@@ -7,4 +7,4 @@ install the [.Net Core 3.0 Preview 3 **Runtime** for Windows](https://dotnet.mic
 
 ## Notice for those building REvernus
 Net Core 3.0 does not come with Visual Studio 2019 by default (at least until we get offical support) and you will need to
-download the [.Net Core 3.0 **SDK** Preview 3](https://dotnet.microsoft.com/download/dotnet-core/3.0).
+download the [.Net Core 3.0 **SDK** Preview 3](https://dotnet.microsoft.com/download/dotnet-core/3.0) and install the [Visual Studio 2019 Preview](https://visualstudio.microsoft.com/vs/preview/)
