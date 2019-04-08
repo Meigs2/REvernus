@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace REvernus.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class implements the INotifyPropertyChanged interface, and should be used for ViewModels
     /// </summary>
