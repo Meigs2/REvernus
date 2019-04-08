@@ -5,6 +5,7 @@ using System.Windows.Input;
 
 namespace REvernus.Core
 {
+    // Thanks to https://gist.github.com/thomaslevesque/5408535 for the simple implementation of a ICommand
     public class DelegateCommand : ICommand
     {
         private readonly Action _execute;

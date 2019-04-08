@@ -5,8 +5,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Navigation;
-using DynamicData.Binding;
-using ReactiveUI;
 using REvernus.Core;
 
 namespace REvernus.ViewModels
