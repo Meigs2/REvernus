@@ -7,6 +7,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Windows.Navigation;
 using Prism.Commands;
 using REvernus.Core;
+using REvernus.Views;
 
 namespace REvernus.ViewModels
 {
@@ -15,21 +16,45 @@ namespace REvernus.ViewModels
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public DelegateCommand ButtonClickCommand { get; }
-
         public MainWindowViewModel()
         {
-            Utilities.Startup.PerformStartupActions();
-            Log.Info("New session of REvernus has been started.");
+            PerformStartup();
 
-            ButtonClickCommand = new DelegateCommand(ShutDown);
+            InitializeCommands();
         }
 
-        public string Message { get; set; } = "Hello .NET 3.0!";
-
-        public void ShutDown()
+        private void InitializeCommands()
         {
-            Application.Current.Shutdown();
+            CharacterManagerMenuItemCommand = new DelegateCommand(OpenCharacterManagerWindow);
         }
+
+        private void OpenCharacterManagerWindow()
+        {
+            Window w = new Window()
+            {
+                Title = "Character Manager",
+                Content = new CharacterManagerView(),
+                Width = 350,
+                Height = 400,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            w.Show();
+        }
+
+        private static void PerformStartup()
+        {
+            try
+            {
+                Utilities.Startup.PerformStartupActions();
+                Log.Info("New session of REvernus has been started.");
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                Application.Current.Shutdown();
+            }
+        }
+
+        public DelegateCommand CharacterManagerMenuItemCommand { get; set; }
     }
 }
