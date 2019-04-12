@@ -51,7 +51,7 @@ namespace EVEStandard.API
         /// <param name="auth">The <see cref="AuthDTO"/> object.</param>
         /// <param name="contractId">The contract to open.</param>
         /// <returns></returns>
-        public async Task OpenContractWindowV1Async(AuthDTO auth, int contractId)
+        public async Task OpenContractWindowV1Async(AuthDTO auth, long contractId)
         {
             CheckAuth(auth, Scopes.ESI_UI_OPEN_WINDOW_1);
 

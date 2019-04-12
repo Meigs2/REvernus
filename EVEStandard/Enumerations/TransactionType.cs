@@ -122,7 +122,6 @@
         upkeep_adjustment_fee = 114,
         war_ally_contract = 115,
         war_fee = 116,
-        war_fee_surrender = 117,
-        structure_gate_jump = 118
+        war_fee_surrender = 117
     }
 }

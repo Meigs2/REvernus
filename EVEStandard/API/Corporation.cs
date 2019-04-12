@@ -180,21 +180,19 @@ namespace EVEStandard.API
         /// <param name="corporationId">An EVE corporation ID.</param>
         /// <param name="page">Which page of results to return. Default value: 1.</param>
         /// <param name="ifNoneMatch">ETag from a previous request. A 304 will be returned if this matches the current ETag.</param>
-        /// <param name="language">Language to use in the response</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing a list of corporation structures’ information.</returns>
-        public async Task<ESIModelDTO<List<CorporationStructure>>> GetCorporationStructuresV3Async(AuthDTO auth, int corporationId, int page = 1, string language = Language.English, string ifNoneMatch = null)
+        public async Task<ESIModelDTO<List<CorporationStructure>>> GetCorporationStructuresV2Async(AuthDTO auth, int corporationId, int page = 1, string ifNoneMatch = null)
         {
             CheckAuth(auth, Scopes.ESI_CORPORATIONS_READ_STRUCTURES_1);
 
             var queryParameters = new Dictionary<string, string>
             {
-                { "page", page.ToString() },
-                { "language", language }
+                { "page", page.ToString() }
             };
 
-            var responseModel = await GetAsync($"/v3/corporations/{corporationId}/structures/", auth, ifNoneMatch, queryParameters);
+            var responseModel = await GetAsync($"/v2/corporations/{corporationId}/structures/", auth, ifNoneMatch, queryParameters);
 
-            CheckResponse(nameof(GetCorporationStructuresV3Async), responseModel.Error, responseModel.Message, responseModel.LegacyWarning, logger);
+            CheckResponse(nameof(GetCorporationStructuresV2Async), responseModel.Error, responseModel.Message, responseModel.LegacyWarning, logger);
 
             return ReturnModelDTO<List<CorporationStructure>>(responseModel);
         }

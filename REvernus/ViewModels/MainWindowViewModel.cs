@@ -35,7 +35,7 @@ namespace REvernus.ViewModels
                 Title = "Character Manager",
                 Content = new CharacterManagerView(),
                 Width = 350,
-                Height = 400,
+                Height = 500,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };
             w.Show();

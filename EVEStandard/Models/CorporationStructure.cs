@@ -25,8 +25,7 @@ namespace EVEStandard.Models
             onlining_vulnerable = 9,
             shield_vulnerable = 10,
             unanchored = 11,
-            unknown = 12,
-            deploy_vulnerable = 13
+            unknown = 12
         }
 
         #endregion Enums
@@ -87,7 +86,7 @@ namespace EVEStandard.Models
         /// </summary>
         /// <value>The day of the week when the structure exits its final reinforcement period and becomes vulnerable to attack against its hull. Monday is 0 and Sunday is 6.</value>
         [JsonProperty("reinforce_weekday")]
-        public int? ReinforceWeekday { get; set; }
+        public int ReinforceWeekday { get; set; }
 
         /// <summary>
         /// Contains a list of service upgrades, and their state

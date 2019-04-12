@@ -6,5 +6,6 @@
         public string ExpectedState { get; set; }
         public string ReturnedState { get; set; }
         public string AuthorizationCode { get; set; }
+        public string CodeVerifier { get; set; }
     }
 }
