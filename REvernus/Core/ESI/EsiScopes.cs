@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MEvernus.Core.ESI
+namespace REvernus.Core.ESI
 {
     public class EsiScopes
     {

@@ -7,7 +7,7 @@ using EVEStandard;
 using EVEStandard.Enumerations;
 using EVEStandard.Models.SSO;
 
-namespace MEvernus.Core.ESI
+namespace REvernus.Core.ESI
 {
     internal class EsiData
     {

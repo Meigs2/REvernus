@@ -14,10 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using EVEStandard;
 using EVEStandard.Models.SSO;
-using MEvernus.Core.ESI;
+using REvernus.Core.ESI;
 using REvernus.Models;
 
-namespace MEvernus.Core.CharacterManagement
+namespace REvernus.Core.CharacterManagement
 {
     /// <summary>
     /// Interaction logic for VerificationWindow.xaml
