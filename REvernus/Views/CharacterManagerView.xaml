@@ -18,15 +18,14 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Margin="3" Grid.Column="0" Content="Add Character"/>
+                <Button Margin="3" Grid.Column="0" Content="Add Character" Command="{Binding AddCharacterCommand}"/>
                 <Button Margin="3" Grid.Column="1" Content="Remove Character(s)"/>
             </Grid>
-            <ListView x:Name="CharacterListView" Margin="5">
+            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Model.Characters}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Enabled" />
-                        <GridViewColumn Header="Character ID"/>
-                        <GridViewColumn Header="Character Name"/>
+                        <GridViewColumn Header="Character ID" DisplayMemberBinding="{Binding CharacterDetails.CharacterId}"/>
+                        <GridViewColumn Header="Character Name" DisplayMemberBinding="{Binding CharacterDetails.CharacterName}"/>
                     </GridView>
                 </ListView.View>
             </ListView>

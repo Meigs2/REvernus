@@ -24,9 +24,12 @@ namespace REvernus.Core.CharacterManagement
     /// </summary>
     public partial class VerificationWindow : Window
     {
-        private readonly EVEStandardAPI _client;
-        public EvernusCharacter Character { get; set; } = new EvernusCharacter();
-        private Authorization Authorization { get; set; }
+        private EVEStandardAPI _client;
+        public REvernusCharacter Character { get; set; } = new REvernusCharacter();
+        private Authorization Authorization { get; set; } = new Authorization();
+
+        private static readonly log4net.ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public VerificationWindow(EVEStandardAPI client)
         {
@@ -36,8 +39,8 @@ namespace REvernus.Core.CharacterManagement
 
         private void LoginButton_Click(object sender, RoutedEventArgs routedEventArgs)
         {
-            Authorization = _client.SSO.AuthorizeToEVEUri(EsiScopes.Scopes);
-            Process.Start(Authorization.SignInURI);
+            Authorization = _client.SSOv2.AuthorizeToEVEUri(EsiScopes.Scopes);
+            Utilities.Browser.OpenBrowser(Authorization.SignInURI);
         }
 
         private async void AcceptButton_Click(object sender, RoutedEventArgs e)
@@ -49,37 +52,14 @@ namespace REvernus.Core.CharacterManagement
                 Authorization.AuthorizationCode = AuthCodeTextBox.Text;
                 Authorization.ExpectedState = string.Empty; // Expected state is set to empty, as we don't require the user to provide it from the returned URL
 
-                Character.AccessTokenDetails = await _client.SSO.VerifyAuthorizationAsync(Authorization);
-                Character.CharacterDetails = await _client.SSO.GetCharacterDetailsAsync(Character.AccessTokenDetails.AccessToken);
+                Character.AccessTokenDetails = await _client.SSOv2.VerifyAuthorizationAsync(Authorization);
+                Character.CharacterDetails = _client.SSOv2.GetCharacterDetailsAsync(Character.AccessTokenDetails.AccessToken);
 
-                // If this character is already added to our list, ask if we want to replace it.
-                if (CharacterManager.CurrentInstance.CharacterList.SingleOrDefault(c => c.CharacterName == Character.CharacterName) != null)
-                {
-                    var duplicate =
-                        CharacterManager.CurrentInstance.CharacterList.Single(c =>
-                            c.CharacterName == Character.CharacterName);
-                    var dialogResult = MessageBox.Show("Character is already added, would you like to replace it?", "", MessageBoxButton.YesNo);
-
-                    if (dialogResult == MessageBoxResult.Yes)
-                    {
-                        CharacterManager.CurrentInstance.CharacterList[
-                                CharacterManager.CurrentInstance.CharacterList.IndexOf(duplicate)] =
-                            Character;
-                        Close();
-                        return;
-                    }
-                    else
-                    {
-                        Close();
-                        return;
-                    }
-                }
-
-                CharacterManager.CurrentInstance.CharacterList.Add(Character);
                 Close();
             }
             catch (Exception error)
             {
+                Log.Error(error);
                 MessageBox.Show("Authorization verification failed, error message:\n" + error.Message +
                                 "\n Source: \n" + error.Source + "\n\n Please click the image again and re-enter the code in the web prompt.");
             }

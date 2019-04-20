@@ -5,7 +5,7 @@ using EVEStandard.Models.SSO;
 
 namespace REvernus.Models
 {
-    public class EvernusCharacter
+    public class REvernusCharacter
     {
         public AccessTokenDetails AccessTokenDetails { get; set; } = new AccessTokenDetails();
         public CharacterDetails CharacterDetails { get; set; } = new CharacterDetails();

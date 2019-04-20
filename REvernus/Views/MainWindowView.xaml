@@ -1,4 +1,4 @@
-﻿<Window x:Class="REvernus.MainWindow"
+﻿<Window x:Class="REvernus.MainWindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
 
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="MainWindowView" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </Window.DataContext>
