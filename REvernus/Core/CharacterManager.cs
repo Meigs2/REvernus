@@ -14,14 +14,14 @@ namespace REvernus.Core
         #region Variables and Properties
 
         private static CharacterManager _currentInstance;
-        public static CharacterManager CurrentInstance => _currentInstance ?? (_currentInstance = new CharacterManager());
+        public static CharacterManager CurrentInstance => _currentInstance ??= new CharacterManager();
 
         internal HashSet<REvernusCharacter> CharacterList { get; set; } = new HashSet<REvernusCharacter>();
 
         private REvernusCharacter _selectedCharacter;
         public REvernusCharacter SelectedCharacter
         {
-            get => _selectedCharacter ?? (_selectedCharacter = new REvernusCharacter());
+            get => _selectedCharacter ??= new REvernusCharacter();
             set => SetProperty(ref _selectedCharacter, value);
         }
 
