@@ -18,26 +18,25 @@ namespace REvernus.Core.Serialization
         /// <param name="path"></param>
         public static void SerializeData<T>(T data, string path)
         {
-            // Check if the parent directory of the file exist, if not, create it.
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-            }
+                // Check if the parent directory of the file exist, if not, create it.
+                if (!Directory.Exists(Path.GetDirectoryName(path)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                }
 
-            var fileStream = new FileStream(path, FileMode.Create);
+                var fileStream = new FileStream(path, FileMode.Create);
 
-            if (data != null)
-            {
-                try
+                if (data != null)
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(fileStream, data);
-                    fileStream.Close();
                 }
-                catch (Exception e)
-                {
-                    Log.Error(e);
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -49,9 +48,9 @@ namespace REvernus.Core.Serialization
         /// <returns></returns>
         public static object DeserializeData<T>(string path)
         {
-            var fileStream = new FileStream(path, FileMode.Open);
             try
             {
+                var fileStream = new FileStream(path, FileMode.Open);
                 var binaryFormatter = new BinaryFormatter();
                 var result = (T) binaryFormatter.Deserialize(fileStream);
                 fileStream.Close();
@@ -60,8 +59,8 @@ namespace REvernus.Core.Serialization
             catch (Exception e)
             {
                 Log.Error(e);
+                return null;
             }
-            return null;
         }
     }
 }
