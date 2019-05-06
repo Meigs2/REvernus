@@ -14,22 +14,25 @@ namespace REvernus.ViewModels
 
         public DelegateCommand AddCharacterCommand { get; set; }
 
+        public DelegateCommand RemoveCharacterCommand { get; set; }
+
         #endregion
 
         public CharacterManagerViewModel()
         {
             AddCharacterCommand = new DelegateCommand(AddNewCharacter);
-            CharacterManager.CurrentInstance.NewCharacterAdded += RefreshModelCharacterList;
-        }
 
-        private void RefreshModelCharacterList(object sender, EventArgs e)
-        {
-            Model.Characters = CharacterManager.CurrentInstance.CharacterList.ToList();
+            RemoveCharacterCommand = new DelegateCommand(RemoveCharacters);
         }
 
         private void AddNewCharacter()
         {
             CharacterManager.AuthorizeNewCharacter();
+        }
+
+        private void RemoveCharacters()
+        {
+
         }
     }
 }

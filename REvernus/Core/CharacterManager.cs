@@ -3,6 +3,7 @@ using REvernus.Core.CharacterManagement;
 using REvernus.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
@@ -16,13 +17,33 @@ namespace REvernus.Core
         private static CharacterManager _currentInstance;
         public static CharacterManager CurrentInstance => _currentInstance ??= new CharacterManager();
 
-        internal HashSet<REvernusCharacter> CharacterList { get; set; } = new HashSet<REvernusCharacter>();
+        private ObservableCollection<REvernusCharacter> _characterList;
+
+        public static ObservableCollection<REvernusCharacter> CharacterList
+        {
+            get => CurrentInstance._characterList ??= new ObservableCollection<REvernusCharacter>();
+            set
+            {
+                if (value != CurrentInstance._characterList)
+                {
+                    CurrentInstance.SetProperty(ref CurrentInstance._characterList, value);
+                    CurrentInstance.OnCharactersChanged();
+                }
+            }
+        }
 
         private REvernusCharacter _selectedCharacter;
-        public REvernusCharacter SelectedCharacter
+        public static REvernusCharacter SelectedCharacter
         {
-            get => _selectedCharacter ??= new REvernusCharacter();
-            set => SetProperty(ref _selectedCharacter, value);
+            get => CurrentInstance._selectedCharacter ??= new REvernusCharacter();
+            set
+            {
+                if (value != CurrentInstance._selectedCharacter)
+                {
+                    CurrentInstance.SetProperty(ref CurrentInstance._selectedCharacter, value);
+                    CurrentInstance.OnSelectedCharacterChanged();
+                }
+            }
         }
 
         #endregion
@@ -35,7 +56,7 @@ namespace REvernus.Core
             verificationWindow.ShowDialog();
 
             var duplicateCharacter =
-                CharacterManager.CurrentInstance.CharacterList.SingleOrDefault(
+                CharacterManager.CharacterList.SingleOrDefault(
                     c => c.CharacterDetails.CharacterName == verificationWindow.Character.CharacterDetails.CharacterName);
             if (duplicateCharacter != null)
             {
@@ -43,8 +64,8 @@ namespace REvernus.Core
                 return;
             }
 
-            CharacterManager.CurrentInstance.CharacterList.Add(verificationWindow.Character);
-            CharacterManager.CurrentInstance.OnNewCharacterAdded();
+            CharacterManager.CharacterList.Add(verificationWindow.Character);
+            CharacterManager.CurrentInstance.OnCharactersChanged();
         }
 
         #endregion
@@ -64,10 +85,10 @@ namespace REvernus.Core
         }
 
 
-        public event EventHandler NewCharacterAdded;
-        protected virtual void OnNewCharacterAdded()
+        public event EventHandler CharactersChanged;
+        protected virtual void OnCharactersChanged()
         {
-            NewCharacterAdded?.Invoke(this, EventArgs.Empty);
+            CharactersChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

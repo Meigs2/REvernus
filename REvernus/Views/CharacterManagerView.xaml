@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:REvernus.Views"
              xmlns:viewModels="clr-namespace:REvernus.ViewModels"
+             xmlns:characterManger="clr-namespace:REvernus.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -19,9 +20,9 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button Margin="3" Grid.Column="0" Content="Add Character" Command="{Binding AddCharacterCommand}"/>
-                <Button Margin="3" Grid.Column="1" Content="Remove Character(s)"/>
+                <Button Margin="3" Grid.Column="1" Content="Remove Character(s)" Command="{Binding RemoveCharacterCommand}"/>
             </Grid>
-            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Model.Characters}">
+            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Source={x:Static characterManger:CharacterManager.CharacterList}}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Character ID" DisplayMemberBinding="{Binding CharacterDetails.CharacterId}"/>

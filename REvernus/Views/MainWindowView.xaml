@@ -7,17 +7,28 @@
 
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindowView" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="REvernus" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
         <DockPanel>
-            <Menu x:Name="MainWindowMenu" DockPanel.Dock="Top">
-                <MenuItem x:Name="FileMenuItem" Header="File">
-                    <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
-                </MenuItem>
-            </Menu>
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Menu x:Name="MainWindowMenu" Grid.Column="0">
+                    <MenuItem x:Name="FileMenuItem" Header="File">
+                        <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
+                    </MenuItem>
+                </Menu>
+                <ComboBox Grid.Column="1" HorizontalAlignment="Right" MinWidth="200">
+                    <ComboBoxItem Content="Test"/>
+                </ComboBox>
+            </Grid>
+            <Grid>
+            </Grid>
         </DockPanel>
     </Grid>
 </Window>
