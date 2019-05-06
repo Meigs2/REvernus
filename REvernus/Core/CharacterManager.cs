@@ -2,7 +2,6 @@
 using REvernus.Core.CharacterManagement;
 using REvernus.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -11,9 +10,6 @@ namespace REvernus.Core
 {
     public class CharacterManager : BindableBase
     {
-
-        #region Variables and Properties
-
         private static CharacterManager _currentInstance;
         public static CharacterManager CurrentInstance => _currentInstance ??= new CharacterManager();
 
@@ -46,10 +42,6 @@ namespace REvernus.Core
             }
         }
 
-        #endregion
-
-        #region Public Methods
-
         public static void AuthorizeNewCharacter()
         {
             var verificationWindow = new VerificationWindow(ESI.EsiData.EsiClient);
@@ -68,30 +60,16 @@ namespace REvernus.Core
             CharacterManager.CurrentInstance.OnCharactersChanged();
         }
 
-        #endregion
-
-        #region Private Methods
-
-
-
-        #endregion
-
-        #region MyRegion
-
         public event EventHandler SelectedCharacterChanged;
         protected virtual void OnSelectedCharacterChanged()
         {
             SelectedCharacterChanged?.Invoke(this, EventArgs.Empty);
         }
 
-
         public event EventHandler CharactersChanged;
         protected virtual void OnCharactersChanged()
         {
             CharactersChanged?.Invoke(this, EventArgs.Empty);
         }
-
-        #endregion
-
     }
 }
