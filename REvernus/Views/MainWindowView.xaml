@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:REvernus"
-
+        xmlns:characterManager="clr-namespace:REvernus.Core"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
         Title="REvernus" Height="450" Width="800" WindowStartupLocation="CenterScreen">
@@ -23,11 +23,14 @@
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
                     </MenuItem>
                 </Menu>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Right" MinWidth="200">
-                    <ComboBoxItem Content="Test"/>
+                <ComboBox Grid.Column="1" HorizontalAlignment="Right" MinWidth="200" 
+                          ItemsSource="{Binding Source={x:Static characterManager:CharacterManager.CharacterList}}"
+                          SelectedItem="{Binding Source={x:Static characterManager:CharacterManager.SelectedCharacter}, Path=.}"
+                          DisplayMemberPath="CharacterName">
                 </ComboBox>
             </Grid>
             <Grid>
+                <Label Content="{Binding Source={x:Static characterManager:CharacterManager.SelectedCharacter}, Path=CharacterName}"></Label>
             </Grid>
         </DockPanel>
     </Grid>
