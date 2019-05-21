@@ -21,8 +21,8 @@ namespace REvernus
             await PerformStartupActions();
 
             // Start the Main Window.
-            var a = new MainWindowView();
-            a.Show();
+            var mainWindowView = new MainWindowView();
+            mainWindowView.Show();
         }
 
         private static async Task PerformStartupActions()
