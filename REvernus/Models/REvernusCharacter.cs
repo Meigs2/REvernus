@@ -10,7 +10,6 @@ namespace REvernus.Models
     {
         public AccessTokenDetails AccessTokenDetails { get; set; } = new AccessTokenDetails();
         public CharacterDetails CharacterDetails { get; set; } = new CharacterDetails();
-
         public string CharacterName => CharacterDetails.CharacterName;
     }
 }

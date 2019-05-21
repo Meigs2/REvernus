@@ -7,19 +7,28 @@ using System.Windows.Forms.VisualStyles;
 using System.Windows.Navigation;
 using Prism.Commands;
 using REvernus.Core;
+using REvernus.Models;
 using REvernus.Views;
 
 namespace REvernus.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        public REvernusCharacter SelectedCharacter
+        {
+            get => CharacterManager.CurrentInstance.SelectedCharacter;
+            set
+            {
+                CharacterManager.CurrentInstance.SelectedCharacter = value;
+                OnPropertyChanged();
+            }
+        }
+
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MainWindowViewModel()
         {
-            PerformStartup();
-
             InitializeCommands();
         }
 
@@ -28,7 +37,7 @@ namespace REvernus.ViewModels
             CharacterManagerMenuItemCommand = new DelegateCommand(OpenCharacterManagerWindow);
         }
 
-        private void OpenCharacterManagerWindow()
+        private static void OpenCharacterManagerWindow()
         {
             Window w = new Window()
             {
@@ -39,20 +48,6 @@ namespace REvernus.ViewModels
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };
             w.Show();
-        }
-
-        private static void PerformStartup()
-        {
-            try
-            {
-                Utilities.Startup.PerformStartupActions();
-                Log.Info("New session of REvernus has been started.");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-                Application.Current.Shutdown();
-            }
         }
 
         public DelegateCommand CharacterManagerMenuItemCommand { get; set; }

@@ -2,8 +2,9 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Polenter.Serialization;
 
-namespace REvernus.Core.Serialization
+namespace REvernus.Utilities
 {
     public static class Serializer
     {
@@ -16,7 +17,7 @@ namespace REvernus.Core.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="path"></param>
-        public static void SerializeData<T>(T data, string path)
+        public static bool SerializeData<T>(T data, string path)
         {
             try
             {
@@ -26,17 +27,20 @@ namespace REvernus.Core.Serialization
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                 }
 
-                var fileStream = new FileStream(path, FileMode.Create);
-
                 if (data != null)
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(fileStream, data);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(fileStream, data);
+                    }
                 }
+                return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.Error(e);
+                return false;
             }
         }
 
@@ -46,20 +50,20 @@ namespace REvernus.Core.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static object DeserializeData<T>(string path)
+        public static T DeserializeData<T>(string path)
         {
             try
             {
                 var fileStream = new FileStream(path, FileMode.Open);
                 var binaryFormatter = new BinaryFormatter();
-                var result = (T) binaryFormatter.Deserialize(fileStream);
+                var result = binaryFormatter.Deserialize(fileStream);
                 fileStream.Close();
-                return result;
+                return (T) result;
             }
             catch (Exception e)
             {
                 Log.Error(e);
-                return null;
+                return default;
             }
         }
     }

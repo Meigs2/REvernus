@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:REvernus"
+        xmlns:local="clr-namespace:REvernus.ViewModels"
         xmlns:characterManager="clr-namespace:REvernus.Core"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
         Title="REvernus" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
-        <viewModels:MainWindowViewModel/>
+        <local:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
         <DockPanel>
@@ -24,14 +24,16 @@
                     </MenuItem>
                 </Menu>
                 <ComboBox Grid.Column="1" HorizontalAlignment="Right" MinWidth="200" 
-                          ItemsSource="{Binding Source={x:Static characterManager:CharacterManager.CharacterList}}"
-                          SelectedItem="{Binding Source={x:Static characterManager:CharacterManager.SelectedCharacter}, Path=.}"
+                          ItemsSource="{Binding CharacterList}"
+                          SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}"
                           DisplayMemberPath="CharacterName"
                           IsSynchronizedWithCurrentItem="True">
+                    <ComboBox.DataContext>
+                        <characterManager:CharacterManager/>
+                    </ComboBox.DataContext>
                 </ComboBox>
             </Grid>
             <Grid>
-                <Label Content="{Binding Source={x:Static characterManager:CharacterManager.SelectedCharacter}, Path=CharacterName}"></Label>
             </Grid>
         </DockPanel>
     </Grid>
