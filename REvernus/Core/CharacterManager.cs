@@ -52,11 +52,6 @@ namespace REvernus.Core
             }
         }
 
-        public CharacterManager()
-        {
-
-        }
-
         public static void AuthorizeNewCharacter()
         {
             var verificationWindow = new VerificationWindow(ESI.EsiData.EsiClient);
@@ -74,6 +69,14 @@ namespace REvernus.Core
             CharacterList.Add(verificationWindow.Character);
 
             CurrentInstance.OnCharactersChanged();
+        }
+
+        public static void RemoveCharacters(List<REvernusCharacter> characters)
+        {
+            foreach (var rEvernusCharacter in characters)
+            {
+                CharacterList.Remove(rEvernusCharacter);
+            }
         }
 
         public static async Task RefreshCharacterAuth()

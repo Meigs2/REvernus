@@ -18,11 +18,23 @@ namespace REvernus
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
+            // Bug: .Net Core 3.0 Preview 4/5 has a DPI scaling issue, this fixes it. To be removed when fixed.
+            var bugWindow = new Window
+            {
+                Height = 0,
+                ShowInTaskbar = false,
+                Width = 0,
+                WindowStyle = WindowStyle.None
+            };
+            bugWindow.Show();
+            bugWindow.Hide();
+
             await PerformStartupActions();
 
             // Start the Main Window.
             var mainWindowView = new MainWindowView();
-            mainWindowView.Show();
+            mainWindowView.ShowDialog();
+            Current.Shutdown(-1);
         }
 
         private static async Task PerformStartupActions()
@@ -30,7 +42,7 @@ namespace REvernus
             try
             {
                 await Utilities.StartupAndExit.PerformStartupActions();
-                Log.Info("New session of REvernus has been started.");
+                Log.Info("New session of REvernus has been successfully started.");
             }
             catch (Exception e)
             {
