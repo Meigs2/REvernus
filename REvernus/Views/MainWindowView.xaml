@@ -23,14 +23,11 @@
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
                     </MenuItem>
                 </Menu>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Right" MinWidth="200" 
+                <ComboBox x:Name="CharacterComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="200" 
                           ItemsSource="{Binding CharacterList}"
                           SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}"
                           DisplayMemberPath="CharacterName"
                           IsSynchronizedWithCurrentItem="True">
-                    <ComboBox.DataContext>
-                        <characterManager:CharacterManager/>
-                    </ComboBox.DataContext>
                 </ComboBox>
             </Grid>
             <Grid>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using REvernus.Core;
 
 namespace REvernus
 {
@@ -23,6 +24,7 @@ namespace REvernus
         public MainWindowView()
         {
             InitializeComponent();
+            CharacterComboBox.DataContext = CharacterManager.CurrentInstance;
         }
     }
 }

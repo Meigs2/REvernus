@@ -1,17 +1,16 @@
-﻿using EVEStandard.Models.SSO;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using REvernus.Core.CharacterManagement;
+using REvernus.Core.ESI;
 using REvernus.Models;
+using REvernus.Models.SerializableModels;
+using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
-using EVEStandard.API;
-using REvernus.Core.ESI;
-using REvernus.Models.SerializableModels;
-using REvernus.Utilities;
 
 namespace REvernus.Core
 {
@@ -21,7 +20,16 @@ namespace REvernus.Core
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static CharacterManager _currentInstance;
-        public static CharacterManager CurrentInstance => _currentInstance ??= new CharacterManager();
+        public static CharacterManager CurrentInstance {
+            get
+            {
+                if (_currentInstance == null)
+                {
+                    _currentInstance = new CharacterManager();
+                }
+                return _currentInstance;
+            }
+        }
 
         private ObservableCollection<REvernusCharacter> _characterList;
 
@@ -32,7 +40,7 @@ namespace REvernus.Core
             {
                 if (value != CurrentInstance._characterList)
                 {
-                    CurrentInstance.SetProperty(ref _currentInstance._characterList,value);
+                    CurrentInstance.SetProperty(ref _currentInstance._characterList, value);
                     CurrentInstance.OnCharactersChanged();
                 }
             }
@@ -52,15 +60,28 @@ namespace REvernus.Core
             }
         }
 
+        private CharacterManager()
+        {
+            _authRefreshTimer.Elapsed += _authRefreshTimer_Elapsed;
+            _authRefreshTimer.Enabled = true;
+        }
+
+        private async void _authRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            await RefreshAllCharacterAuth();
+        }
+
+        #region Public Methods and Events
+
         public static void AuthorizeNewCharacter()
         {
-            var verificationWindow = new VerificationWindow(ESI.EsiData.EsiClient);
+            var verificationWindow = new VerificationWindow(EsiData.EsiClient);
             verificationWindow.ShowDialog();
 
             var duplicateCharacter =
                 CharacterList.SingleOrDefault(
                     c => c.CharacterDetails.CharacterName == verificationWindow.Character.CharacterDetails.CharacterName);
-            if (duplicateCharacter != null) 
+            if (duplicateCharacter != null)
             {
                 MessageBox.Show($"{duplicateCharacter.CharacterDetails.CharacterName} is already added!", "", MessageBoxButton.OK);
                 return;
@@ -79,12 +100,17 @@ namespace REvernus.Core
             }
         }
 
-        public static async Task RefreshCharacterAuth()
+        private readonly Timer _authRefreshTimer = new Timer()
+        { Interval = TimeSpan.FromMinutes(10).TotalMilliseconds, AutoReset = true };
+        public static async Task RefreshAllCharacterAuth()
         {
+            var taskList = new List<Task>();
             foreach (var character in CharacterList)
             {
-               character.AccessTokenDetails = await EsiData.EsiClient.SSOv2.GetRefreshTokenAsync(character.AccessTokenDetails.RefreshToken);
+                taskList.Add(EsiData.EsiClient.SSOv2.GetRefreshTokenAsync(character.AccessTokenDetails.RefreshToken));
             }
+            await Task.WhenAll(taskList);
+            Log.Info("Successfully refreshed all character's auth.");
         }
 
         public static void SerializeCharacters()
@@ -92,7 +118,7 @@ namespace REvernus.Core
             var serializableList = new List<SerializableCharacter>();
             foreach (var character in CharacterList)
             {
-                serializableList.Add(new SerializableCharacter(){RefreshToken = character.AccessTokenDetails.RefreshToken});
+                serializableList.Add(new SerializableCharacter() { RefreshToken = character.AccessTokenDetails.RefreshToken });
             }
             Serializer.SerializeData(serializableList, Environment.CurrentDirectory + @"\Characters.bin");
         }
@@ -138,5 +164,11 @@ namespace REvernus.Core
         {
             CharactersChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        #endregion
+
+        #region Private Methods, Events, and grouped things, like timers and their initializers.
+
+        #endregion
     }
 }
