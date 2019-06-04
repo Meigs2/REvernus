@@ -83,7 +83,7 @@ namespace REvernus.Utilities
             var fileStream = new FileStream(Path.Combine(_dataFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.Read, FileShare.Read);
             var outStream = File.Create(Path.Combine(_dataFolderPath, "eve.db"));
 
-            Decompress(fileStream, outStream,false);
+            DecompressBz2(fileStream, outStream,false);
 
             SystemSounds.Exclamation.Play();
             window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
@@ -91,13 +91,8 @@ namespace REvernus.Utilities
             window.Close();
         }
 
-        private void Decompress(Stream inStream, Stream outStream, bool isStreamOwner)
+        private void DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)
         {
-            if (inStream == null || outStream == null)
-            {
-                throw new Exception("Null Stream");
-            }
-
             try
             {
                 using (BZip2InputStream bzipInput = new BZip2InputStream(inStream))
