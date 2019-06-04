@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using Prism.Commands;
 using REvernus.Core;
 using REvernus.Models;
+using REvernus.Utilities;
 using REvernus.Views;
 
 namespace REvernus.ViewModels
@@ -35,6 +36,11 @@ namespace REvernus.ViewModels
         private void InitializeCommands()
         {
             CharacterManagerMenuItemCommand = new DelegateCommand(OpenCharacterManagerWindow);
+            DownloadSdeDataMenuItemCommand = new DelegateCommand(() =>
+            {
+                var dl = new SdeDownloader();
+                dl.DownloadLatestSde();
+            });
         }
 
         private static void OpenCharacterManagerWindow()
@@ -51,5 +57,6 @@ namespace REvernus.ViewModels
         }
 
         public DelegateCommand CharacterManagerMenuItemCommand { get; set; }
+        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; }
     }
 }

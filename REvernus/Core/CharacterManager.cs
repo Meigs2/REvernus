@@ -20,7 +20,8 @@ namespace REvernus.Core
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static CharacterManager _currentInstance;
-        public static CharacterManager CurrentInstance {
+        public static CharacterManager CurrentInstance
+        {
             get
             {
                 if (_currentInstance == null)
@@ -120,13 +121,13 @@ namespace REvernus.Core
             {
                 serializableList.Add(new SerializableCharacter() { RefreshToken = character.AccessTokenDetails.RefreshToken });
             }
-            Serializer.SerializeData(serializableList, Environment.CurrentDirectory + @"\Characters.bin");
+            Serializer.SerializeData(serializableList, System.IO.Path.Combine(Environment.CurrentDirectory, "Characters.bin"));
         }
 
         public static async Task DeserializeCharacters()
         {
-            var serializedCharacterList = Serializer.DeserializeData<List<SerializableCharacter>>(
-                Environment.CurrentDirectory + @"\Characters.bin");
+            var serializedCharacterList = Serializer.DeserializeData<List<SerializableCharacter>>(System.IO.Path.Combine(
+                Environment.CurrentDirectory, "Characters.bin"));
 
             if (serializedCharacterList == null) return;
 
