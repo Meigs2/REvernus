@@ -22,14 +22,7 @@ namespace REvernus.Core
         private static CharacterManager _currentInstance;
         public static CharacterManager CurrentInstance
         {
-            get
-            {
-                if (_currentInstance == null)
-                {
-                    _currentInstance = new CharacterManager();
-                }
-                return _currentInstance;
-            }
+            get { return _currentInstance ??= new CharacterManager(); }
         }
 
         private ObservableCollection<REvernusCharacter> _characterList;

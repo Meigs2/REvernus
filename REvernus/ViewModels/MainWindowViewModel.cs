@@ -28,21 +28,6 @@ namespace REvernus.ViewModels
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public MainWindowViewModel()
-        {
-            InitializeCommands();
-        }
-
-        private void InitializeCommands()
-        {
-            CharacterManagerMenuItemCommand = new DelegateCommand(OpenCharacterManagerWindow);
-            DownloadSdeDataMenuItemCommand = new DelegateCommand(() =>
-            {
-                var dl = new SdeDownloader();
-                dl.DownloadLatestSde();
-            });
-        }
-
         private static void OpenCharacterManagerWindow()
         {
             Window w = new Window()
@@ -56,7 +41,11 @@ namespace REvernus.ViewModels
             w.Show();
         }
 
-        public DelegateCommand CharacterManagerMenuItemCommand { get; set; }
-        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; }
+        public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
+        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(() =>
+        {
+            var dl = new SdeDownloader();
+            dl.DownloadLatestSde();
+        });
     }
 }

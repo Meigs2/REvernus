@@ -20,14 +20,14 @@ namespace REvernus.Utilities
 {
     public class SdeDownloader
     {
-        private readonly log4net.ILog Log =
+        private readonly log4net.ILog _log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // ReSharper disable once IdentifierTypo
         private readonly string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
         private string _dataFolderPath => Path.Combine(Environment.CurrentDirectory, "Data");
         private readonly WebClient _webClient = new WebClient();
-        private Window window;
+        private Window _window;
         private SdeDownloadProgressView _windowView;
 
         public void DownloadLatestSde()
@@ -37,7 +37,7 @@ namespace REvernus.Utilities
                 void ClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
                 {
                     _windowView.DownloadProgressBar.Value = e.ProgressPercentage;
-                    window.TaskbarItemInfo.ProgressValue = e.ProgressPercentage/100d;
+                    _window.TaskbarItemInfo.ProgressValue = e.ProgressPercentage/100d;
                 }
 
                 // Check to see if the Data folder has been made yet, if not, create it.
@@ -46,7 +46,7 @@ namespace REvernus.Utilities
                     Directory.CreateDirectory(_dataFolderPath);
                 }
 
-                window = new Window()
+                _window = new Window()
                 {
                     Title = "Character Manager",
                     Content = new SdeDownloadProgressView(),
@@ -54,11 +54,11 @@ namespace REvernus.Utilities
                     Height = 300,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
-                window.TaskbarItemInfo = new TaskbarItemInfo(){ ProgressState = TaskbarItemProgressState.Normal };
+                _window.TaskbarItemInfo = new TaskbarItemInfo(){ ProgressState = TaskbarItemProgressState.Normal };
                 // Prevent user from closing download window
-                window.Closing += (sender, args) => { args.Cancel = true; };
-                window.Show();
-                _windowView = (SdeDownloadProgressView)window.Content;
+                _window.Closing += (sender, args) => { args.Cancel = true; };
+                _window.Show();
+                _windowView = (SdeDownloadProgressView)_window.Content;
                 _windowView.TextBlock.Text = "Downloading the current SDE... This may take a while!\nThe client will freeze near the end\nso don't panic. This window will close after\n the download and unzip completes.";
 
                 // Download file
@@ -70,8 +70,8 @@ namespace REvernus.Utilities
             }
             catch (Exception e)
             {
-                window.Close();
-                Log.Error(e);
+                _window.Close();
+                _log.Error(e);
             }
         }
 
@@ -86,9 +86,9 @@ namespace REvernus.Utilities
             DecompressBz2(fileStream, outStream,false);
 
             SystemSounds.Exclamation.Play();
-            window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-            window.Close();
+            _window.Close();
         }
 
         private void DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)

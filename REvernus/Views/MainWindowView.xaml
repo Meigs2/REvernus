@@ -7,7 +7,8 @@
         xmlns:characterManager="clr-namespace:REvernus.Core"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="REvernus" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="REvernus" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        xmlns:views="clr-namespace:REvernus.Views">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
@@ -32,6 +33,11 @@
                 </ComboBox>
             </Grid>
             <Grid>
+                <TabControl x:Name="MainTabControl">
+                    <TabItem Header="Market Orders">
+                        <views:MarketOrdersViewerView/>
+                    </TabItem>
+                </TabControl>
             </Grid>
         </DockPanel>
     </Grid>
