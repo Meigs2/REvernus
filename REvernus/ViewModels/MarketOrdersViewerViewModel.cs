@@ -25,8 +25,8 @@ namespace REvernus.ViewModels
 
         private void GetMarketData()
         {
-            var a = SdeData.GetInventoryTypes();
-            MarketOrders = a;
+            var data = SdeData.GetInventoryTypes();
+            MarketOrders = data;
         }
 
         public DelegateCommand GetOrdersCommand { get; set; }

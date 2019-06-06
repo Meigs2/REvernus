@@ -56,7 +56,6 @@ namespace REvernus.Utilities
                 };
                 _window.TaskbarItemInfo = new TaskbarItemInfo(){ ProgressState = TaskbarItemProgressState.Normal };
                 // Prevent user from closing download window
-                _window.Closing += (sender, args) => { args.Cancel = true; };
                 _window.Show();
                 _windowView = (SdeDownloadProgressView)_window.Content;
                 _windowView.TextBlock.Text = "Downloading the current SDE... This may take a while!\nThe client will freeze near the end\nso don't panic. This window will close after\n the download and unzip completes.";
