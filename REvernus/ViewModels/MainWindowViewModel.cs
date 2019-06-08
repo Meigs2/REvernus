@@ -44,8 +44,8 @@ namespace REvernus.ViewModels
         public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
         public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(() =>
         {
-            var dl = new SdeDownloader();
-            dl.DownloadLatestSde();
+            var downloader = new SdeDownloader();
+            downloader.DownloadLatestSde();
         });
     }
 }

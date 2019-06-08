@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Utilities;
@@ -17,16 +18,14 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _marketOrders, value);
         }
 
-        MarketOrdersViewerViewModel()
+        public MarketOrdersViewerViewModel()
         {
-            GetOrdersCommand = new DelegateCommand(GetMarketData);
+            GetOrdersCommand = new DelegateCommand(async () => await GetMarketData());
         }
 
-
-        private void GetMarketData()
+        private async Task GetMarketData()
         {
-            var data = SdeData.GetInventoryTypes();
-            MarketOrders = data;
+            MarketOrders = await SdeData.GetInventoryTypesAsync();
         }
 
         public DelegateCommand GetOrdersCommand { get; set; }

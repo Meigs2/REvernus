@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.Core;
+using REvernus.Views.SimpleViews;
+using System;
+using System.ComponentModel;
 using System.IO;
 using System.Media;
 using System.Net;
-using System.Runtime.InteropServices;
-using ICSharpCode.SharpZipLib;
-using System.Text;
-using System.Threading;
-using System.Web;
 using System.Windows;
-using System.Windows.Automation.Peers;
 using System.Windows.Shell;
-using ICSharpCode.SharpZipLib.BZip2;
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
-using REvernus.Views.SimpleViews;
 
 namespace REvernus.Utilities
 {
@@ -26,9 +19,15 @@ namespace REvernus.Utilities
         // ReSharper disable once IdentifierTypo
         private readonly string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
         private string _dataFolderPath => Path.Combine(Environment.CurrentDirectory, "Data");
-        private readonly WebClient _webClient = new WebClient();
+        private readonly WebClient _webClient;
         private Window _window;
         private SdeDownloadProgressView _windowView;
+        private bool _isDownloadComplete;
+
+        public SdeDownloader()
+        {
+            _webClient = new WebClient();
+        }
 
         public void DownloadLatestSde()
         {
@@ -37,7 +36,7 @@ namespace REvernus.Utilities
                 void ClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
                 {
                     _windowView.DownloadProgressBar.Value = e.ProgressPercentage;
-                    _window.TaskbarItemInfo.ProgressValue = e.ProgressPercentage/100d;
+                    _window.TaskbarItemInfo.ProgressValue = e.ProgressPercentage / 100d;
                 }
 
                 // Check to see if the Data folder has been made yet, if not, create it.
@@ -54,8 +53,8 @@ namespace REvernus.Utilities
                     Height = 300,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
-                _window.TaskbarItemInfo = new TaskbarItemInfo(){ ProgressState = TaskbarItemProgressState.Normal };
-                // Prevent user from closing download window
+                _window.TaskbarItemInfo = new TaskbarItemInfo() { ProgressState = TaskbarItemProgressState.Normal };
+                _window.Closing += _window_Closing;
                 _window.Show();
                 _windowView = (SdeDownloadProgressView)_window.Content;
                 _windowView.TextBlock.Text = "Downloading the current SDE... This may take a while!\nThe client will freeze near the end\nso don't panic. This window will close after\n the download and unzip completes.";
@@ -74,31 +73,38 @@ namespace REvernus.Utilities
             }
         }
 
+        private void _window_Closing(object sender, CancelEventArgs e)
+        {
+            if (_isDownloadComplete) return;
+
+            SystemSounds.Asterisk.Play();
+            e.Cancel = true;
+        }
+
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             _webClient.Dispose();
 
             // Extract .bz2 file
-            var fileStream = new FileStream(Path.Combine(_dataFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.Read, FileShare.Read);
-            var outStream = File.Create(Path.Combine(_dataFolderPath, "eve.db"));
+            using (var outStream = File.Create(Path.Combine(_dataFolderPath, "eve.db")))
+            {
+                using var fileStream = new FileStream(Path.Combine(_dataFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                DecompressBz2(fileStream, outStream, false);
 
-            DecompressBz2(fileStream, outStream,false);
+                SystemSounds.Exclamation.Play();
+                _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            }
 
-            SystemSounds.Exclamation.Play();
-            _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
-
+            _isDownloadComplete = true;
             _window.Close();
         }
 
-        private void DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)
+        private static void DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)
         {
             try
             {
-                using (BZip2InputStream bzipInput = new BZip2InputStream(inStream))
-                {
-                    bzipInput.IsStreamOwner = isStreamOwner;
-                    StreamUtils.Copy(bzipInput, outStream, new byte[4096]);
-                }
+                using BZip2InputStream bzipInput = new BZip2InputStream(inStream) {IsStreamOwner = isStreamOwner};
+                StreamUtils.Copy(bzipInput, outStream, new byte[4096]);
             }
             finally
             {
