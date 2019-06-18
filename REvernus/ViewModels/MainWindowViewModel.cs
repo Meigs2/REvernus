@@ -17,10 +17,10 @@ namespace REvernus.ViewModels
     {
         public REvernusCharacter SelectedCharacter
         {
-            get => CharacterManager.CurrentInstance.SelectedCharacter;
+            get => CharacterManager.SelectedCharacter;
             set
             {
-                CharacterManager.CurrentInstance.SelectedCharacter = value;
+                CharacterManager.SelectedCharacter = value;
                 OnPropertyChanged();
             }
         }

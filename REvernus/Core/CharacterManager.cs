@@ -41,7 +41,7 @@ namespace REvernus.Core
         }
 
         private REvernusCharacter _selectedCharacter = new REvernusCharacter();
-        public REvernusCharacter SelectedCharacter
+        public static REvernusCharacter SelectedCharacter
         {
             get => CurrentInstance._selectedCharacter ??= new REvernusCharacter();
             set
@@ -140,6 +140,7 @@ namespace REvernus.Core
                 }
 
                 CharacterList = new ObservableCollection<REvernusCharacter>(charList);
+                SelectedCharacter = CharacterList[0];
             }
             catch (Exception e)
             {

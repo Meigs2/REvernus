@@ -13,13 +13,17 @@ namespace REvernus.Utilities
         public static string SdeDataBasePath => Path.Combine(Environment.CurrentDirectory, "Data", "eve.db");
         private static readonly SQLiteConnection SdeDatabaseConnection = new SQLiteConnection($"Data Source={SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True;FailIfMissing=True");
 
+        /// <summary>
+        /// Returns a DataTable containing the typeID and typeNames of all items currently on the market.
+        /// </summary>
+        /// <returns></returns>
         public static Task<DataTable> GetInventoryTypesAsync()
         {
             try
             {
                 SdeDatabaseConnection.Open();
                 var command = SdeDatabaseConnection.CreateCommand();
-                command.CommandText = "SELECT * FROM 'invTypes' WHERE marketGroupID IS NOT null";
+                command.CommandText = "SELECT * FROM 'invTypes' WHERE marketGroupID IS NOT null AND published IS true LIMIT 0,1000";
 
                 var reader = command.ExecuteReader();
                 var dataTable = new DataTable();
@@ -35,10 +39,10 @@ namespace REvernus.Utilities
                 {
                     SystemSounds.Asterisk.Play();
                     MessageBox.Show(
-                        "There was an error accessing the Static Data Export local database.\nHave you downloaded the Static Data Export under File?", "Error", MessageBoxButton.OK);
+                        "There was an error accessing the Static Data Export local database.\nHave you downloaded the Static Data Export under 'File'?", "Error", MessageBoxButton.OK);
                 }
                 Console.WriteLine(e);
-                return null;
+                return Task.FromResult(new DataTable());
             }
         }
     }
