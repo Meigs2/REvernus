@@ -14,6 +14,8 @@ namespace REvernus.Utilities
 
             await CharacterManager.DeserializeCharacters();
 
+            await SdeData.ImportSdeData();
+
             AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
         }
 

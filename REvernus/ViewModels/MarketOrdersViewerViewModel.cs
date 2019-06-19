@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using EVEStandard.API;
 using EVEStandard.Models.API;
 using Prism.Commands;
@@ -27,28 +28,18 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _marketOrders, value);
         }
 
-        private DataTable OrderDataTable = new DataTable();
-        private ConcurrentBag<DataRow> DataRows = new ConcurrentBag<DataRow>();
+        private static readonly log4net.ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MarketOrdersViewerViewModel()
         {
             GetOrdersCommand = new DelegateCommand(async () => await GetMarketData());
-
-            OrderDataTable.Columns.Add("Item Name", typeof(string));
-            OrderDataTable.Columns.Add("Buy", typeof(double));
-            OrderDataTable.Columns.Add("Sell", typeof(double));
-            OrderDataTable.Columns.Add("Difference", typeof(double));
-            OrderDataTable.Columns.Add("Buy Order Count", typeof(int));
-            OrderDataTable.Columns.Add("Sell Order Count", typeof(int));
         }
 
         private async Task GetMarketData()
         {
             try
             {
-                OrderDataTable.Clear();
-                DataRows.Clear();
-
                 // todo: implement type selection window
 
                 var marketOrders = await EsiData.EsiClient.Market.ListOpenOrdersFromCharacterV2Async(
@@ -59,62 +50,67 @@ namespace REvernus.ViewModels
                         Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_READ_CHARACTER_ORDERS_1
                     });
 
-                var types = await SdeData.GetInventoryTypesAsync();
-                var displayTable = new DataTable();
-
-                var taskList = new List<Task>();
-
-                foreach (DataRow item in types.Rows)
-                {
-                    var typeId = (long) item["typeId"];
-                    var typeName = (string) item["typeName"];
-                    taskList.Add(MarketTask(typeId, typeName));
-                }
-
-                await Task.WhenAll(taskList);
-
-                foreach (var dataRow in DataRows)
-                {
-                    OrderDataTable.Rows.Add(dataRow);
-                }
-
-                MarketOrders = OrderDataTable;
-
-                // todo: get best sell and buy order for station
+                MarketOrders = await MarketOrdersToOrderData(marketOrders.Model);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Log.Error(e);
             }
         }
 
-        private async Task MarketTask(long typeId, string typeName)
+        private async Task<DataTable> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
         {
-            try
+            var orderDataTable = new DataTable();
+            var dataRows = new ConcurrentBag<DataRow>();
+            var taskList = new List<Task>();
+
+            orderDataTable.Columns.Add("Item Name", typeof(string));
+            orderDataTable.Columns.Add("Buy", typeof(double));
+            orderDataTable.Columns.Add("Sell", typeof(double));
+            orderDataTable.Columns.Add("Difference", typeof(double));
+            orderDataTable.Columns.Add("Buy Order Count", typeof(int));
+            orderDataTable.Columns.Add("Sell Order Count", typeof(int));
+
+            foreach (var order in orderList)
             {
-                var row = OrderDataTable.NewRow();
-
-                row[0] = typeName;
-
-                // todo: make station selector tool
-                var orders = await Market.GetStationOrders(typeId, 60003760);
-                Market.GetBestBuySell(orders, out var bestBuyOrder, out var bestSellOrder);
-
-                row[1] = bestBuyOrder.Price;
-                row[2] = bestSellOrder.Price;
-
-                row[3] = bestSellOrder.Price - bestBuyOrder.Price;
-
-                row[4] = orders.Count(o => o.IsBuyOrder);
-                row[5] = orders.Count(o => !o.IsBuyOrder);
-
-                DataRows.Add(row);
+                taskList.Add(Task.Run(async () => await MarketTask(order)));
             }
-            catch (Exception e)
+
+            await Task.WhenAll(taskList);
+
+            foreach (var dataRow in dataRows)
             {
-                Console.WriteLine(e);
-                throw;
+                orderDataTable.Rows.Add(dataRow);
+            }
+
+            return orderDataTable;
+
+            async Task MarketTask(EVEStandard.Models.CharacterMarketOrder order)
+            {
+                try
+                {
+                    var row = orderDataTable.NewRow();
+
+                    row[0] = SdeData.TypeIdToTypeName(order.TypeId);
+
+                    // todo: make station selector tool
+                    var orders = await Market.GetStationOrders(order.TypeId, 60003760);
+                    Market.GetBestBuySell(orders, out var bestBuyOrder, out var bestSellOrder);
+
+                    row[1] = bestBuyOrder.Price;
+                    row[2] = bestSellOrder.Price;
+
+                    row[3] = bestSellOrder.Price - bestBuyOrder.Price;
+
+                    row[4] = orders.Count(o => o.IsBuyOrder);
+                    row[5] = orders.Count(o => !o.IsBuyOrder);
+
+                    dataRows.Add(row);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e);
+                }
             }
         }
 
