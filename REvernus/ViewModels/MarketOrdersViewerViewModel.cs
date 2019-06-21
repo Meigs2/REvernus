@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using EVEStandard.API;
 using EVEStandard.Models.API;
 using Prism.Commands;
@@ -50,7 +51,8 @@ namespace REvernus.ViewModels
                         Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_READ_CHARACTER_ORDERS_1
                     });
 
-                MarketOrders = await MarketOrdersToOrderData(marketOrders.Model);
+                var a = await MarketOrdersToOrderData(marketOrders.Model);
+                MarketOrders = a;
             }
             catch (Exception e)
             {
@@ -64,6 +66,8 @@ namespace REvernus.ViewModels
             var dataRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
 
+            orderDataTable.TableName = "Orders";
+
             orderDataTable.Columns.Add("Item Name", typeof(string));
             orderDataTable.Columns.Add("Buy", typeof(double));
             orderDataTable.Columns.Add("Sell", typeof(double));
@@ -73,7 +77,8 @@ namespace REvernus.ViewModels
 
             foreach (var order in orderList)
             {
-                taskList.Add(Task.Run(async () => await MarketTask(order)));
+                var row = orderDataTable.NewRow();
+                taskList.Add(Task.Run(async () => await MarketTask(order, row)));
             }
 
             await Task.WhenAll(taskList);
@@ -85,22 +90,20 @@ namespace REvernus.ViewModels
 
             return orderDataTable;
 
-            async Task MarketTask(EVEStandard.Models.CharacterMarketOrder order)
+            async Task MarketTask(EVEStandard.Models.CharacterMarketOrder order, DataRow row)
             {
                 try
                 {
-                    var row = orderDataTable.NewRow();
-
                     row[0] = SdeData.TypeIdToTypeName(order.TypeId);
 
                     // todo: make station selector tool
                     var orders = await Market.GetStationOrders(order.TypeId, 60003760);
                     Market.GetBestBuySell(orders, out var bestBuyOrder, out var bestSellOrder);
 
-                    row[1] = bestBuyOrder.Price;
-                    row[2] = bestSellOrder.Price;
+                    row[1] = Math.Round(bestBuyOrder.Price, 2, MidpointRounding.ToEven);
+                    row[2] = Math.Round(bestSellOrder.Price, 2, MidpointRounding.ToEven);
 
-                    row[3] = bestSellOrder.Price - bestBuyOrder.Price;
+                    row[3] = Math.Round((bestSellOrder.Price - bestBuyOrder.Price), 2, MidpointRounding.ToEven);
 
                     row[4] = orders.Count(o => o.IsBuyOrder);
                     row[5] = orders.Count(o => !o.IsBuyOrder);
