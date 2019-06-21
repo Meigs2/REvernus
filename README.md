@@ -9,9 +9,9 @@ REvernus is a rewrite of the market/industry/everything eve tool written in C# f
 Evernus is a market/industry/everything eve tool that is no longer being developed or supported. Currently, its functionality is starting to degrade, and some features are virtually unusable or not working all together.
 
 ## What does REvernus do?
-Hopefully, everything Evernus did but better and with more features.
+Hopefully, everything Evernus did but better and with more features. Currently the project is in super early development and does not have as many features as Evernus, however I am hoping to have a public realase by the end of June/early July with support for order viewing/updating and market analysis, so people can start to use it.
 
-## Why are you re-writing it?
+## Why are you re-writing Evernus?
 I used to use Evernus a lot back when it was being supported and when I was interested in market stuff, and when I tried to use it recently I found it virually unusable. So, I figured I should take the torch and try and maintain it myself, however I am not that expierenced with C++, and I am a CS student wanting to write something that people can use, so I figured why not re-write the whole thing! I also wish to set up some sort of feature bounty system for the project (for isk), so even if I'm long gone, people can still request features and keep REvernus working for as long as EvE is alive and kicking.
 
 ## How do I run this program?
