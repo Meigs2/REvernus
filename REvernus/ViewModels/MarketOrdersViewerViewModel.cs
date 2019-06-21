@@ -51,8 +51,7 @@ namespace REvernus.ViewModels
                         Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_READ_CHARACTER_ORDERS_1
                     });
 
-                var a = await MarketOrdersToOrderData(marketOrders.Model);
-                MarketOrders = a;
+                MarketOrders = await MarketOrdersToOrderData(marketOrders.Model);
             }
             catch (Exception e)
             {
