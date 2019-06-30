@@ -56,11 +56,11 @@ namespace REvernus.Core
 
         private CharacterManager()
         {
-            _authRefreshTimer.Elapsed += _authRefreshTimer_Elapsed;
+            _authRefreshTimer.Elapsed += AuthRefreshTimer_Elapsed;
             _authRefreshTimer.Enabled = true;
         }
 
-        private async void _authRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void AuthRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             await RefreshAllCharacterAuth();
         }

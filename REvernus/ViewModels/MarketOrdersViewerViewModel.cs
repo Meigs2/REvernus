@@ -59,20 +59,23 @@ namespace REvernus.ViewModels
             }
         }
 
+        private readonly string _tableName = "Orders";
         private async Task<DataTable> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
         {
             var orderDataTable = new DataTable();
             var dataRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
 
-            orderDataTable.TableName = "Orders";
+            orderDataTable.TableName = _tableName;
 
             orderDataTable.Columns.Add("Item Name", typeof(string));
             orderDataTable.Columns.Add("Buy", typeof(double));
             orderDataTable.Columns.Add("Sell", typeof(double));
             orderDataTable.Columns.Add("Difference", typeof(double));
+            orderDataTable.Columns.Add("Percent Difference", typeof(double));
             orderDataTable.Columns.Add("Buy Order Count", typeof(int));
             orderDataTable.Columns.Add("Sell Order Count", typeof(int));
+
 
             foreach (var order in orderList)
             {
@@ -89,23 +92,26 @@ namespace REvernus.ViewModels
 
             return orderDataTable;
 
-            async Task MarketTask(EVEStandard.Models.CharacterMarketOrder order, DataRow row)
+            async Task MarketTask(EVEStandard.Models.CharacterMarketOrder characterItemOrder, DataRow row)
             {
                 try
                 {
-                    row[0] = SdeData.TypeIdToTypeName(order.TypeId);
+                    row["Item Name"] = SdeData.TypeIdToTypeName(characterItemOrder.TypeId);
 
                     // todo: make station selector tool
-                    var orders = await Market.GetStationOrders(order.TypeId, 60003760);
-                    Market.GetBestBuySell(orders, out var bestBuyOrder, out var bestSellOrder);
+                    var stationOrders = await Market.GetStationOrders(characterItemOrder.TypeId, 60003760);
+                    Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
 
-                    row[1] = Math.Round(bestBuyOrder.Price, 2, MidpointRounding.ToEven);
-                    row[2] = Math.Round(bestSellOrder.Price, 2, MidpointRounding.ToEven);
+                    row["Buy"] = Math.Round(bestBuyOrder.Price, 2, MidpointRounding.ToEven);
+                    row["Sell"] = Math.Round(bestSellOrder.Price, 2, MidpointRounding.ToEven);
 
-                    row[3] = Math.Round((bestSellOrder.Price - bestBuyOrder.Price), 2, MidpointRounding.ToEven);
+                    row["Difference"] = Math.Round((bestSellOrder.Price - bestBuyOrder.Price), 2, MidpointRounding.ToEven);
+                    row["Percent Difference"] =
+                        Math.Round((bestSellOrder.Price - bestBuyOrder.Price) / bestBuyOrder.Price,
+                            2, MidpointRounding.ToEven);
 
-                    row[4] = orders.Count(o => o.IsBuyOrder);
-                    row[5] = orders.Count(o => !o.IsBuyOrder);
+                    row["Buy Order Count"] = stationOrders.Count(o => o.IsBuyOrder);
+                    row["Sell Order Count"] = stationOrders.Count(o => !o.IsBuyOrder);
 
                     dataRows.Add(row);
                 }
