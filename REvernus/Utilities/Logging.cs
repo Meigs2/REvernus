@@ -16,18 +16,22 @@ namespace REvernus.Utilities
         {
             var hierarchy = (Hierarchy)LogManager.GetRepository(Assembly.GetExecutingAssembly());
 
-            var patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "%date [%thread] %-5level %logger - %message%newline";
+            var patternLayout = new PatternLayout
+            {
+                ConversionPattern = "%date [%thread] %-5level %logger - %message%newline"
+            };
             patternLayout.ActivateOptions();
 
-            var roller = new RollingFileAppender();
-            roller.AppendToFile = true;
-            roller.File = "REvernus.log";
-            roller.Layout = patternLayout;
-            roller.MaxSizeRollBackups = 5;
-            roller.MaximumFileSize = "1MB";
-            roller.RollingStyle = RollingFileAppender.RollingMode.Size;
-            roller.StaticLogFileName = true;
+            var roller = new RollingFileAppender
+            {
+                AppendToFile = true,
+                File = "REvernus.log",
+                Layout = patternLayout,
+                MaxSizeRollBackups = 5,
+                MaximumFileSize = "1MB",
+                RollingStyle = RollingFileAppender.RollingMode.Size,
+                StaticLogFileName = true
+            };
             roller.ActivateOptions();
             hierarchy.Root.AddAppender(roller);
 

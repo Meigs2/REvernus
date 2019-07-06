@@ -1,15 +1,15 @@
-﻿using ICSharpCode.SharpZipLib.BZip2;
-using ICSharpCode.SharpZipLib.Core;
-using REvernus.Views.SimpleViews;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Media;
 using System.Net;
 using System.Windows;
 using System.Windows.Shell;
+using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.Core;
+using REvernus.Views.SimpleViews;
 
-namespace REvernus.Utilities
+namespace REvernus.Utilities.StaticData
 {
     public class SdeDownloader
     {
@@ -18,7 +18,7 @@ namespace REvernus.Utilities
 
         // ReSharper disable once IdentifierTypo
         private readonly string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
-        private string _dataFolderPath => Path.Combine(Environment.CurrentDirectory, "Data");
+        private string DataFolderPath => Path.Combine(Environment.CurrentDirectory, "Data");
         private readonly WebClient _webClient;
         private Window _window;
         private SdeDownloadProgressView _windowView;
@@ -40,9 +40,9 @@ namespace REvernus.Utilities
                 }
 
                 // Check to see if the Data folder has been made yet, if not, create it.
-                if (!Directory.Exists(_dataFolderPath))
+                if (!Directory.Exists(DataFolderPath))
                 {
-                    Directory.CreateDirectory(_dataFolderPath);
+                    Directory.CreateDirectory(DataFolderPath);
                 }
 
                 _window = new Window()
@@ -54,7 +54,7 @@ namespace REvernus.Utilities
                     WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
                 _window.TaskbarItemInfo = new TaskbarItemInfo() { ProgressState = TaskbarItemProgressState.Normal };
-                _window.Closing += _window_Closing;
+                _window.Closing += Window_Closing;
                 _window.Show();
                 _windowView = (SdeDownloadProgressView)_window.Content;
                 _windowView.TextBlock.Text = "Downloading the current SDE... This may take a while!\nThe client will freeze near the end\nso don't panic. This window will close after\n the download and unzip completes.";
@@ -64,7 +64,7 @@ namespace REvernus.Utilities
                 _webClient.DownloadProgressChanged += ClientDownloadProgressChanged;
                 _webClient.Headers.Add("User-Agent: Other");
                 _webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
-                _webClient.DownloadFileAsync(new Uri(_fuzzworkLatestDbPath), Path.Combine(_dataFolderPath, "eve.db.bz2"));
+                _webClient.DownloadFileAsync(new Uri(_fuzzworkLatestDbPath), Path.Combine(DataFolderPath, "eve.db.bz2"));
             }
             catch (Exception e)
             {
@@ -73,7 +73,7 @@ namespace REvernus.Utilities
             }
         }
 
-        private void _window_Closing(object sender, CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_isDownloadComplete) return;
 
@@ -86,9 +86,9 @@ namespace REvernus.Utilities
             _webClient.Dispose();
 
             // Extract .bz2 file
-            using (var outStream = File.Create(Path.Combine(_dataFolderPath, "eve.db")))
+            using (var outStream = File.Create(Path.Combine(DataFolderPath, "eve.db")))
             {
-                using var fileStream = new FileStream(Path.Combine(_dataFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                using var fileStream = new FileStream(Path.Combine(DataFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
                 DecompressBz2(fileStream, outStream, false);
 
                 SystemSounds.Exclamation.Play();
@@ -105,6 +105,7 @@ namespace REvernus.Utilities
             {
                 using BZip2InputStream bzipInput = new BZip2InputStream(inStream) {IsStreamOwner = isStreamOwner};
                 StreamUtils.Copy(bzipInput, outStream, new byte[4096]);
+                bzipInput.Dispose();
             }
             finally
             {

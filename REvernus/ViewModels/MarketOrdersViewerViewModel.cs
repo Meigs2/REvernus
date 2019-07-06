@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using EVEStandard.API;
+﻿using EVEStandard.Models;
 using EVEStandard.Models.API;
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;
 using REvernus.Core.ESI;
-using REvernus.Utilities;
-using Market = REvernus.Utilities.Market;
+using REvernus.Utilities.StaticData;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Market = REvernus.Utilities.Esi.Market;
 
 namespace REvernus.ViewModels
 {
@@ -69,13 +63,12 @@ namespace REvernus.ViewModels
             orderDataTable.TableName = _tableName;
 
             orderDataTable.Columns.Add("Item Name", typeof(string));
-            orderDataTable.Columns.Add("Buy", typeof(double));
-            orderDataTable.Columns.Add("Sell", typeof(double));
-            orderDataTable.Columns.Add("Difference", typeof(double));
-            orderDataTable.Columns.Add("Percent Difference", typeof(double));
-            orderDataTable.Columns.Add("Buy Order Count", typeof(int));
-            orderDataTable.Columns.Add("Sell Order Count", typeof(int));
-
+            orderDataTable.Columns.Add("Location", typeof(string));
+            orderDataTable.Columns.Add("Price", typeof(double));
+            orderDataTable.Columns.Add("Outbid", typeof(bool));
+            orderDataTable.Columns.Add("Volume", typeof(string));
+            orderDataTable.Columns.Add("Total Value", typeof(double));
+            orderDataTable.Columns.Add("Completion ETA", typeof(TimeSpan));
 
             foreach (var order in orderList)
             {
@@ -96,22 +89,23 @@ namespace REvernus.ViewModels
             {
                 try
                 {
-                    row["Item Name"] = SdeData.TypeIdToTypeName(characterItemOrder.TypeId);
-
-                    // todo: make station selector tool
                     var stationOrders = await Market.GetStationOrders(characterItemOrder.TypeId, 60003760);
                     Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
 
-                    row["Buy"] = Math.Round(bestBuyOrder.Price, 2, MidpointRounding.ToEven);
-                    row["Sell"] = Math.Round(bestSellOrder.Price, 2, MidpointRounding.ToEven);
+                    row["Item Name"] = EveItems.TypeIdToTypeName(characterItemOrder.TypeId);
 
-                    row["Difference"] = Math.Round((bestSellOrder.Price - bestBuyOrder.Price), 2, MidpointRounding.ToEven);
-                    row["Percent Difference"] =
-                        Math.Round((bestSellOrder.Price - bestBuyOrder.Price) / bestBuyOrder.Price,
-                            2, MidpointRounding.ToEven);
+                    row["Location"] = Structures.GetStructureName(characterItemOrder.LocationId);
 
-                    row["Buy Order Count"] = stationOrders.Count(o => o.IsBuyOrder);
-                    row["Sell Order Count"] = stationOrders.Count(o => !o.IsBuyOrder);
+                    row["Price"] = characterItemOrder.Price;
+
+                    row["Outbid"] = IsOutbid(characterItemOrder, bestBuyOrder, bestSellOrder);
+
+                    row["Volume"] = $"{characterItemOrder.VolumeRemain}/{characterItemOrder.VolumeTotal}";
+
+                    row["Total Value"] = Math.Round(characterItemOrder.Price * characterItemOrder.VolumeRemain, 2, MidpointRounding.ToEven);
+
+                    row["Completion ETA"] = ((DateTime.Now - characterItemOrder.Issued) / (characterItemOrder.VolumeTotal - characterItemOrder.VolumeRemain))
+                                             * characterItemOrder.VolumeRemain;
 
                     dataRows.Add(row);
                 }
@@ -120,6 +114,17 @@ namespace REvernus.ViewModels
                     Log.Error(e);
                 }
             }
+        }
+
+        private bool IsOutbid(CharacterMarketOrder characterItemOrder, MarketOrder bestBuyOrder, MarketOrder bestSellOrder)
+        {
+            if (characterItemOrder.IsBuyOrder is true)
+                return characterItemOrder.Price < bestBuyOrder.Price;
+
+            if (characterItemOrder.IsBuyOrder == null || characterItemOrder.IsBuyOrder is false)
+                return characterItemOrder.Price > bestSellOrder.Price;
+
+            return false;
         }
 
         public DelegateCommand GetOrdersCommand { get; set; }

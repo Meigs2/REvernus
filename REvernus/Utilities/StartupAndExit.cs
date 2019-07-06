@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using REvernus.Core;
+using REvernus.Utilities.StaticData;
 
 namespace REvernus.Utilities
 {
@@ -14,7 +15,9 @@ namespace REvernus.Utilities
 
             await CharacterManager.DeserializeCharacters();
 
-            await SdeData.ImportSdeData();
+            await EveItems.ImportSdeData();
+
+            await Structures.LoadStructureDictionary();
 
             AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
         }

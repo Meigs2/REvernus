@@ -1,10 +1,10 @@
-﻿using EVEStandard.Models;
-using REvernus.Core.ESI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EVEStandard.Models;
+using REvernus.Core.ESI;
 
-namespace REvernus.Utilities
+namespace REvernus.Utilities.Esi
 {
     public static class Market
     {

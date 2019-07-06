@@ -62,4 +62,8 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\SdeModels\" />
+  </ItemGroup>
+
 </Project>

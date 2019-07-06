@@ -9,6 +9,7 @@ using Prism.Commands;
 using REvernus.Core;
 using REvernus.Models;
 using REvernus.Utilities;
+using REvernus.Utilities.StaticData;
 using REvernus.Views;
 
 namespace REvernus.ViewModels
@@ -30,15 +31,24 @@ namespace REvernus.ViewModels
 
         private static void OpenCharacterManagerWindow()
         {
-            Window w = new Window()
+            try
             {
-                Title = "Character Manager",
-                Content = new CharacterManagerView(),
-                Width = 350,
-                Height = 500,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
-            w.Show();
+                Window w = new Window()
+                {
+                    Title = "Character Manager",
+                    Content = new CharacterManagerView(),
+                    Width = 350,
+                    Height = 500,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+                w.Show();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Log.Error(e);
+                throw;
+            }
         }
 
         public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
