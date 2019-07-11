@@ -68,7 +68,7 @@ namespace REvernus.ViewModels
             orderDataTable.Columns.Add("Outbid", typeof(bool));
             orderDataTable.Columns.Add("Volume", typeof(string));
             orderDataTable.Columns.Add("Total Value", typeof(double));
-            orderDataTable.Columns.Add("Completion ETA", typeof(TimeSpan));
+            orderDataTable.Columns.Add("Completion ETA", typeof(string));
 
             foreach (var order in orderList)
             {
@@ -104,8 +104,15 @@ namespace REvernus.ViewModels
 
                     row["Total Value"] = Math.Round(characterItemOrder.Price * characterItemOrder.VolumeRemain, 2, MidpointRounding.ToEven);
 
-                    row["Completion ETA"] = ((DateTime.Now - characterItemOrder.Issued) / (characterItemOrder.VolumeTotal - characterItemOrder.VolumeRemain))
-                                             * characterItemOrder.VolumeRemain;
+                    if (characterItemOrder.VolumeTotal != characterItemOrder.VolumeRemain)
+                    {
+                        row["Completion ETA"] = ((DateTime.Now - characterItemOrder.Issued) / (characterItemOrder.VolumeTotal - characterItemOrder.VolumeRemain)
+                                                 * characterItemOrder.VolumeRemain).ToString(@"dd\:hh\:mm\:ss");
+                    }
+                    else
+                    {
+                        row["Completion ETA"] = "Infinite";
+                    }
 
                     dataRows.Add(row);
                 }

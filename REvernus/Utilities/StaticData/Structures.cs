@@ -17,7 +17,7 @@ namespace REvernus.Utilities.StaticData
             try
             {
                 StructureDictionary.TryGetValue(structureId, out var locationName);
-                return locationName != "" ? locationName : "Unknown Citadel";
+                return locationName ?? "Unknown Citadel";
             }
             catch (Exception e)
             {
