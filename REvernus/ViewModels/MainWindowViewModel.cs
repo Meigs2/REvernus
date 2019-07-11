@@ -26,8 +26,20 @@ namespace REvernus.ViewModels
             }
         }
 
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged();
+            }
+        }
+
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private string _statusText;
 
         private static void OpenCharacterManagerWindow()
         {

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using REvernus.ViewModels;
 
 namespace REvernus
 {
@@ -16,13 +17,15 @@ namespace REvernus
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public new static MainWindowView MainWindow { get; private set; }
+
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             await PerformStartupActions();
 
             // Start the Main Window.
-            var mainWindowView = new MainWindowView();
-            mainWindowView.ShowDialog();
+            MainWindow = new MainWindowView();
+            MainWindow.ShowDialog();
             Current.Shutdown(-1);
         }
 
@@ -31,7 +34,7 @@ namespace REvernus
             try
             {
                 await Utilities.StartupAndExit.PerformStartupActions();
-                Log.Info("New session of REvernus has been successfully started.");
+                Log.Info($"New session of REvernus has been successfully started.");
             }
             catch (Exception e)
             {

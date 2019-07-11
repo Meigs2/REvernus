@@ -56,6 +56,8 @@ namespace REvernus.ViewModels
         private readonly string _tableName = "Orders";
         private async Task<DataTable> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
         {
+            Utilities.Status.SetStatusText($"Retrieving {orderList.Count} orders...");
+
             var orderDataTable = new DataTable();
             var dataRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
@@ -82,6 +84,7 @@ namespace REvernus.ViewModels
             {
                 orderDataTable.Rows.Add(dataRow);
             }
+            Utilities.Status.SetStatusText();
 
             return orderDataTable;
 

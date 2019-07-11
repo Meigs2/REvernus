@@ -32,6 +32,9 @@
                           IsSynchronizedWithCurrentItem="True">
                 </ComboBox>
             </Grid>
+            <Grid DockPanel.Dock="Bottom" Height="30">
+                <TextBlock x:Name="StatusTextBlock" Text="{Binding StatusText}"/>
+            </Grid>
             <Grid>
                 <TabControl x:Name="MainTabControl">
                     <TabItem Header="Market Orders">

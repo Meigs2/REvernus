@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using REvernus.Core;
+using REvernus.ViewModels;
 
 namespace REvernus
 {
