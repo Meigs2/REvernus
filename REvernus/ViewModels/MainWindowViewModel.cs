@@ -36,10 +36,21 @@ namespace REvernus.ViewModels
             }
         }
 
+        public int NumActiveJobs
+        {
+            get => _numActiveJobs;
+            set
+            {
+                _numActiveJobs = value;
+                OnPropertyChanged();
+            }
+        }
+
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string _statusText;
+        private int _numActiveJobs;
 
         private static void OpenCharacterManagerWindow()
         {

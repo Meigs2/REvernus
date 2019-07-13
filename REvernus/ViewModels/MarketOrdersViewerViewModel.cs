@@ -35,17 +35,9 @@ namespace REvernus.ViewModels
         {
             try
             {
-                // todo: implement type selection window
+                var marketOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
 
-                var marketOrders = await EsiData.EsiClient.Market.ListOpenOrdersFromCharacterV2Async(
-                    new AuthDTO()
-                    {
-                        AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
-                        CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
-                        Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_READ_CHARACTER_ORDERS_1
-                    });
-
-                MarketOrders = await MarketOrdersToOrderData(marketOrders.Model);
+                MarketOrders = await MarketOrdersToOrderData(marketOrders);
             }
             catch (Exception e)
             {
@@ -56,8 +48,6 @@ namespace REvernus.ViewModels
         private readonly string _tableName = "Orders";
         private async Task<DataTable> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
         {
-            Utilities.Status.SetStatusText($"Retrieving {orderList.Count} orders...");
-
             var orderDataTable = new DataTable();
             var dataRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
@@ -84,7 +74,6 @@ namespace REvernus.ViewModels
             {
                 orderDataTable.Rows.Add(dataRow);
             }
-            Utilities.Status.SetStatusText();
 
             return orderDataTable;
 
@@ -92,6 +81,7 @@ namespace REvernus.ViewModels
             {
                 try
                 {
+                    using var handle = Utilities.Status.GetNewStatusHandle();
                     var stationOrders = await Market.GetStationOrders(characterItemOrder.TypeId, 60003760);
                     Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
 
