@@ -64,6 +64,7 @@
 
   <ItemGroup>
     <Folder Include="Models\SdeModels\" />
+    <Folder Include="Utilities\SettingsModels\" />
   </ItemGroup>
 
 </Project>

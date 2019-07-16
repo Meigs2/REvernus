@@ -18,7 +18,6 @@ namespace REvernus.Utilities.StaticData
 
         // ReSharper disable once IdentifierTypo
         private readonly string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
-        private string DataFolderPath => Path.Combine(Environment.CurrentDirectory, "Data");
         private readonly WebClient _webClient;
         private Window _window;
         private SdeDownloadProgressView _windowView;
@@ -40,9 +39,9 @@ namespace REvernus.Utilities.StaticData
                 }
 
                 // Check to see if the Data folder has been made yet, if not, create it.
-                if (!Directory.Exists(DataFolderPath))
+                if (!Directory.Exists(Paths.DataBaseFolderPath))
                 {
-                    Directory.CreateDirectory(DataFolderPath);
+                    Directory.CreateDirectory(Paths.DataBaseFolderPath);
                 }
 
                 _window = new Window()
@@ -64,7 +63,7 @@ namespace REvernus.Utilities.StaticData
                 _webClient.DownloadProgressChanged += ClientDownloadProgressChanged;
                 _webClient.Headers.Add("User-Agent: Other");
                 _webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
-                _webClient.DownloadFileAsync(new Uri(_fuzzworkLatestDbPath), Path.Combine(DataFolderPath, "eve.db.bz2"));
+                _webClient.DownloadFileAsync(new Uri(_fuzzworkLatestDbPath), Paths.CompressedSdeDataBasePath);
             }
             catch (Exception e)
             {
@@ -86,9 +85,9 @@ namespace REvernus.Utilities.StaticData
             _webClient.Dispose();
 
             // Extract .bz2 file
-            using (var outStream = File.Create(Path.Combine(DataFolderPath, "eve.db")))
+            using (var outStream = File.Create(Path.Combine(Paths.DataBaseFolderPath, "eve.db")))
             {
-                using var fileStream = new FileStream(Path.Combine(DataFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                using var fileStream = new FileStream(Path.Combine(Paths.DataBaseFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
                 DecompressBz2(fileStream, outStream, false);
 
                 SystemSounds.Exclamation.Play();

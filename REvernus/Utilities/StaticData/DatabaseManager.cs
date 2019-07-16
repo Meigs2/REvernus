@@ -10,8 +10,7 @@ namespace REvernus.Utilities.StaticData
 {
     public static class DatabaseManager
     {
-        public static string SdeDataBasePath => Path.Combine(Environment.CurrentDirectory, "Data", "eve.db");
-        private static readonly SQLiteConnection ReadOnlyEveDbConnection = new SQLiteConnection($"Data Source={SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True;FailIfMissing=True");
+        private static readonly SQLiteConnection ReadOnlyEveDbConnection = new SQLiteConnection($"Data Source={Utilities.Paths.SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True;FailIfMissing=True");
 
         public static DataTable QueryEveDb(string commandText)
         {
