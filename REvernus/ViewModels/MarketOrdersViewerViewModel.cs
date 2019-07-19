@@ -58,6 +58,7 @@ namespace REvernus.ViewModels
             orderDataTable.Columns.Add("Location", typeof(string));
             orderDataTable.Columns.Add("Price", typeof(double));
             orderDataTable.Columns.Add("Outbid", typeof(bool));
+            orderDataTable.Columns.Add("Difference", typeof(string));
             orderDataTable.Columns.Add("Volume", typeof(string));
             orderDataTable.Columns.Add("Total Value", typeof(double));
             orderDataTable.Columns.Add("Completion ETA", typeof(string));
@@ -91,7 +92,8 @@ namespace REvernus.ViewModels
 
                     row["Price"] = characterItemOrder.Price;
 
-                    row["Outbid"] = IsOutbid(characterItemOrder, bestBuyOrder, bestSellOrder);
+                    row["Outbid"] = IsOutbid(characterItemOrder, bestBuyOrder, bestSellOrder, out var difference);
+                    row["Difference"] = Math.Round(difference, 2, MidpointRounding.ToEven);
 
                     row["Volume"] = $"{characterItemOrder.VolumeRemain}/{characterItemOrder.VolumeTotal}";
 
@@ -116,13 +118,27 @@ namespace REvernus.ViewModels
             }
         }
 
-        private bool IsOutbid(CharacterMarketOrder characterItemOrder, MarketOrder bestBuyOrder, MarketOrder bestSellOrder)
+        private bool IsOutbid(CharacterMarketOrder characterItemOrder, MarketOrder bestBuyOrder, MarketOrder bestSellOrder, out double outbidDifference)
         {
+            outbidDifference = 0.0;
+
             if (characterItemOrder.IsBuyOrder is true)
-                return characterItemOrder.Price < bestBuyOrder.Price;
+            {
+                if (characterItemOrder.Price < bestBuyOrder.Price)
+                {
+                    outbidDifference = bestBuyOrder.Price - characterItemOrder.Price;
+                    return true;
+                }
+            }
 
             if (characterItemOrder.IsBuyOrder == null || characterItemOrder.IsBuyOrder is false)
-                return characterItemOrder.Price > bestSellOrder.Price;
+            {
+                if (characterItemOrder.Price > bestSellOrder.Price)
+                {
+                    outbidDifference = characterItemOrder.Price - bestSellOrder.Price;
+                    return true;
+                }
+            }
 
             return false;
         }
