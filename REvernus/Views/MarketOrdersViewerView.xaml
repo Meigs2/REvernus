@@ -15,7 +15,7 @@
                 <Button Command="{Binding GetOrdersCommand}"></Button>
             </Grid>
             <TabControl x:Name="MainTabControl">
-                <DataGrid x:Name="SellOrderDataGrid" ItemsSource="{Binding MarketOrders, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                <DataGrid x:Name="SellOrderDataGrid" ItemsSource="{Binding SellOrdersDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" IsReadOnly="True">
                 </DataGrid>
             </TabControl>

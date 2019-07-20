@@ -17,7 +17,7 @@ namespace REvernus.ViewModels
     public class MarketOrdersViewerViewModel : BindableBase
     {
         private DataTable _marketOrders;
-        public DataTable MarketOrders
+        public DataTable SellOrdersDataTable
         {
             get => _marketOrders ??= new DataTable();
             set => SetProperty(ref _marketOrders, value);
@@ -37,7 +37,8 @@ namespace REvernus.ViewModels
             {
                 var marketOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
 
-                MarketOrders = await MarketOrdersToOrderData(marketOrders);
+                var result = await MarketOrdersToOrderData(marketOrders);
+                SellOrdersDataTable = result.sellOrderDataTable;
             }
             catch (Exception e)
             {
@@ -46,39 +47,45 @@ namespace REvernus.ViewModels
         }
 
         private readonly string _tableName = "Orders";
-        private async Task<DataTable> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
+        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
         {
-            var orderDataTable = new DataTable();
-            var dataRows = new ConcurrentBag<DataRow>();
+            var sellOrderRows = new ConcurrentBag<DataRow>();
+            var buyOrderRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
 
-            orderDataTable.TableName = _tableName;
+            var sellOrdersDataTable = new DataTable {TableName = _tableName};
+            sellOrdersDataTable.Columns.Add("Item Name", typeof(string));
+            sellOrdersDataTable.Columns.Add("Location", typeof(string));
+            sellOrdersDataTable.Columns.Add("Price", typeof(double));
+            sellOrdersDataTable.Columns.Add("Outbid", typeof(bool));
+            sellOrdersDataTable.Columns.Add("Difference", typeof(string));
+            sellOrdersDataTable.Columns.Add("Volume", typeof(string));
+            sellOrdersDataTable.Columns.Add("Total Value", typeof(double));
+            sellOrdersDataTable.Columns.Add("Completion ETA", typeof(string));
 
-            orderDataTable.Columns.Add("Item Name", typeof(string));
-            orderDataTable.Columns.Add("Location", typeof(string));
-            orderDataTable.Columns.Add("Price", typeof(double));
-            orderDataTable.Columns.Add("Outbid", typeof(bool));
-            orderDataTable.Columns.Add("Difference", typeof(string));
-            orderDataTable.Columns.Add("Volume", typeof(string));
-            orderDataTable.Columns.Add("Total Value", typeof(double));
-            orderDataTable.Columns.Add("Completion ETA", typeof(string));
+            var buyOrdersDataTable = sellOrdersDataTable.Clone();
 
             foreach (var order in orderList)
             {
-                var row = orderDataTable.NewRow();
+                var row = sellOrdersDataTable.NewRow();
                 taskList.Add(Task.Run(async () => await MarketTask(order, row)));
             }
 
             await Task.WhenAll(taskList);
 
-            foreach (var dataRow in dataRows)
+            foreach (var sellOrderRow in sellOrderRows)
             {
-                orderDataTable.Rows.Add(dataRow);
+                sellOrdersDataTable.Rows.Add(sellOrderRow);
             }
 
-            return orderDataTable;
+            foreach (var buyOrderRow in buyOrderRows)
+            {
+                buyOrdersDataTable.Rows.Add(buyOrderRow);
+            }
 
-            async Task MarketTask(EVEStandard.Models.CharacterMarketOrder characterItemOrder, DataRow row)
+            return (sellOrdersDataTable, buyOrdersDataTable);
+
+            async Task MarketTask(CharacterMarketOrder characterItemOrder, DataRow row)
             {
                 try
                 {
@@ -109,7 +116,14 @@ namespace REvernus.ViewModels
                         row["Completion ETA"] = "Infinite";
                     }
 
-                    dataRows.Add(row);
+                    if ((characterItemOrder.IsBuyOrder == true))
+                    {
+                        buyOrderRows.Add(row);
+                    }
+                    else
+                    {
+                        sellOrderRows.Add(row);
+                    }
                 }
                 catch (Exception e)
                 {
