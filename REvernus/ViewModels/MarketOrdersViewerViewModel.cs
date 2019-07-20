@@ -16,11 +16,18 @@ namespace REvernus.ViewModels
 {
     public class MarketOrdersViewerViewModel : BindableBase
     {
-        private DataTable _marketOrders;
+        private DataTable _sellOrdersDataTable;
         public DataTable SellOrdersDataTable
         {
-            get => _marketOrders ??= new DataTable();
-            set => SetProperty(ref _marketOrders, value);
+            get => _sellOrdersDataTable ??= new DataTable();
+            set => SetProperty(ref _sellOrdersDataTable, value);
+        }
+
+        private DataTable _buyOrdersDataTable;
+        public DataTable BuyOrdersDataTable
+        {
+            get => _buyOrdersDataTable ??= new DataTable();
+            set => SetProperty(ref _buyOrdersDataTable, value);
         }
 
         private static readonly log4net.ILog Log =
@@ -37,8 +44,9 @@ namespace REvernus.ViewModels
             {
                 var marketOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
 
-                var result = await MarketOrdersToOrderData(marketOrders);
-                SellOrdersDataTable = result.sellOrderDataTable;
+                var (sellOrderDataTable, buyOrderDataTable) = await MarketOrdersToOrderData(marketOrders);
+                SellOrdersDataTable = sellOrderDataTable;
+                BuyOrdersDataTable = buyOrderDataTable;
             }
             catch (Exception e)
             {
@@ -94,16 +102,11 @@ namespace REvernus.ViewModels
                     Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
 
                     row["Item Name"] = EveItems.TypeIdToTypeName(characterItemOrder.TypeId);
-
                     row["Location"] = Structures.GetStructureName(characterItemOrder.LocationId);
-
                     row["Price"] = characterItemOrder.Price;
-
                     row["Outbid"] = IsOutbid(characterItemOrder, bestBuyOrder, bestSellOrder, out var difference);
                     row["Difference"] = Math.Round(difference, 2, MidpointRounding.ToEven);
-
                     row["Volume"] = $"{characterItemOrder.VolumeRemain}/{characterItemOrder.VolumeTotal}";
-
                     row["Total Value"] = Math.Round(characterItemOrder.Price * characterItemOrder.VolumeRemain, 2, MidpointRounding.ToEven);
 
                     if (characterItemOrder.VolumeTotal != characterItemOrder.VolumeRemain)
