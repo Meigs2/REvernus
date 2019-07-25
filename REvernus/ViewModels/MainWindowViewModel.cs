@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Media;
 using System.Text;
 using System.Windows;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Navigation;
 using Prism.Commands;
 using REvernus.Core;
