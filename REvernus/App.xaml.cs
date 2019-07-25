@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using REvernus.Utilities;
+using System;
 using System.Windows;
-using REvernus.Utilities;
-using REvernus.ViewModels;
 
 namespace REvernus
 {
@@ -23,20 +16,13 @@ namespace REvernus
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            try
-            {
-                Environment.ExitCode = -1;
+            Environment.ExitCode = -1;
 
-                await StartupAndExit.PerformStartupActions();
+            await StartupAndExit.PerformStartupActions();
 
-                MainWindow = new MainWindowView();
-                MainWindow.ShowDialog();
-                Environment.ExitCode = -10;
-            }
-            catch (Exception exception)
-            {
-                Log.Error(exception);
-            }
+            MainWindow = new MainWindowView();
+            MainWindow.ShowDialog();
+            Environment.ExitCode = -10;
         }
     }
 }

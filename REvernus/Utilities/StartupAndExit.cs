@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Prism.Events;
-using REvernus.Core;
+﻿using REvernus.Core;
 using REvernus.Utilities.StaticData;
+using System;
+using System.Threading.Tasks;
 
 namespace REvernus.Utilities
 {
@@ -16,24 +12,17 @@ namespace REvernus.Utilities
 
         public static async Task PerformStartupActions()
         {
-            try
-            {
-                Logging.SetupLogging();
+            Logging.SetupLogging();
 
-                await DatabaseManager.Initialize();
+            await DatabaseManager.Initialize();
 
-                await CharacterManager.Initialize();
+            await CharacterManager.Initialize();
 
-                EveItems.Initialize();
+            EveItems.Initialize();
 
-                //Settings.Initialize();
+            //Settings.Initialize();
 
-                AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-            }
+            AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
         }
 
         private static void OnApplicationExit(object sender, EventArgs e)

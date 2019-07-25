@@ -19,19 +19,14 @@ namespace REvernus.Utilities.StaticData
 
         // ReSharper disable once IdentifierTypo
         private readonly string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
-        private readonly WebClient _webClient;
         private Window _window;
         private SdeDownloadProgressView _windowView;
-
-        public SdeDownloader()
-        {
-            _webClient = new WebClient();
-        }
 
         public async Task DownloadLatestSde()
         {
             try
             {
+                var webClient = new WebClient();
                 // Check to see if the Data folder has been made yet, if not, create it.
                 if (!Directory.Exists(Paths.DataBaseFolderPath))
                 {
@@ -57,11 +52,10 @@ namespace REvernus.Utilities.StaticData
 
                 // Download file
 
-                _webClient.Headers.Add("User-Agent: Other");
-                await Task.Run(() =>
-                    _webClient.DownloadFile(new Uri(_fuzzworkLatestDbPath), Paths.CompressedSdeDataBasePath));
+                webClient.Headers.Add("User-Agent: Other");
+                await webClient.DownloadFileTaskAsync(new Uri(_fuzzworkLatestDbPath), Paths.CompressedSdeDataBasePath);
 
-                _webClient.Dispose();
+                webClient.Dispose();
 
                 // Extract .bz2 file
                 await using (var outStream = File.Create(Path.Combine(Paths.DataBaseFolderPath, "eve.db")))
