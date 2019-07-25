@@ -1,5 +1,4 @@
 ﻿using Prism.Mvvm;
-using REvernus.Core.CharacterManagement;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Models.SerializableModels;
@@ -7,10 +6,13 @@ using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using Authorization = EVEStandard.Models.SSO.Authorization;
 
 namespace REvernus.Core
 {
@@ -67,25 +69,44 @@ namespace REvernus.Core
 
         #region Public Methods and Events
 
-        public static void AuthorizeNewCharacter()
+        public static async Task AuthorizeNewCharacter()
         {
-            var verificationWindow = new VerificationWindow(EsiData.EsiClient);
-            verificationWindow.ShowDialog();
+            var authorization = EsiData.EsiClient.SSOv2.AuthorizeToEVEUri(EsiScopes.Scopes);
+            using var listener = new HttpListener(); 
+            listener.Prefixes.Add(EsiData.LocalUri);
+            listener.Start();
+            Browser.OpenBrowser(authorization.SignInURI);
+            var context = await listener.GetContextAsync();
+            var code = context.Request.QueryString.Get("code");
+            await using var sw = new StreamWriter(context.Response.OutputStream);
+
+            if (code == null)
+            {
+                context.Response.StatusCode = 401;
+                sw.Write("Authorization failed.");
+                return;
+            }
+
+            authorization.AuthorizationCode = code;
+            authorization.ExpectedState = string.Empty;
+            
+            var character = new REvernusCharacter();
+            character.AccessTokenDetails = await EsiData.EsiClient.SSOv2.VerifyAuthorizationAsync(authorization);
+            character.CharacterDetails = EsiData.EsiClient.SSOv2.GetCharacterDetailsAsync(character.AccessTokenDetails.AccessToken);
+            
+            context.Response.StatusCode = 200;
+            sw.Write("Authorization success, you can close this window.");
 
             var duplicateCharacter =
                 CharacterList.SingleOrDefault(
-                    c => c.CharacterDetails.CharacterName == verificationWindow.Character.CharacterDetails.CharacterName);
+                    c => c.CharacterDetails.CharacterName == character.CharacterDetails.CharacterName);
             if (duplicateCharacter != null)
             {
                 MessageBox.Show($"{duplicateCharacter.CharacterDetails.CharacterName} is already added!", "", MessageBoxButton.OK);
                 return;
             }
 
-            if (verificationWindow.Character.CharacterName == "")
-                return;
-
-            CharacterList.Add(verificationWindow.Character);
-
+            CharacterList.Add(character);
             CurrentInstance.OnCharactersChanged();
         }
 
