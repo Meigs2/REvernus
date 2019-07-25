@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SQLite;
 using System.Threading.Tasks;
 
 namespace REvernus.Utilities.StaticData
@@ -16,8 +17,16 @@ namespace REvernus.Utilities.StaticData
         {
             try
             {
-                StructureDictionary.TryGetValue(structureId, out var locationName);
-                return locationName ?? "Unknown Citadel";
+               var result = DatabaseManager.QueryEveDb(
+                    $"SELECT stationName FROM staStations WHERE stationId = {structureId}", new SQLiteConnection(DatabaseManager.ReadOnlyEveDbConnection));
+               if (result.Rows.Count == 0)
+               {
+                   return "Unknown Citadel";
+               }
+               else
+               {
+                   return (string) result.Rows[0][0];
+               }
             }
             catch (Exception e)
             {
@@ -26,25 +35,6 @@ namespace REvernus.Utilities.StaticData
             }
 
             return string.Empty;
-        }
-
-        public static async Task Initialize()
-        {
-            try
-            {
-                StructureDictionary.Clear();
-                var result = await DatabaseManager.QueryEveDbAsync("SELECT stationId, stationName FROM staStations");
-                foreach (DataRow row in result.Rows)
-                {
-                    StructureDictionary.Add((long)row[0],(string)row[1]);
-                }
-                result.Dispose();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                Log.Error(e);
-            }
         }
 
         // todo: add static method to add a structure to DB

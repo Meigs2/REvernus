@@ -8,30 +8,32 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
+using EVEStandard.Models;
 
 namespace REvernus.Utilities.StaticData
 {
     public static class DatabaseManager
     {
-        private static readonly SQLiteConnection ReadOnlyEveDbConnection = new SQLiteConnection($"Data Source={Utilities.Paths.SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True;FailIfMissing=True");
-        private static readonly SQLiteConnection UserDataDbConnection = new SQLiteConnection($"Data Source={Utilities.Paths.SdeDataBasePath};Version=3;");
+        public static readonly SQLiteConnection ReadOnlyEveDbConnection = new SQLiteConnection($"Data Source={Paths.SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True;FailIfMissing=True");
+        public static readonly SQLiteConnection UserDataDbConnection = new SQLiteConnection($"Data Source={Paths.UserDataBasePath};Version=3;");
 
-        public static DataTable QueryEveDb(string commandText)
+        public static DataTable QueryEveDb(string commandText, SQLiteConnection connection)
         {
             try
             {
-                ReadOnlyEveDbConnection.Open();
-                var command = ReadOnlyEveDbConnection.CreateCommand();
-                command.CommandText = commandText;
+                using (connection)
+                {
+                    connection.Open();
+                    var command = connection.CreateCommand();
+                    command.CommandText = commandText;
 
-                var reader = command.ExecuteReader();
-                var dataTable = new DataTable();
-                dataTable.Load(reader);
+                    var reader = command.ExecuteReader();
+                    var dataTable = new DataTable();
+                    dataTable.Load(reader);
 
-                ReadOnlyEveDbConnection.Close();
-
-                return dataTable;
+                    connection.Close();
+                    return dataTable;
+                }
             }
             catch (Exception e)
             {
@@ -48,6 +50,12 @@ namespace REvernus.Utilities.StaticData
 
         public static async Task Initialize()
         {
+
+            if (!File.Exists(Paths.UserDataBasePath))
+            {
+                CreateUserDataTable();
+            }
+
             if (!File.Exists(Paths.SdeDataBasePath))
             {
                 var boxResult = MessageBox.Show("The EvE Static Data Export is required for REvernus to function properly." +
@@ -55,36 +63,30 @@ namespace REvernus.Utilities.StaticData
 
                 if (boxResult == MessageBoxResult.No) Application.Current.Shutdown(-2);
 
-                await Task.Run(new SdeDownloader().DownloadLatestSde);
-            }
-
-            if (!File.Exists(Paths.UserDataBasePath))
-            {
-                Directory.CreateDirectory(Paths.DataBaseFolderPath);
-                CreateUserDataTable();
+                var sdeDownloader = new SdeDownloader();
+                await sdeDownloader.DownloadLatestSde();
             }
 
             // todo: and and verify user.db settings table
         }
 
-        public static Task<DataTable> QueryEveDbAsync(string commandText)
-        {
-            return Task.FromResult(QueryEveDb(commandText));
-        }
-
         private static void CreateUserDataTable()
         {
-            SQLiteConnection.CreateFile(Paths.UserDataBasePath);
-
-            UserDataDbConnection.Open();
-
-            // Create settings table
-            using (var sqLiteCommand = new SQLiteCommand(@"CREATE TABLE settings (settingName TEXT, settingValue BLOB)", UserDataDbConnection))
+            try
             {
+                SQLiteConnection.CreateFile(Paths.UserDataBasePath);
+                var connection = new SQLiteConnection(UserDataDbConnection);
+                connection.Open();
+                // Create settings table
+                using var sqLiteCommand = new SQLiteCommand(@"CREATE TABLE settings (settingName INT, settingValue INT)", connection);
                 sqLiteCommand.ExecuteNonQuery();
+                connection.Close();
             }
-
-            UserDataDbConnection.Close();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private static T ByteToObject<T>(byte[] param)

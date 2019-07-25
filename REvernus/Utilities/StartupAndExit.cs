@@ -11,28 +11,28 @@ namespace REvernus.Utilities
 {
     public class StartupAndExit
     {
-        public static void PerformStartupActions()
+        private static readonly log4net.ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public static async Task PerformStartupActions()
         {
             try
             {
                 Logging.SetupLogging();
 
-                Task.Run(DatabaseManager.Initialize).GetAwaiter().GetResult();
+                await DatabaseManager.Initialize();
 
-                Task.Run(CharacterManager.Initialize).GetAwaiter().GetResult();
+                await CharacterManager.Initialize();
 
-                Task.Run(EveItems.Initialize).GetAwaiter().GetResult();
+                EveItems.Initialize();
 
-                Task.Run(Structures.Initialize).GetAwaiter().GetResult();
-                
-                Task.Run(Settings.Initialize).GetAwaiter().GetResult();
+                //Settings.Initialize();
 
                 AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Log.Fatal(e);
             }
         }
 

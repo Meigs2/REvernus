@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using REvernus.Utilities;
 using REvernus.ViewModels;
 
 namespace REvernus
@@ -22,13 +23,20 @@ namespace REvernus
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            Environment.ExitCode = -1;
+            try
+            {
+                Environment.ExitCode = -1;
 
-            await Task.Run(Utilities.StartupAndExit.PerformStartupActions);
+                await StartupAndExit.PerformStartupActions();
 
-            MainWindow = new MainWindowView();
-            MainWindow.ShowDialog();
-            Current.Shutdown();
+                MainWindow = new MainWindowView();
+                MainWindow.ShowDialog();
+                Environment.ExitCode = -10;
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception);
+            }
         }
     }
 }

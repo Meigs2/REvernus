@@ -32,15 +32,6 @@ namespace REvernus.Utilities.StaticData
         {
             try
             {
-                void ClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _windowView.DownloadProgressBar.Value = e.ProgressPercentage;
-                            _window.TaskbarItemInfo.ProgressValue = e.ProgressPercentage / 100d;
-                        });
-                }
-
                 // Check to see if the Data folder has been made yet, if not, create it.
                 if (!Directory.Exists(Paths.DataBaseFolderPath))
                 {
@@ -61,11 +52,11 @@ namespace REvernus.Utilities.StaticData
                     _window.Show();
                     _windowView = (SdeDownloadProgressView) _window.Content;
                     _windowView.TextBlock.Text = "Downloading the current SDE... This may take a while!";
+                    _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
                 });
 
                 // Download file
 
-                _webClient.DownloadProgressChanged += ClientDownloadProgressChanged;
                 _webClient.Headers.Add("User-Agent: Other");
                 await Task.Run(() =>
                     _webClient.DownloadFile(new Uri(_fuzzworkLatestDbPath), Paths.CompressedSdeDataBasePath));
@@ -75,11 +66,12 @@ namespace REvernus.Utilities.StaticData
                 // Extract .bz2 file
                 await using (var outStream = File.Create(Path.Combine(Paths.DataBaseFolderPath, "eve.db")))
                 {
-                    await using var fileStream = new FileStream(Path.Combine(Paths.DataBaseFolderPath, "eve.db.bz2"), FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                    await DecompressBz2(fileStream, outStream, false);
+                    await using var fileStream = new FileStream(Paths.CompressedSdeDataBasePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    DecompressBz2(fileStream, outStream, false);
 
                     SystemSounds.Exclamation.Play();
-                    _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                    Application.Current.Dispatcher.Invoke(() =>
+                        _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None);
                 }
 
                 Application.Current.Dispatcher.Invoke(_window.Close);
@@ -91,12 +83,12 @@ namespace REvernus.Utilities.StaticData
             }
         }
 
-        private static async Task DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)
+        private static void DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)
         {
-            await using var bzipInput = new BZip2InputStream(inStream) {IsStreamOwner = isStreamOwner};
+            using var bzipInput = new BZip2InputStream(inStream) {IsStreamOwner = isStreamOwner};
             try
             {
-                await Task.Run(() => StreamUtils.Copy(bzipInput, outStream, new byte[4096]));
+                StreamUtils.Copy(bzipInput, outStream, new byte[4096]);
                 bzipInput.Dispose();
             }
             finally
