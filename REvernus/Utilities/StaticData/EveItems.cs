@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -22,16 +23,23 @@ namespace REvernus.Utilities.StaticData
             return DatabaseManager.QueryEveDbAsync("SELECT * FROM 'invTypes' WHERE marketGroupID IS NOT null AND published IS true");
         }
 
-        public static async Task ImportSdeData()
+        public static async Task Initialize()
         {
-            TypeIdToTypeNameDictionary.Clear();
-
-            var types = await GetAllInventoryTypesAsync();
-            foreach (DataRow typesRow in types.Rows)
+            try
             {
-                TypeIdToTypeNameDictionary.TryAdd((long)typesRow["typeID"], typesRow["typeName"].ToString());
+                TypeIdToTypeNameDictionary.Clear();
+
+                var types = await GetAllInventoryTypesAsync();
+                foreach (DataRow typesRow in types.Rows)
+                {
+                    TypeIdToTypeNameDictionary.TryAdd((long)typesRow["typeID"], typesRow["typeName"].ToString());
+                }
+                types.Dispose();
             }
-            types.Dispose();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

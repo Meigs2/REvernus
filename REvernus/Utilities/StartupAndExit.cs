@@ -2,24 +2,38 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using Prism.Events;
 using REvernus.Core;
 using REvernus.Utilities.StaticData;
 
 namespace REvernus.Utilities
 {
-    public static class StartupAndExit
+    public class StartupAndExit
     {
-        public static async Task PerformStartupActions()
+        public static void PerformStartupActions()
         {
-            Logging.SetupLogging();
+            try
+            {
+                Logging.SetupLogging();
 
-            await CharacterManager.DeserializeCharacters();
+                Task.Run(DatabaseManager.Initialize).GetAwaiter().GetResult();
 
-            await EveItems.ImportSdeData();
+                Task.Run(CharacterManager.Initialize).GetAwaiter().GetResult();
 
-            await Structures.LoadStructureDictionary();
+                Task.Run(EveItems.Initialize).GetAwaiter().GetResult();
 
-            AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
+                Task.Run(Structures.Initialize).GetAwaiter().GetResult();
+                
+                Task.Run(Settings.Initialize).GetAwaiter().GetResult();
+
+                AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private static void OnApplicationExit(object sender, EventArgs e)

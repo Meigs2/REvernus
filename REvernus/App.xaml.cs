@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using REvernus.ViewModels;
@@ -21,26 +22,13 @@ namespace REvernus
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            await PerformStartupActions();
+            Environment.ExitCode = -1;
 
-            // Start the Main Window.
+            await Task.Run(Utilities.StartupAndExit.PerformStartupActions);
+
             MainWindow = new MainWindowView();
             MainWindow.ShowDialog();
-            Current.Shutdown(-1);
-        }
-
-        private static async Task PerformStartupActions()
-        {
-            try
-            {
-                await Utilities.StartupAndExit.PerformStartupActions();
-                Log.Info($"New session of REvernus has been successfully started.");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-                Current.Shutdown();
-            }
+            Current.Shutdown();
         }
     }
 }

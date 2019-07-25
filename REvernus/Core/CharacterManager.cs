@@ -81,6 +81,9 @@ namespace REvernus.Core
                 return;
             }
 
+            if (verificationWindow.Character.CharacterName == "")
+                return;
+
             CharacterList.Add(verificationWindow.Character);
 
             CurrentInstance.OnCharactersChanged();
@@ -117,7 +120,7 @@ namespace REvernus.Core
             Serializer.SerializeData(serializableList, Paths.CharacterDataFilePath);
         }
 
-        public static async Task DeserializeCharacters()
+        public static async Task Initialize()
         {
             var serializedCharacterList = Serializer.DeserializeData<List<SerializableCharacter>>(Paths.CharacterDataFilePath);
 

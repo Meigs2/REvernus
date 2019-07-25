@@ -35,10 +35,10 @@ namespace REvernus.ViewModels
 
         public MarketOrdersViewerViewModel()
         {
-            GetOrdersCommand = new DelegateCommand(async () => await GetMarketData());
+            GetOrdersCommand = new DelegateCommand(async () => await GetOrderInformation());
         }
 
-        private async Task GetMarketData()
+        private async Task GetOrderInformation()
         {
             try
             {

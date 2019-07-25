@@ -28,7 +28,7 @@ namespace REvernus.Utilities.StaticData
             return string.Empty;
         }
 
-        public static async Task LoadStructureDictionary()
+        public static async Task Initialize()
         {
             try
             {

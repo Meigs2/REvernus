@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace REvernus.Utilities
 {
-    public class Settings
+    public static class Settings
     {
-        private static Settings _currentInstance;
-        public static Settings CurrentInstance
+        public static void Initialize()
         {
-            get { return _currentInstance ??= new Settings(); }
+            // Check if settings exists
         }
 
-        public static void SerializeSettings()
+        public static void Save()
         {
-            Serializer.SerializeData(_currentInstance, Paths.SettingsDataFilePath);
-        }
 
-        public static void DeserializeSettings()
-        {
-            Serializer.DeserializeData<Settings>(Paths.SettingsDataFilePath);
         }
     }
 }
