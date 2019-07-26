@@ -16,12 +16,14 @@ namespace REvernus
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
+            Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Environment.ExitCode = -1;
 
             await StartupAndExit.PerformStartupActions();
 
             MainWindow = new MainWindowView();
             MainWindow.ShowDialog();
+
             Environment.ExitCode = -10;
         }
     }

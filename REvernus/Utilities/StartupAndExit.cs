@@ -20,7 +20,7 @@ namespace REvernus.Utilities
 
             EveItems.Initialize();
 
-            //Settings.Initialize();
+            Settings.Initialize();
 
             AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
         }
