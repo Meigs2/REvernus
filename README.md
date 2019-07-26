@@ -21,7 +21,7 @@ I used to use Evernus a lot back when it was still being maintained and when I w
 REvernus doesn't, and never will intend to, violate the EVE EULA. REvernus only interacts with your game in ways deemed acceptable by CCP, in this case, via the ESI API. REvernus does **not** interact with your client in any other way. REvernus looks at files created by the EVE client, downloads SDE data from Fuzzworks, alongside using ESI to get everything it needs to function properly. If there is an issue with how the program works or interacts with anything, please do not hesitate to message me or create an issue, and I will work to get it fixed as soon as possible. With all that said, use this program at your own risk.
 
 ## How do I run this program?
-At the moment there are no public releases avialable, however you can download the project and build it yourself, check the bottom of this readme on how to do that. I plan to have a build out by at least the end of June 2019 or early July. Check back here or [on the EVE Forums](https://forums.eveonline.com/t/revernus-release-null-evernus-re-written) thread for updates!
+At the moment there are no public releases avialable, however you can download the project and build it yourself, check the bottom of this readme on how to do that. Check back here or [on the EVE Forums](https://forums.eveonline.com/t/revernus-release-null-evernus-re-written) thread for updates!
 
 ## Can I request features?
 You sure can! If you wish to request a feature, ***please*** do not be afraid to make a Feature Request over in the Issues tab at the top of this page!
