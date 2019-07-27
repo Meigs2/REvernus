@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -71,45 +72,60 @@ namespace REvernus.Views
 
         private async Task MoveSelectedRow(Key direction)
         {
-            // Check if tab is selected
-            var selectedItem = (TabItem) App.MainWindow.MainTabControl.SelectedItem;
-            if (selectedItem != null && selectedItem.Header.ToString() != "Market Orders")
+            try
             {
-                return;
+                // Check if tab is selected
+                var selectedItem = (TabItem) App.MainWindow.MainTabControl.SelectedItem;
+                if (selectedItem != null && selectedItem.Header.ToString() != "Market Orders")
+                {
+                    return;
+                }
+
+                var selectedDataGrid = GetSelectedDataGrid();
+
+                if (selectedDataGrid == null)
+                {
+                    return;
+                }
+
+                // Get next index
+                var currentRow = selectedDataGrid.SelectedIndex;
+
+                var nextRow = direction == Key.Up ? currentRow - 1 : currentRow + 1;
+
+                if (nextRow < 0)
+                {
+                    return;
+                }
+
+                if (nextRow >= selectedDataGrid.Items.Count)
+                {
+                    return;
+                }
+
+                selectedDataGrid.SelectedIndex = nextRow;
+                selectedDataGrid.SelectedItem = selectedDataGrid.Items[selectedDataGrid.SelectedIndex];
+
+                var row = (DataRowView) selectedDataGrid.SelectedItem;
+                var orderOwner = CharacterManager.CharacterList.FirstOrDefault(
+                    s => s.CharacterName != null && 
+                         s.CharacterName == (string)row.Row.ItemArray[row.Row.Table.Columns["Owner"].Ordinal]);
+                var itemId = (int)row.Row.ItemArray[row.Row.Table.Columns["Item Id"].Ordinal];
+
+                if (orderOwner != null) await orderOwner.OpenMarketWindow(itemId);
+
+                var difference = ((double) (row.Row.ItemArray[row.Row.Table.Columns["Difference"].Ordinal]));
+                var price = ((double) (row.Row.ItemArray[row.Row.Table.Columns["Price"].Ordinal]));
+                var overbid = difference > 0 ? -1 : 1;
+
+                Clipboard.SetText(Math.Round((difference + price + overbid),2, MidpointRounding.ToEven).ToString());
+
+                SystemSounds.Beep.Play();
             }
-
-            var selectedDataGrid = GetSelectedDataGrid();
-
-            if (selectedDataGrid == null)
+            catch (Exception e)
             {
-                return;
+                Console.WriteLine(e);
             }
-
-            // Get next index
-            var currentRow = selectedDataGrid.SelectedIndex;
-
-            var nextRow = direction == Key.Up ? currentRow - 1 : currentRow + 1;
-
-            if (nextRow < 0)
-            {
-                return;
-            }
-
-            if (nextRow >= selectedDataGrid.Items.Count)
-            {
-                return;
-            }
-
-            selectedDataGrid.SelectedIndex = nextRow;
-            selectedDataGrid.SelectedItem = selectedDataGrid.Items[selectedDataGrid.SelectedIndex];
-
-            var row = (DataRowView) selectedDataGrid.SelectedItem;
-            var orderOwner = CharacterManager.CharacterList.FirstOrDefault(
-                s => s.CharacterName != null && 
-                     s.CharacterName == (string)row.Row.ItemArray[row.Row.Table.Columns["Owner"].Ordinal]);
-            var itemId = (int)row.Row.ItemArray[row.Row.Table.Columns["Item Id"].Ordinal];
-
-            if (orderOwner != null) await orderOwner.OpenMarketWindow(itemId);
         }
 
         private DataGrid GetSelectedDataGrid()

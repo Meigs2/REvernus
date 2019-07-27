@@ -72,7 +72,7 @@ namespace REvernus.ViewModels
             sellOrdersDataTable.Columns.Add("Location", typeof(string));
             sellOrdersDataTable.Columns.Add("Price", typeof(double));
             sellOrdersDataTable.Columns.Add("Outbid", typeof(bool));
-            sellOrdersDataTable.Columns.Add("Difference", typeof(string));
+            sellOrdersDataTable.Columns.Add("Difference", typeof(double));
             sellOrdersDataTable.Columns.Add("Volume", typeof(string));
             sellOrdersDataTable.Columns.Add("Total Value", typeof(double));
             sellOrdersDataTable.Columns.Add("Completion ETA", typeof(string));
