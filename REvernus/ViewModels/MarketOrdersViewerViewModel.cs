@@ -9,7 +9,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using Gma.System.MouseKeyHook;
 using Market = REvernus.Utilities.Esi.Market;
 
 namespace REvernus.ViewModels
@@ -43,8 +46,9 @@ namespace REvernus.ViewModels
             try
             {
                 var marketOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
+                var selectedCharacter = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId;
 
-                var (sellOrderDataTable, buyOrderDataTable) = await MarketOrdersToOrderData(marketOrders);
+                var (sellOrderDataTable, buyOrderDataTable) = await MarketOrdersToOrderData(marketOrders, selectedCharacter);
                 SellOrdersDataTable = sellOrderDataTable;
                 BuyOrdersDataTable = buyOrderDataTable;
             }
@@ -55,7 +59,8 @@ namespace REvernus.ViewModels
         }
 
         private readonly string _tableName = "Orders";
-        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<EVEStandard.Models.CharacterMarketOrder> orderList)
+        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(
+            List<CharacterMarketOrder> orderList, int selectedCharacterId)
         {
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
@@ -63,6 +68,7 @@ namespace REvernus.ViewModels
 
             var sellOrdersDataTable = new DataTable {TableName = _tableName};
             sellOrdersDataTable.Columns.Add("Item Name", typeof(string));
+            sellOrdersDataTable.Columns.Add("Item Id", typeof(int));
             sellOrdersDataTable.Columns.Add("Location", typeof(string));
             sellOrdersDataTable.Columns.Add("Price", typeof(double));
             sellOrdersDataTable.Columns.Add("Outbid", typeof(bool));
@@ -70,6 +76,7 @@ namespace REvernus.ViewModels
             sellOrdersDataTable.Columns.Add("Volume", typeof(string));
             sellOrdersDataTable.Columns.Add("Total Value", typeof(double));
             sellOrdersDataTable.Columns.Add("Completion ETA", typeof(string));
+            sellOrdersDataTable.Columns.Add("Owner", typeof(string));
 
             var buyOrdersDataTable = sellOrdersDataTable.Clone();
 
@@ -102,6 +109,7 @@ namespace REvernus.ViewModels
                     Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
 
                     row["Item Name"] = EveItems.TypeIdToTypeName(characterItemOrder.TypeId);
+                    row["Item Id"] = characterItemOrder.TypeId;
                     row["Location"] = Structures.GetStructureName(characterItemOrder.LocationId);
                     row["Price"] = characterItemOrder.Price;
                     row["Outbid"] = IsOutbid(characterItemOrder, bestBuyOrder, bestSellOrder, out var difference);
@@ -127,6 +135,10 @@ namespace REvernus.ViewModels
                     {
                         sellOrderRows.Add(row);
                     }
+
+                    row["Owner"] = CharacterManager.CharacterList
+                        .FirstOrDefault(s => s.CharacterDetails.CharacterId == selectedCharacterId)
+                        ?.CharacterName;
                 }
                 catch (Exception e)
                 {
@@ -152,7 +164,7 @@ namespace REvernus.ViewModels
             {
                 if (characterItemOrder.Price > bestSellOrder.Price)
                 {
-                    outbidDifference = characterItemOrder.Price - bestSellOrder.Price;
+                    outbidDifference = bestSellOrder.Price - characterItemOrder.Price;
                     return true;
                 }
             }

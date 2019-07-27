@@ -16,7 +16,7 @@ namespace REvernus
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
             Environment.ExitCode = -1;
 
             await StartupAndExit.PerformStartupActions();

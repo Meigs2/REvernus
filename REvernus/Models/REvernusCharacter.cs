@@ -29,5 +29,16 @@ namespace REvernus.Models
                 });
             return result.Model;
         }
+
+        public async Task OpenMarketWindow(int typeId)
+        {
+            await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(
+                new AuthDTO()
+                {
+                    AccessToken = AccessTokenDetails,
+                    CharacterId = CharacterDetails.CharacterId,
+                    Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1
+                }, typeId);
+        }
     }
 }
