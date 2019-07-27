@@ -15,6 +15,7 @@
     <None Remove="Core\ESI\VerificationWindow.xaml" />
     <None Remove="Views\CharacterManagerView.xaml" />
     <None Remove="Views\MainWindowView.xaml" />
+    <None Remove="Views\MarginToolView.xaml" />
     <None Remove="Views\MarketOrdersViewerView.xaml" />
     <None Remove="Views\SimpleViews\SdeDownloadProgressView.xaml" />
   </ItemGroup>

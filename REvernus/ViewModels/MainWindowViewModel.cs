@@ -4,6 +4,7 @@ using System.Media;
 using System.Text;
 using System.Windows;
 using System.Windows.Navigation;
+using Gma.System.MouseKeyHook;
 using Prism.Commands;
 using REvernus.Core;
 using REvernus.Models;
@@ -51,6 +52,90 @@ namespace REvernus.ViewModels
         private string _statusText;
         private int _numActiveJobs;
 
+        public MainWindowViewModel()
+        {
+            SubscribeHotKeys();
+            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+        }
+
+        #region HotKeys
+
+        private IKeyboardMouseEvents _keybindEvents = Hook.AppEvents();
+
+        private void UnsubscribeHotKeys(object sender, EventArgs e)
+        {
+            _keybindEvents.Dispose();
+        }
+
+        private void UnsubscribeHotKeys()
+        {
+            _keybindEvents.Dispose();
+        }
+
+        private void SubscribeHotKeys()
+        {
+            UnsubscribeHotKeys();
+
+            _keybindEvents = Hook.GlobalEvents();
+
+            var actions = new Dictionary<Combination, Action>()
+            {
+                {Combination.FromString("Control+M"), OpenCloseMarginTool},
+            };
+
+            _keybindEvents.OnCombination(actions);
+        }
+
+        #endregion
+
+        private Window _marginWindow;
+
+        private void OpenCloseMarginTool()
+        {
+            if (!App.MainWindow.IsActive && (_marginWindow != null && !_marginWindow.IsActive)) return;
+
+            try
+            {
+                if (_marginWindow == null)
+                {
+                    _marginWindow = new Window()
+                    {
+                        Title = "Margin Tool",
+                        Content = new MarginToolView(),
+                        Width = 300,
+                        Height = 450,
+                        WindowStartupLocation = WindowStartupLocation.Manual
+                    };
+                    _marginWindow.Show();
+                    _marginWindow.Closing += (sender, args) =>
+                    {
+                        args.Cancel = true;
+                        _marginWindow.Visibility = Visibility.Hidden;
+                    };
+                }
+                else
+                {
+                    if (_marginWindow.WindowState == WindowState.Minimized)
+                    {
+                        _marginWindow.WindowState = WindowState.Normal;
+                    }
+                    else if (_marginWindow.Visibility == Visibility.Visible)
+                    {
+                        _marginWindow.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        _marginWindow.Visibility = Visibility.Visible;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Log.Error(e);
+            }
+        }
+
         private static void OpenCharacterManagerWindow()
         {
             try
@@ -69,7 +154,6 @@ namespace REvernus.ViewModels
             {
                 Console.WriteLine(e);
                 Log.Error(e);
-                throw;
             }
         }
 
