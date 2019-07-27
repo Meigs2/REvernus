@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -27,24 +29,24 @@ namespace REvernus.Views
 
         public MarketOrdersViewerView()
         {
-            SubscribeHotkeys();
-            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotkeys;
+            SubscribeHotKeys();
+            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
             InitializeComponent();
         }
 
-        private void UnsubscribeHotkeys(object sender, EventArgs e)
+        private void UnsubscribeHotKeys(object sender, EventArgs e)
         {
             _keybindEvents.Dispose();
         }
 
-        private void UnsubscribeHotkeys()
+        private void UnsubscribeHotKeys()
         {
             _keybindEvents.Dispose();
         }
 
-        private void SubscribeHotkeys()
+        private void SubscribeHotKeys()
         {
-            UnsubscribeHotkeys();
+            UnsubscribeHotKeys();
 
             _keybindEvents = Hook.GlobalEvents();
 
@@ -69,6 +71,13 @@ namespace REvernus.Views
 
         private async Task MoveSelectedRow(Key direction)
         {
+            // Check if tab is selected
+            var selectedItem = (TabItem) App.MainWindow.MainTabControl.SelectedItem;
+            if (selectedItem != null && selectedItem.Header.ToString() != "Market Orders")
+            {
+                return;
+            }
+
             var selectedDataGrid = GetSelectedDataGrid();
 
             if (selectedDataGrid == null)
