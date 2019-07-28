@@ -1,13 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
+using Prism.Mvvm;
+using REvernus.Core;
+using REvernus.Models;
 using REvernus.Utilities;
 
 namespace REvernus.ViewModels
 {
-    public class MarginToolViewModel
+    public class MarginToolViewModel : BindableBase
     {
+        #region Margin Tool Bindings
+
+        private string _margin = "0.00%";
+        public string Margin
+        {
+            get => _margin;
+            set => SetProperty(ref _margin, value);
+        }
+
+        private string _markup = "0.00%";
+        public string Markup
+        {
+            get => _markup;
+            set => SetProperty(ref _markup, value);
+        }
+
+        private double _brokerNpc = 0.027;
+        public double BrokerNpc
+        {
+            get => _brokerNpc;
+            set => SetProperty(ref _brokerNpc, value);
+        }
+
+        private double _brokerCitadel = 0.003;
+        public double BrokerCitadel
+        {
+            get => _brokerCitadel;
+            set => SetProperty(ref _brokerCitadel, value);
+        }
+
+        private double _salesTax = 0.012;
+        public double SalesTax
+        {
+            get => _salesTax;
+            set => SetProperty(ref _salesTax, value);
+        }
+
+        private string _profit = "0.00";
+        public string Profit
+        {
+            get => _profit;
+            set => SetProperty(ref _profit, value);
+        }
+
+        private string _buyCopyPrice;
+        public string BuyCopyPrice
+        {
+            get => _buyCopyPrice;
+            set => SetProperty(ref _buyCopyPrice, value);
+        }
+
+        private string _sellCopyPrice;
+        public string SellCopyPrice
+        {
+            get => _buyCopyPrice;
+            set => SetProperty(ref _sellCopyPrice, value);
+        }
+
+        #endregion
+
+        private List<ExportedOrderModel> Orders = new List<ExportedOrderModel>();
+
         private FileSystemWatcher _watcher;
 
         public MarginToolViewModel()
@@ -26,7 +93,8 @@ namespace REvernus.ViewModels
         {
             try
             {
-                var orders = new List<ExportedOrderModel>();
+                var currentChar = CharacterManager.SelectedCharacter;
+                Orders.Clear();
                 using (var file = File.Open(e.FullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
                     using (var reader = new StreamReader(file))
@@ -53,7 +121,7 @@ namespace REvernus.ViewModels
                                 order.SystemId = int.Parse(values[12]);
                                 order.NumJumpsAway = int.Parse(values[13]);
 
-                                orders.Add(order);
+                                Orders.Add(order);
                             }
                             catch (Exception)
                             {
@@ -62,11 +130,57 @@ namespace REvernus.ViewModels
                         }
                     }
                 }
+
+                // Filter results
+                var filteredOrders = Orders.Where(o => o.NumJumpsAway < 1).ToList();
+                var filteredSellOrders = filteredOrders.Where(o => !o.IsBuyOrder).ToList();
+                var filteredBuyOrders = filteredOrders.Where(o => o.IsBuyOrder).ToList();
+
+                // Calculate margin
+                var bestSell = filteredSellOrders[0].Price - 0.10;
+                var bestBuy = filteredBuyOrders[0].Price + 0.10;
+
+                Margin = GetMargin(bestSell, bestBuy).ToString("P");
+                Markup = GetMarkup(bestSell, bestBuy).ToString("P");
+                Profit = GetProfit(bestSell, bestBuy).ToString("N");
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
             }
+        }
+
+        public double GetMargin(double sellPrice, double buyPrice)
+        {
+            var realSell = GetSellPrice(sellPrice);
+            var realBuy = GetBuyPrice(buyPrice);
+
+            return ((realSell - realBuy) / realSell);
+        }
+
+        public double GetMarkup(double sellPrice, double buyPrice)
+        {
+            var realSell = GetSellPrice(sellPrice);
+            var realBuy = GetBuyPrice(buyPrice);
+
+            return ((realSell - realBuy) / realBuy);
+        }
+
+        public double GetProfit(double sellPrice, double buyPrice)
+        {
+            var costs = (sellPrice * SalesTax) + (sellPrice * BrokerNpc) + (buyPrice * BrokerNpc) + buyPrice;
+            var revenue = sellPrice;
+            return revenue - costs;
+        }
+
+        public double GetSellPrice(double sellPrice)
+        {
+            return ( sellPrice * ( 1.0 - SalesTax) ) - (sellPrice * BrokerNpc);
+        }
+
+        public double GetBuyPrice(double buyPrice)
+        {
+            return buyPrice + (buyPrice * BrokerNpc);
         }
     }
 }
