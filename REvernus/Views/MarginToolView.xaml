@@ -13,69 +13,77 @@
     <Grid>
         <TabControl>
             <TabItem Header="Margin Data">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <GroupBox>
-                        <Grid x:Name="MarginGrid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="2*"/>
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height="3*"/>
-                                    </Grid.RowDefinitions>
-                                    <Viewbox Margin="1">
-                                        <TextBlock Text="Margin:"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="1" Margin="1">
-                                        <TextBlock Text="{Binding Margin}"/>
-                                    </Viewbox>
-                                </Grid>
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="1*"/>
-                                        <RowDefinition Height="3*"/>
-                                    </Grid.RowDefinitions>
-                                    <Viewbox Margin="1">
-                                        <TextBlock Text="Markup:"/>
-                                    </Viewbox>
-                                    <Viewbox Grid.Row="1" Margin="1">
-                                        <TextBlock Text="{Binding Markup}"/>
-                                    </Viewbox>
-                                </Grid>
-                            </Grid>
-                            <Grid Grid.Row="1">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Bottom" Height="15" Margin="2">
+                        <CheckBox>Always On Top</CheckBox>
+                    </Grid>
+                    <Grid DockPanel.Dock="Top" Height="30">
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}" FontSize="15"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <GroupBox>
+                            <Grid x:Name="MarginGrid">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="1*"/>
                                     <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0">
-                                    <TextBlock Text="Profit:"/>
-                                </Viewbox>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="3*"/>
+                                        </Grid.RowDefinitions>
+                                        <Viewbox Margin="1">
+                                            <TextBlock Text="Margin:"/>
+                                        </Viewbox>
+                                        <Viewbox Grid.Row="1" Margin="1">
+                                            <TextBlock Text="{Binding Margin}"/>
+                                        </Viewbox>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="3*"/>
+                                        </Grid.RowDefinitions>
+                                        <Viewbox Margin="1">
+                                            <TextBlock Text="Markup:"/>
+                                        </Viewbox>
+                                        <Viewbox Grid.Row="1" Margin="1">
+                                            <TextBlock Text="{Binding Markup}"/>
+                                        </Viewbox>
+                                    </Grid>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+                                    <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0">
+                                        <TextBlock Text="Profit:"/>
+                                    </Viewbox>
                                     <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
-                                    <TextBlock Text="{Binding Profit}"/>
-                                </Viewbox>
+                                        <TextBlock Text="{Binding Profit}"/>
+                                    </Viewbox>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1">
-                        <Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1">
+                            <Grid>
 
-                        </Grid>
-                    </GroupBox>
-                </Grid>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </DockPanel>
             </TabItem>
             <TabItem Header="Options">
 

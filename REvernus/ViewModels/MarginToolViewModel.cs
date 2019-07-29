@@ -15,6 +15,13 @@ namespace REvernus.ViewModels
     {
         #region Margin Tool Bindings
 
+        private string _itemName = "Export Item Data In-Game";
+        public string ItemName
+        {
+            get => _itemName;
+            set => SetProperty(ref _itemName, value);
+        }
+
         private string _margin = "0.00%";
         public string Margin
         {
@@ -140,6 +147,7 @@ namespace REvernus.ViewModels
                 var bestSell = filteredSellOrders[0].Price - 0.10;
                 var bestBuy = filteredBuyOrders[0].Price + 0.10;
 
+                ItemName = e.Name.Split('-')[1];
                 Margin = GetMargin(bestSell, bestBuy).ToString("P");
                 Markup = GetMarkup(bestSell, bestBuy).ToString("P");
                 Profit = GetProfit(bestSell, bestBuy).ToString("N");
