@@ -22,5 +22,11 @@ namespace REvernus.Views
         {
             InitializeComponent();
         }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Window parentWindow = Window.GetWindow(VisualTreeHelper.GetParent(this) ?? new Window());
+            if (parentWindow != null) parentWindow.Topmost = !parentWindow.Topmost;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Input;
 
 namespace REvernus.ViewModels
@@ -36,21 +37,21 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _markup, value);
         }
 
-        private double _buyBroker = 0.027;
+        private double _buyBroker = 0.05;
         public double BuyBroker
         {
             get => _buyBroker;
             set => SetProperty(ref _buyBroker, value);
         }
 
-        private double _sellBroker = 0.027;
+        private double _sellBroker = 0.05;
         public double SellBroker
         {
             get => _sellBroker;
             set => SetProperty(ref _sellBroker, value);
         }
 
-        private double _salesTax = 0.012;
+        private double _salesTax = 0.05;
         public double SalesTax
         {
             get => _salesTax;

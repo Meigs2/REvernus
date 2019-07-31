@@ -7,19 +7,20 @@
              xmlns:viewModels="clr-namespace:REvernus.ViewModels"
              xmlns:utilities="clr-namespace:REvernus.Utilities"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="450">
+             d:DesignHeight="450" Width="430">
     <UserControl.DataContext>
         <viewModels:MarginToolViewModel/>
     </UserControl.DataContext>
     <UserControl.Resources>
         <utilities:EnumBooleanConverter x:Key="EnumBooleanConverter"/>
+        <utilities:PercentageConverter x:Key="PercentageConverter"/>
     </UserControl.Resources>
     <Grid>
         <TabControl>
             <TabItem Header="Margin Data">
                 <DockPanel>
                     <Grid DockPanel.Dock="Bottom" Height="15" Margin="2">
-                        <CheckBox>Always On Top</CheckBox>
+                        <CheckBox Content="Always On Top" Command="{Binding }" Checked="CheckBox_Checked"/>
                     </Grid>
                     <Grid DockPanel.Dock="Top" Height="30">
                         <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}" FontSize="15"/>
@@ -48,11 +49,11 @@
                                         <ColumnDefinition Width="1.5*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Margin:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                    <Viewbox Grid.Row="0" Grid.Column="1" Margin="1">
+                                    <Viewbox Grid.Row="0" Grid.Column="1" Margin="1" HorizontalAlignment="Left">
                                         <TextBlock Text="{Binding Margin}"/>
                                     </Viewbox>
                                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Markup:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                    <Viewbox Grid.Row="1" Grid.Column="1" Margin="1">
+                                    <Viewbox Grid.Row="1" Grid.Column="1" Margin="1" HorizontalAlignment="Left">
                                         <TextBlock Text="{Binding Markup}"/>
                                     </Viewbox>
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Profit:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -142,7 +143,7 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="Sell:" VerticalAlignment="Center" Margin="2"/>
                                         <TextBox Height="20" MaxLines="1" Grid.Column="1" Text="{Binding SellCopyPrice}" Margin="2"/>
-                                        <Button Grid.Column="2" Content="Copy" Height="20" Width="40"/>
+                                        <Button Grid.Column="2" Content="Copy" Height="20" Width="40" Command="{Binding SellCopyCommand}"/>
                                     </Grid>
                                     <Grid Row="1">
                                         <Grid.ColumnDefinitions>
@@ -171,6 +172,39 @@
                                                  IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.Sell}}"/>
                                     <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Buy Copy" Grid.Row="2" Grid.Column="1"
                                                  IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.Buy}}"/>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="3">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Buy Broker:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding BuyBroker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </Grid>
+                                <Grid Grid.Column="1" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Sell Broker:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SellBroker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </Grid>
+                                <Grid Grid.Column="2" Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Sales Tax:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SalesTax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                 </Grid>
                             </Grid>
                         </GroupBox>

@@ -102,7 +102,7 @@ namespace REvernus.ViewModels
                     {
                         Title = "Margin Tool",
                         Content = new MarginToolView(),
-                        Width = 300,
+                        Width = 430,
                         Height = 450,
                         WindowStartupLocation = WindowStartupLocation.Manual
                     };
