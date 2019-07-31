@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using Prism.Commands;
+using REvernus.Core;
+using REvernus.Utilities;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Prism.Mvvm;
-using REvernus.Core;
-using REvernus.Models;
-using REvernus.Utilities;
+using System.Windows;
+using System.Windows.Input;
 
 namespace REvernus.ViewModels
 {
@@ -15,7 +15,7 @@ namespace REvernus.ViewModels
     {
         #region Margin Tool Bindings
 
-        private string _itemName = "Export Item Data In-Game";
+        private string _itemName = "Export Item Market Data In-Game";
         public string ItemName
         {
             get => _itemName;
@@ -36,18 +36,18 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _markup, value);
         }
 
-        private double _brokerNpc = 0.027;
-        public double BrokerNpc
+        private double _buyBroker = 0.027;
+        public double BuyBroker
         {
-            get => _brokerNpc;
-            set => SetProperty(ref _brokerNpc, value);
+            get => _buyBroker;
+            set => SetProperty(ref _buyBroker, value);
         }
 
-        private double _brokerCitadel = 0.003;
-        public double BrokerCitadel
+        private double _sellBroker = 0.027;
+        public double SellBroker
         {
-            get => _brokerCitadel;
-            set => SetProperty(ref _brokerCitadel, value);
+            get => _sellBroker;
+            set => SetProperty(ref _sellBroker, value);
         }
 
         private double _salesTax = 0.012;
@@ -64,6 +64,56 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _profit, value);
         }
 
+        private string _revenue = "0";
+        public string Revenue
+        {
+            get => _revenue;
+            set => SetProperty(ref _revenue, value);
+        }
+
+        private string _costs = "0";
+        public string Costs
+        {
+            get => _costs;
+            set => SetProperty(ref _costs, value);
+        }
+
+        private string _buyout = "0";
+        public string Buyout
+        {
+            get => _buyout;
+            set => SetProperty(ref _buyout, value);
+        }
+
+        private string _numBuyOrders = "0";
+        public string NumBuyOrders
+        {
+            get => _numBuyOrders;
+            set => SetProperty(ref _numBuyOrders, value);
+        }
+
+        private string _numSellOrders = "0";
+        public string NumSellOrders
+        {
+            get => _numSellOrders;
+            set => SetProperty(ref _numSellOrders, value);
+        }
+
+
+        private string _sellOrderFulfillment = "0/0";
+        public string SellOrderFulfillment
+        {
+            get => _sellOrderFulfillment;
+            set => SetProperty(ref _sellOrderFulfillment, value);
+        }
+
+        private string _buyOrderFulfillment = "0/0";
+        public string BuyOrderFulfillment
+        {
+            get => _buyOrderFulfillment;
+            set => SetProperty(ref _buyOrderFulfillment, value);
+        }
+
         private string _buyCopyPrice;
         public string BuyCopyPrice
         {
@@ -74,8 +124,38 @@ namespace REvernus.ViewModels
         private string _sellCopyPrice;
         public string SellCopyPrice
         {
-            get => _buyCopyPrice;
+            get => _sellCopyPrice;
             set => SetProperty(ref _sellCopyPrice, value);
+        }
+
+        private CopyEnum _selectedEnum = CopyEnum.None;
+        public CopyEnum SelectedEnum
+        {
+            get => _selectedEnum;
+            set
+            {
+                SetProperty(ref _selectedEnum, value);
+                switch (value)
+                {
+                    case CopyEnum.Sell:
+                        SellPriceClipboardCopy();
+                        break;
+                    case CopyEnum.Buy:
+                        BuyPriceClipboardCopy();
+                        break;
+                    case CopyEnum.None:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                }
+            }
+        }
+
+        public enum CopyEnum
+        {
+            None,
+            Sell,
+            Buy
         }
 
         #endregion
@@ -94,6 +174,9 @@ namespace REvernus.ViewModels
             };
             _watcher.Created += WatcherOnChanged;
             _watcher.EnableRaisingEvents = true;
+
+            BuyCopyCommand = new DelegateCommand(BuyPriceClipboardCopy);
+            SellCopyCommand = new DelegateCommand(SellPriceClipboardCopy);
         }
 
         private void WatcherOnChanged(object sender, FileSystemEventArgs e)
@@ -144,13 +227,28 @@ namespace REvernus.ViewModels
                 var filteredBuyOrders = filteredOrders.Where(o => o.IsBuyOrder).ToList();
 
                 // Calculate margin
-                var bestSell = filteredSellOrders[0].Price - 0.10;
-                var bestBuy = filteredBuyOrders[0].Price + 0.10;
+                var bestSell = filteredSellOrders[0].Price - 0.01;
+                var bestBuy = filteredBuyOrders[0].Price + 0.01;
+
+                SellCopyPrice = bestSell.ToString("N");
+                BuyCopyPrice = bestBuy.ToString("N");
 
                 ItemName = e.Name.Split('-')[1];
                 Margin = GetMargin(bestSell, bestBuy).ToString("P");
                 Markup = GetMarkup(bestSell, bestBuy).ToString("P");
                 Profit = GetProfit(bestSell, bestBuy).ToString("N");
+
+                Revenue = bestSell.ToString("N");
+                Costs = GetCosts(bestSell, bestBuy).ToString("N");
+                Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
+
+                NumBuyOrders = filteredBuyOrders.Count.ToString();
+                NumSellOrders = filteredSellOrders.Count.ToString();
+
+                BuyOrderFulfillment = $"{filteredBuyOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredBuyOrders.Sum(o => o.VolumeEntered)}";
+                SellOrderFulfillment = $"{filteredSellOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredSellOrders.Sum(o => o.VolumeEntered)}";
+
+
             }
             catch (Exception exception)
             {
@@ -176,19 +274,50 @@ namespace REvernus.ViewModels
 
         public double GetProfit(double sellPrice, double buyPrice)
         {
-            var costs = (sellPrice * SalesTax) + (sellPrice * BrokerNpc) + (buyPrice * BrokerNpc) + buyPrice;
+            var costs = GetCosts(sellPrice, buyPrice);
             var revenue = sellPrice;
             return revenue - costs;
         }
 
+        private double GetCosts(double sellPrice, double buyPrice)
+        {
+            return (sellPrice * SalesTax) + (sellPrice * SellBroker) + (buyPrice * BuyBroker) + buyPrice;
+        }
+
         public double GetSellPrice(double sellPrice)
         {
-            return ( sellPrice * ( 1.0 - SalesTax) ) - (sellPrice * BrokerNpc);
+            return (sellPrice * (1.0 - SalesTax)) - (sellPrice * SellBroker);
         }
 
         public double GetBuyPrice(double buyPrice)
         {
-            return buyPrice + (buyPrice * BrokerNpc);
+            return buyPrice + (buyPrice * BuyBroker);
+        }
+
+        public DelegateCommand BuyCopyCommand { get; set; }
+        private void BuyPriceClipboardCopy()
+        {
+            try
+            {
+                Clipboard.SetText(BuyCopyPrice);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public DelegateCommand SellCopyCommand { get; set; }
+        private void SellPriceClipboardCopy()
+        {
+            try
+            {
+                Clipboard.SetText(SellCopyPrice);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
