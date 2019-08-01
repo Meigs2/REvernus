@@ -50,7 +50,6 @@ namespace REvernus.Utilities.StaticData
 
         public static async Task Initialize()
         {
-
             if (!File.Exists(Paths.UserDataBasePath))
             {
                 CreateUserDataTable();
@@ -70,10 +69,14 @@ namespace REvernus.Utilities.StaticData
             // todo: and and verify user.db settings table
         }
 
-        private static void CreateUserDataTable()
+        private static void CreateUserDataTable()   
         {
             try
             {
+                if (!Directory.Exists(Paths.DataBaseFolderPath))
+                {
+                    Directory.CreateDirectory(Paths.DataBaseFolderPath);
+                }
                 SQLiteConnection.CreateFile(Paths.UserDataBasePath);
                 var connection = new SQLiteConnection(UserDataDbConnection);
                 connection.Open();

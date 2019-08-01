@@ -6,14 +6,15 @@
              xmlns:local="clr-namespace:REvernus.Views"
              xmlns:viewModels="clr-namespace:REvernus.ViewModels"
              xmlns:utilities="clr-namespace:REvernus.Utilities"
+             xmlns:converters="clr-namespace:REvernus.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" Width="430">
     <UserControl.DataContext>
         <viewModels:MarginToolViewModel/>
     </UserControl.DataContext>
     <UserControl.Resources>
-        <utilities:EnumBooleanConverter x:Key="EnumBooleanConverter"/>
-        <utilities:PercentageConverter x:Key="PercentageConverter"/>
+        <converters:EnumBooleanConverter x:Key="EnumBooleanConverter"/>
+        <converters:PercentageConverter x:Key="PercentageConverter"/>
     </UserControl.Resources>
     <Grid>
         <TabControl>
