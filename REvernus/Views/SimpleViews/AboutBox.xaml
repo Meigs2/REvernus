@@ -1,0 +1,47 @@
+﻿<Window x:Class="REvernus.Views.SimpleViews.AboutBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:REvernus.Views.SimpleViews"
+        mc:Ignorable="d"
+        Title="AboutBox" Height="479" Width="754">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="0" x:Name="ImageGrid">
+            <Image Margin="5">
+                <Image.Source>
+                    <BitmapImage UriSource="/Resources/Revernus-Full-2k.png"/>
+                </Image.Source>
+            </Image>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <TabControl>
+                    <TabItem Header="Assembly Info">
+                    </TabItem>
+                    <TabItem Header="Attributions">
+                        <TextBlock IsEnabled="True" x:Name="AttributionsTextBlock" TextWrapping="Wrap">
+                            <Span>
+                                Images and Eve Online data: ©CCP hf. All rights reserved. Used with permission.
+                            </Span>
+                            <LineBreak/>
+                            <LineBreak/>
+                            <Span>
+                                Evestandard Copyright (c) 2018 Matthew Park: <LineBreak/> 
+                                <Hyperlink NavigateUri="https://github.com/gehnster/EVEStandard/blob/master/LICENSE">View License</Hyperlink>
+                            </Span>
+                        </TextBlock>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

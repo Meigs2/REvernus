@@ -13,11 +13,18 @@
 
   <ItemGroup>
     <None Remove="Core\ESI\VerificationWindow.xaml" />
+    <None Remove="Resources\Revernus-2k.png" />
+    <None Remove="Resources\REvernus-Full-2k.png" />
     <None Remove="Views\CharacterManagerView.xaml" />
     <None Remove="Views\MainWindowView.xaml" />
     <None Remove="Views\MarginToolView.xaml" />
     <None Remove="Views\MarketOrdersViewerView.xaml" />
     <None Remove="Views\SimpleViews\SdeDownloadProgressView.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Revernus-2k.png" />
+    <Resource Include="Resources\REvernus-Full-2k.png" />
   </ItemGroup>
 
   <ItemGroup>
