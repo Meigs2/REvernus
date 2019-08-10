@@ -5,7 +5,7 @@
 REvernus is a rewrite of the market/industry/everything EVE tool written in C# for Windows!
 </p>
 <p align="center" font-size: 3>
-Official Discord Server: https://discord.gg/xNMwCv
+Official Discord Server: https://discord.gg/nqd8myJ
 </p>
 
 ## What is Evernus?
