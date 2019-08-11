@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace REvernus.Views.SimpleViews
@@ -20,6 +21,12 @@ namespace REvernus.Views.SimpleViews
         public AboutBox()
         {
             InitializeComponent();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Utilities.Browser.OpenBrowser(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
     }
 }

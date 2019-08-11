@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:REvernus.Views.SimpleViews"
         mc:Ignorable="d"
-        Title="AboutBox" Height="479" Width="754">
+        Title="About REvernus" Height="479" Width="754">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -24,21 +24,71 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid>
-                <TabControl>
-                    <TabItem Header="Assembly Info">
-                    </TabItem>
-                    <TabItem Header="Attributions">
-                        <TextBlock IsEnabled="True" x:Name="AttributionsTextBlock" TextWrapping="Wrap">
-                            <Span>
-                                Images and Eve Online data: ©CCP hf. All rights reserved. Used with permission.
-                            </Span>
-                            <LineBreak/>
+                <TabControl Margin="5">
+                    <TabItem Header="Information">
+                        <TextBlock>
                             <LineBreak/>
                             <Span>
-                                Evestandard Copyright (c) 2018 Matthew Park: <LineBreak/> 
-                                <Hyperlink NavigateUri="https://github.com/gehnster/EVEStandard/blob/master/LICENSE">View License</Hyperlink>
+                                REvernus 
+                                <LineBreak/>
+                                <LineBreak/>
+                                Copyright (c) 2019 Connor Radeloff
+                                <LineBreak/>
+                                <LineBreak/>
+                                Contribuitors:
+                                <LineBreak/>
+                                Jimmacle
+                                <LineBreak/>
+                                Ben-Ki
+                                <LineBreak/>
+                                rebelEpik
                             </Span>
                         </TextBlock>
+                    </TabItem>
+                    <TabItem Header="Attributions">
+                        <ScrollViewer>
+                            <TextBlock IsEnabled="True" x:Name="AttributionsTextBlock" TextWrapping="Wrap">
+                                <Span>
+                                    Images and Eve Online data: ©CCP hf. All rights reserved. Used with permission.
+                                </Span>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Span>
+                                    Evestandard: Copyright (c) 2018 Matthew Park <LineBreak/> 
+                                    <Hyperlink NavigateUri="https://github.com/gehnster/EVEStandard/blob/master/LICENSE" RequestNavigate="Hyperlink_RequestNavigate">View License</Hyperlink>
+                                </Span>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Span>
+                                    SharpZipLib: Copyright © 2000-2018 SharpZipLib Contributors <LineBreak/> 
+                                    <Hyperlink NavigateUri="https://github.com/icsharpcode/SharpZipLib/blob/master/LICENSE.txt" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                </Span>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Span>
+                                    GlobalMouseKeyHook: Copyright (c) 2010-2018 George Mamaladze <LineBreak/> 
+                                    <Hyperlink NavigateUri="https://github.com/gmamaladze/globalmousekeyhook/blob/vNext/LICENSE.txt" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                </Span>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Span>
+                                    Log4Net:<LineBreak/> 
+                                    <Hyperlink NavigateUri="https://github.com/apache/logging-log4net/blob/master/LICENSE" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                </Span>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Span>
+                                    Newtonsoft.Json: Copyright (c) 2007 James Newton-King<LineBreak/> 
+                                    <Hyperlink NavigateUri="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                </Span>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Span>
+                                    PrismLibrary: Copyright (c) .NET Foundation<LineBreak/> 
+                                    <Hyperlink NavigateUri="https://github.com/PrismLibrary/Prism/blob/master/LICENSE" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                </Span>
+                            </TextBlock>
+                        </ScrollViewer>
                     </TabItem>
                 </TabControl>
             </Grid>

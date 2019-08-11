@@ -14,7 +14,7 @@ namespace REvernus.Utilities.Converters
                 var fraction = decimal.Parse(value.ToString());
                 return fraction.ToString("P2");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -28,7 +28,7 @@ namespace REvernus.Utilities.Converters
                 var valueWithoutPercentage = value.ToString().TrimEnd(' ', '%');
                 return decimal.Parse(valueWithoutPercentage) / 100;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

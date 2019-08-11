@@ -12,6 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\SdeModels\**" />
+    <EmbeddedResource Remove="Models\SdeModels\**" />
+    <None Remove="Models\SdeModels\**" />
+    <Page Remove="Models\SdeModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Core\ESI\VerificationWindow.xaml" />
     <None Remove="Resources\Revernus-2k.png" />
     <None Remove="Resources\REvernus-Full-2k.png" />
@@ -35,8 +42,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Prism.Core" Version="7.2.0.1367" />
     <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
-    <PackageReference Include="SharpSerializer" Version="3.0.1" />
-    <PackageReference Include="SharpZipLib" Version="1.1.0" />
+    <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.111" />
   </ItemGroup>
 
@@ -75,10 +81,6 @@
     <Page Update="Views\SimpleViews\SdeDownloadProgressView.xaml">
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\SdeModels\" />
   </ItemGroup>
 
 </Project>
