@@ -21,11 +21,11 @@
                 </Grid.ColumnDefinitions>
                 <Menu x:Name="MainWindowMenu" Grid.Column="0">
                     <MenuItem x:Name="FileMenuItem" Header="File">
-                        <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
-                        <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}"/> 
+                        <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}"/>
+                        <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Characters">
-                        <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
+                        <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
                     </MenuItem>
                 </Menu>
                 <ComboBox x:Name="CharacterComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="200" 

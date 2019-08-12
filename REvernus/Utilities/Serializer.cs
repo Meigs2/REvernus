@@ -29,7 +29,7 @@ namespace REvernus.Utilities
                 if (data != null)
                 {
                     using var fileStream = new FileStream(path, FileMode.Create);
-                    BinaryFormatter formatter = new BinaryFormatter();
+                    var formatter = new BinaryFormatter();
                     formatter.Serialize(fileStream, data);
                 }
                 return true;

@@ -11,7 +11,7 @@ namespace REvernus.Core.ESI
 {
     internal class EsiData
     {
-        public static string LocalUri = "http://localhost:8090/";
+        public static string LocalUri = "https://meigs2.github.io/ESICallback/";
         
         public static EVEStandardAPI EsiClient = new EVEStandardAPI(
             "REvernus",
