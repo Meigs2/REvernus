@@ -59,8 +59,7 @@ namespace REvernus.ViewModels
         }
 
         private readonly string _tableName = "Orders";
-        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(
-            List<CharacterMarketOrder> orderList, int selectedCharacterId)
+        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, int selectedCharacterId)
         {
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();

@@ -36,28 +36,6 @@ namespace REvernus.ViewModels
             get => _markup;
             set => SetProperty(ref _markup, value);
         }
-
-        private double _buyBroker = 0.05;
-        public double BuyBroker
-        {
-            get => _buyBroker;
-            set => SetProperty(ref _buyBroker, value);
-        }
-
-        private double _sellBroker = 0.05;
-        public double SellBroker
-        {
-            get => _sellBroker;
-            set => SetProperty(ref _sellBroker, value);
-        }
-
-        private double _salesTax = 0.05;
-        public double SalesTax
-        {
-            get => _salesTax;
-            set => SetProperty(ref _salesTax, value);
-        }
-
         private string _profit = "0.00";
         public string Profit
         {
@@ -115,18 +93,73 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _buyOrderFulfillment, value);
         }
 
+        private double _buyBroker = 0.05;
+        public double BuyBroker
+        {
+            get => _buyBroker;
+            set => SetProperty(ref _buyBroker, value);
+        }
+
+        private double _sellBroker = 0.05;
+        public double SellBroker
+        {
+            get => _sellBroker;
+            set => SetProperty(ref _sellBroker, value);
+        }
+
+        private double _salesTax = 0.05;
+        public double SalesTax
+        {
+            get => _salesTax;
+            set => SetProperty(ref _salesTax, value);
+        }
+
+        private double _buyPrice;
         private string _buyCopyPrice;
         public string BuyCopyPrice
         {
             get => _buyCopyPrice;
-            set => SetProperty(ref _buyCopyPrice, value);
+            set
+            {
+                try
+                {
+                    var parsedPrice = double.Parse(value);
+                    _buyPrice = parsedPrice;
+                }
+                catch (Exception)
+                {
+                    SetProperty(ref _sellCopyPrice, "");
+                    return;
+                }
+
+                UpdateMarginInformation(_sellPrice, _buyPrice);
+
+                SetProperty(ref _buyCopyPrice, _buyPrice.ToString("N"));
+            }
         }
 
+        private double _sellPrice;
         private string _sellCopyPrice;
         public string SellCopyPrice
         {
             get => _sellCopyPrice;
-            set => SetProperty(ref _sellCopyPrice, value);
+            set
+            {
+                try
+                {
+                    var parsedPrice = double.Parse(value);
+                    _sellPrice = parsedPrice;
+                }
+                catch (Exception)
+                {
+                    SetProperty(ref _sellCopyPrice, "");
+                    return;
+                }
+
+                UpdateMarginInformation(_sellPrice, _buyPrice);
+
+                SetProperty(ref _sellCopyPrice, _sellPrice.ToString("N"));
+            }
         }
 
         private CopyEnum _selectedEnum = CopyEnum.None;
@@ -228,33 +261,44 @@ namespace REvernus.ViewModels
                 var filteredBuyOrders = filteredOrders.Where(o => o.IsBuyOrder).ToList();
 
                 // Calculate margin
-                var bestSell = filteredSellOrders[0].Price - 0.01;
-                var bestBuy = filteredBuyOrders[0].Price + 0.01;
+                _sellPrice = 0.0;
+                _buyPrice = 0.0;
 
-                SellCopyPrice = bestSell.ToString("N");
-                BuyCopyPrice = bestBuy.ToString("N");
+                if (filteredSellOrders.ElementAtOrDefault(0) != null)
+                {
+                    _sellPrice = filteredSellOrders[0].Price - 0.01;
+                }
+                if (filteredBuyOrders.ElementAtOrDefault(0) != null)
+                {
+                    _buyPrice = filteredBuyOrders[0].Price + 0.01;
+                }
 
                 ItemName = e.Name.Split('-')[1];
-                Margin = GetMargin(bestSell, bestBuy).ToString("P");
-                Markup = GetMarkup(bestSell, bestBuy).ToString("P");
-                Profit = GetProfit(bestSell, bestBuy).ToString("N");
-
-                Revenue = bestSell.ToString("N");
-                Costs = GetCosts(bestSell, bestBuy).ToString("N");
                 Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
-
                 NumBuyOrders = filteredBuyOrders.Count.ToString();
                 NumSellOrders = filteredSellOrders.Count.ToString();
+                BuyOrderFulfillment =
+                    $"{filteredBuyOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredBuyOrders.Sum(o => o.VolumeEntered)}";
+                SellOrderFulfillment =
+                    $"{filteredSellOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredSellOrders.Sum(o => o.VolumeEntered)}";
 
-                BuyOrderFulfillment = $"{filteredBuyOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredBuyOrders.Sum(o => o.VolumeEntered)}";
-                SellOrderFulfillment = $"{filteredSellOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredSellOrders.Sum(o => o.VolumeEntered)}";
-
-
+                SellCopyPrice = _sellPrice.ToString("N");
+                BuyCopyPrice = _buyPrice.ToString("N");
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
             }
+        }
+
+        private void UpdateMarginInformation(double bestSell, double bestBuy)
+        {
+            Margin = GetMargin(bestSell, bestBuy).ToString("P");
+            Markup = GetMarkup(bestSell, bestBuy).ToString("P");
+            Profit = GetProfit(bestSell, bestBuy).ToString("N");
+
+            Revenue = bestSell.ToString("N");
+            Costs = GetCosts(bestSell, bestBuy).ToString("N");
         }
 
         public double GetMargin(double sellPrice, double buyPrice)

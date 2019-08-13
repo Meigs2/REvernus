@@ -18,8 +18,12 @@ namespace REvernus.Utilities
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = url,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
