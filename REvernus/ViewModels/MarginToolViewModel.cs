@@ -4,6 +4,7 @@ using REvernus.Core;
 using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -15,6 +16,20 @@ namespace REvernus.ViewModels
     public class MarginToolViewModel : BindableBase
     {
         #region Margin Tool Bindings
+
+        private DataTable _tensDataTable = new DataTable();
+        public DataTable TensDataTable
+        {
+            get => _tensDataTable;
+            set => SetProperty(ref _tensDataTable, value);
+        }
+
+        private DataTable _fivesDataTable = new DataTable();
+        public DataTable FivesDataTable
+        {
+            get => _fivesDataTable;
+            set => SetProperty(ref _fivesDataTable, value);
+        }
 
         private string _itemName = "Export Item Market Data In-Game";
         public string ItemName
@@ -97,21 +112,33 @@ namespace REvernus.ViewModels
         public double BuyBroker
         {
             get => _buyBroker;
-            set => SetProperty(ref _buyBroker, value);
+            set
+            {
+                SetProperty(ref _buyBroker, value);
+                UpdateMarginInformation(_sellPrice, _buyPrice);
+            }
         }
 
         private double _sellBroker = 0.05;
         public double SellBroker
         {
             get => _sellBroker;
-            set => SetProperty(ref _sellBroker, value);
+            set
+            {
+                SetProperty(ref _sellBroker, value);
+                UpdateMarginInformation(_sellPrice, _buyPrice);
+            }
         }
 
         private double _salesTax = 0.05;
         public double SalesTax
         {
             get => _salesTax;
-            set => SetProperty(ref _salesTax, value);
+            set
+            {
+                SetProperty(ref _salesTax, value);
+                UpdateMarginInformation(_sellPrice, _buyPrice);
+            }
         }
 
         private double _buyPrice;
@@ -211,6 +238,18 @@ namespace REvernus.ViewModels
 
             BuyCopyCommand = new DelegateCommand(BuyPriceClipboardCopy);
             SellCopyCommand = new DelegateCommand(SellPriceClipboardCopy);
+
+            // Define SampleDataTables
+            var tempTable = new DataTable();
+            tempTable.Columns.AddRange(new List<DataColumn>()
+            {
+                new DataColumn("Volume", typeof(string)),
+                new DataColumn("Cost", typeof(string)),
+                new DataColumn("Profit", typeof(string))
+            }.ToArray());
+
+            TensDataTable = tempTable.Clone();
+            FivesDataTable = tempTable.Clone();
         }
 
         private void WatcherOnChanged(object sender, FileSystemEventArgs e)
@@ -282,6 +321,20 @@ namespace REvernus.ViewModels
                 SellOrderFulfillment =
                     $"{filteredSellOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredSellOrders.Sum(o => o.VolumeEntered)}";
 
+                switch (SelectedEnum)
+                {
+                    case CopyEnum.Sell:
+                        SellPriceClipboardCopy();
+                        break;
+                    case CopyEnum.Buy:
+                        BuyPriceClipboardCopy();
+                        break;
+                    case CopyEnum.None:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(SelectedEnum), SelectedEnum, null);
+                }
+
                 SellCopyPrice = _sellPrice.ToString("N");
                 BuyCopyPrice = _buyPrice.ToString("N");
             }
@@ -295,10 +348,38 @@ namespace REvernus.ViewModels
         {
             Margin = GetMargin(bestSell, bestBuy).ToString("P");
             Markup = GetMarkup(bestSell, bestBuy).ToString("P");
-            Profit = GetProfit(bestSell, bestBuy).ToString("N");
+
+            double profit = GetProfit(bestSell, bestBuy);
+            Profit = profit.ToString("N");
 
             Revenue = bestSell.ToString("N");
-            Costs = GetCosts(bestSell, bestBuy).ToString("N");
+            double costs = GetCosts(bestSell, bestBuy);
+            Costs = costs.ToString("N");
+
+            var tempTensDataTable = TensDataTable.Clone();
+            var tempFivesDataTable = FivesDataTable.Clone();
+
+            for (int i = 0; i < 7; i++)
+            {
+                var newTensRow = tempTensDataTable.NewRow();
+                var newFivesRow = tempFivesDataTable.NewRow();
+
+                var multiplier = Math.Pow(10, i);
+
+                newTensRow["Volume"] = multiplier.ToString("N");
+                newTensRow["Cost"] = ((costs * multiplier)/1000000).ToString("N") + "M";
+                newTensRow["Profit"] = ((profit * multiplier)/1000000).ToString("N") + "M";
+
+                newFivesRow["Volume"] = (multiplier * 5).ToString("N");
+                newFivesRow["Cost"] = ((costs * multiplier * 5)/1000000).ToString("N") + "M";
+                newFivesRow["Profit"] = ((profit * multiplier * 5)/1000000).ToString("N") + "M";
+
+                tempTensDataTable.Rows.Add(newTensRow);
+                tempFivesDataTable.Rows.Add(newFivesRow);
+            }
+
+            TensDataTable = tempTensDataTable;
+            FivesDataTable = tempFivesDataTable;
         }
 
         public double GetMargin(double sellPrice, double buyPrice)

@@ -8,7 +8,7 @@
              xmlns:utilities="clr-namespace:REvernus.Utilities"
              xmlns:converters="clr-namespace:REvernus.Utilities.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" Width="430">
+             d:DesignHeight="450" d:DesignWidth="430">
     <UserControl.DataContext>
         <viewModels:MarginToolViewModel/>
     </UserControl.DataContext>
@@ -21,7 +21,12 @@
             <TabItem Header="Margin Data">
                 <DockPanel>
                     <Grid DockPanel.Dock="Bottom" Height="15" Margin="2">
-                        <CheckBox Content="Always On Top" Command="{Binding }" Checked="CheckBox_Checked"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Content="Always On Top" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxChecked"/>
+                        <CheckBox Content="Show Sample Profit Data" Checked="SampleDataCheckboxChecked" Unchecked="SampleDataCheckboxChecked" Grid.Column="1" HorizontalAlignment="Right"/>
                     </Grid>
                     <Grid DockPanel.Dock="Top" Height="30">
                         <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}" FontSize="15"/>
@@ -29,9 +34,10 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.2*"/>
-                            <RowDefinition Height="1.3*"/>
+                            <RowDefinition Height="1.3*" />
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition Height="0" x:Name="SampleDataRowDefinition" />
                         </Grid.RowDefinitions>
                         <GroupBox>
                             <Grid x:Name="MarginGrid" Margin="2">
@@ -206,6 +212,22 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Sales Tax:" VerticalAlignment="Center"/>
                                     <TextBox Grid.Column="1" Text="{Binding SalesTax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="4" x:Name="SampleDataGroupBox" Visibility="Hidden">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <DataGrid x:Name="TensDataGrid" ItemsSource="{Binding TensDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}" 
+                                              CanUserAddRows="False" IsReadOnly="True"/>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <DataGrid x:Name="FivesDataGrid" ItemsSource="{Binding FivesDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}" 
+                                              CanUserAddRows="False" IsReadOnly="True"/>
                                 </Grid>
                             </Grid>
                         </GroupBox>
