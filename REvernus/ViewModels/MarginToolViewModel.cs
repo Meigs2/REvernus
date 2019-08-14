@@ -108,6 +108,13 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _buyOrderFulfillment, value);
         }
 
+        private uint _jumpsOut;
+        public uint JumpsOut
+        {
+            get => _jumpsOut;
+            set => SetProperty(ref _jumpsOut, value);
+        }
+
         private double _buyBroker = 0.05;
         public double BuyBroker
         {
@@ -295,7 +302,7 @@ namespace REvernus.ViewModels
                 }
 
                 // Filter results
-                var filteredOrders = Orders.Where(o => o.NumJumpsAway < 1).ToList();
+                var filteredOrders = Orders.Where(o => o.NumJumpsAway <= JumpsOut).ToList();
                 var filteredSellOrders = filteredOrders.Where(o => !o.IsBuyOrder).ToList();
                 var filteredBuyOrders = filteredOrders.Where(o => o.IsBuyOrder).ToList();
 
@@ -316,6 +323,7 @@ namespace REvernus.ViewModels
                 Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
                 NumBuyOrders = filteredBuyOrders.Count.ToString();
                 NumSellOrders = filteredSellOrders.Count.ToString();
+
                 BuyOrderFulfillment =
                     $"{filteredBuyOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredBuyOrders.Sum(o => o.VolumeEntered)}";
                 SellOrderFulfillment =

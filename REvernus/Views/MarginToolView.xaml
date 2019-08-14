@@ -235,7 +235,30 @@
                 </DockPanel>
             </TabItem>
             <TabItem Header="Options">
+                <DockPanel>
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height=".2*"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
 
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Order Range:" VerticalAlignment="Center" Margin="2" />
+                                <TextBox Height="20" MaxLines="1" Grid.Column="1"
+                                         Text="{Binding JumpsOut, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </Grid>
