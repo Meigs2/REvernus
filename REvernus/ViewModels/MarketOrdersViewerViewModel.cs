@@ -78,23 +78,32 @@ namespace REvernus.ViewModels
             sellOrdersDataTable.Columns.Add("Owner", typeof(string));
 
             var buyOrdersDataTable = sellOrdersDataTable.Clone();
+            buyOrdersDataTable.TableName = "Buy Orders";
 
             foreach (var order in orderList)
             {
-                var row = sellOrdersDataTable.NewRow();
-                taskList.Add(Task.Run(async () => await MarketTask(order, row)));
+                if ((order.IsBuyOrder == true))
+                {
+                    var row = buyOrdersDataTable.NewRow();
+                    taskList.Add(Task.Run(async () => await MarketTask(order, row)));
+                }
+                else
+                {
+                    var row = sellOrdersDataTable.NewRow();
+                    taskList.Add(Task.Run(async () => await MarketTask(order, row)));
+                }
             }
 
             await Task.WhenAll(taskList);
 
             foreach (var sellOrderRow in sellOrderRows)
             {
-                sellOrdersDataTable.Rows.Add(sellOrderRow);
+                sellOrdersDataTable.Rows.Add(sellOrderRow.ItemArray);
             }
 
             foreach (var buyOrderRow in buyOrderRows)
             {
-                buyOrdersDataTable.Rows.Add(buyOrderRow);
+                buyOrdersDataTable.Rows.Add(buyOrderRow.ItemArray);
             }
 
             return (sellOrdersDataTable, buyOrdersDataTable);
