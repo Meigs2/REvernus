@@ -5,6 +5,7 @@ using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -276,20 +277,20 @@ namespace REvernus.ViewModels
                             {
                                 var values = reader.ReadLine().Split(',');
                                 var order = new ExportedOrderModel();
-                                order.Price = double.Parse(values[0]);
-                                order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])));
-                                order.TypeId = int.Parse(values[2]);
-                                order.Range = int.Parse(values[3]);
-                                order.OrderId = long.Parse(values[4]);
-                                order.VolumeEntered = int.Parse(values[5]);
-                                order.MinVolume = int.Parse(values[6]);
+                                order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
+                                order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
+                                order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
+                                order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
+                                order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
+                                order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
+                                order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
                                 order.IsBuyOrder = bool.Parse(values[7]);
-                                order.DateIssued = DateTime.Parse(values[8]);
-                                order.Duration = int.Parse(values[9]);
-                                order.StationId = long.Parse(values[10]);
-                                order.RegionId = int.Parse(values[11]);
-                                order.SystemId = int.Parse(values[12]);
-                                order.NumJumpsAway = int.Parse(values[13]);
+                                order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
+                                order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
+                                order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
+                                order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
+                                order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
+                                order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
 
                                 Orders.Add(order);
                             }
