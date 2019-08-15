@@ -54,6 +54,8 @@ namespace REvernus.ViewModels
 
         public MainWindowViewModel()
         {
+            OpenCloseMarginToolCommand = new DelegateCommand(OpenCloseMarginTool);
+
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
         }
@@ -156,6 +158,8 @@ namespace REvernus.ViewModels
                 Log.Error(e);
             }
         }
+
+        public DelegateCommand OpenCloseMarginToolCommand { get; set; }
 
         public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
         public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(async () =>

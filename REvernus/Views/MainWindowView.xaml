@@ -14,15 +14,18 @@
     </Window.DataContext>
     <Grid>
         <DockPanel>
-            <Grid DockPanel.Dock="Top">
+            <Grid DockPanel.Dock="Top" Margin="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Menu x:Name="MainWindowMenu" Grid.Column="0">
+                <Menu x:Name="MainWindowMenu" Grid.Column="0" Background="Transparent">
                     <MenuItem x:Name="FileMenuItem" Header="File">
                         <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}"/>
                         <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
+                    </MenuItem>
+                    <MenuItem Header="Tools">
+                        <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Characters">
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
