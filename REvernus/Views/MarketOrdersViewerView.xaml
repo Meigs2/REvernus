@@ -12,7 +12,7 @@
     <Grid>
         <DockPanel>
             <Grid x:Name="TopGrid"  DockPanel.Dock="Top" Height="30">
-                <Button Command="{Binding GetOrdersCommand}"/>
+                <Button Command="{Binding GetOrdersCommand}" Content="Fetch orders" />
             </Grid>
             <TabControl x:Name="MainTabControl">
                 <TabItem Header="Buy and Sell Orders">
