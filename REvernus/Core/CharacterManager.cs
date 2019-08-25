@@ -6,6 +6,8 @@ using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -109,46 +111,69 @@ namespace REvernus.Core
                 taskList.Add(EsiData.EsiClient.SSOv2.GetRefreshTokenAsync(character.AccessTokenDetails.RefreshToken));
             }
             await Task.WhenAll(taskList);
-            Log.Info("Successfully refreshed all character's auth.");
         }
 
-        public static void SerializeCharacters()
+        public static void SaveCharactersToDb()
         {
-            var serializableList = new List<SerializableCharacter>();
+            var command = new SQLiteCommand($"DELETE from {DatabaseManager.RefreshTokenTableName}", new SQLiteConnection(DatabaseManager.UserDataDbConnection));
+            command.Connection.Open();
+            command.ExecuteNonQuery();
+            command.Connection.Close();
+
             foreach (var character in CharacterList)
             {
-                serializableList.Add(new SerializableCharacter() { RefreshToken = character.AccessTokenDetails.RefreshToken });
+                command = new SQLiteCommand($"INSERT into {DatabaseManager.RefreshTokenTableName} (refreshToken) VALUES (@refreshToken)", new SQLiteConnection(DatabaseManager.UserDataDbConnection));
+                command.Parameters.AddWithValue("@refreshToken", character.AccessTokenDetails.RefreshToken);
+
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+                command.Connection.Close();
             }
-            Serializer.SerializeData(serializableList, Paths.CharacterDataFilePath);
         }
 
         public static async Task Initialize()
         {
-            var serializedCharacterList = Serializer.DeserializeData<List<SerializableCharacter>>(Paths.CharacterDataFilePath);
+            var results = DatabaseManager.QueryEveDb($"SELECT * FROM '{DatabaseManager.RefreshTokenTableName}'",
+                new SQLiteConnection(DatabaseManager.UserDataDbConnection));
 
-            if (serializedCharacterList == null) return;
+            var list = new List<string>();
 
+            foreach (DataRow resultsRow in results.Rows)
+            {
+                list.Add(resultsRow[0].ToString());
+            }
+
+            if (list.Count == 0)
+            {
+                return;
+            }
+
+            CharacterList = await GenerateCharacterList(list);
+            SelectedCharacter = CharacterList[0];
+        }
+
+        private static async Task<ObservableCollection<REvernusCharacter>> GenerateCharacterList(List<string> refreshTokenList)
+        {
             try
             {
                 var charList = new List<REvernusCharacter>();
-                foreach (var serializableCharacter in serializedCharacterList)
+                foreach (var refreshToken in refreshTokenList)
                 {
                     var character = new REvernusCharacter
                     {
                         AccessTokenDetails =
-                            await EsiData.EsiClient.SSOv2.GetRefreshTokenAsync(serializableCharacter.RefreshToken)
+                            await EsiData.EsiClient.SSOv2.GetRefreshTokenAsync(refreshToken)
                     };
                     character.CharacterDetails =
                         EsiData.EsiClient.SSOv2.GetCharacterDetailsAsync(character.AccessTokenDetails.AccessToken);
                     charList.Add(character);
                 }
-
-                CharacterList = new ObservableCollection<REvernusCharacter>(charList);
-                SelectedCharacter = CharacterList[0];
+                return new ObservableCollection<REvernusCharacter>(charList);
             }
             catch (Exception e)
             {
                 Log.Error(e);
+                return null;
             }
         }
 

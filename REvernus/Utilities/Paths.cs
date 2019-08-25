@@ -22,9 +22,5 @@ namespace REvernus.Utilities
         public static string CompressedSdeDataBasePath => Path.Combine(DataBaseFolderPath, "eve.db.bz2");
         public static string UserDataBasePath => Path.Combine(DataBaseFolderPath, "user.db");
 
-        // Specific Files
-        public static string CharacterDataFilePath => Path.Combine(DataFolderPath, "Characters.bin");
-        public static string SettingsDataFilePath => Path.Combine(DataFolderPath, "Settings.bin");
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace REvernus.Utilities
 {
@@ -9,7 +10,7 @@ namespace REvernus.Utilities
     {
         public static void Initialize()
         {
-            // Check if settings exists
+
         }
 
         public static void Save()

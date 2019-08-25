@@ -27,7 +27,7 @@ namespace REvernus.Utilities
 
         private static void OnApplicationExit(object sender, EventArgs e)
         {
-            CharacterManager.SerializeCharacters();
+            CharacterManager.SaveCharactersToDb();
         }
     }
 }

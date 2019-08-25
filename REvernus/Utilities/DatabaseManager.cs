@@ -2,15 +2,11 @@
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System.Media;
-using System.Reflection.Metadata;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows;
-using EVEStandard.Models;
+using REvernus.Utilities.StaticData;
 
-namespace REvernus.Utilities.StaticData
+namespace REvernus.Utilities
 {
     public static class DatabaseManager
     {
@@ -19,9 +15,9 @@ namespace REvernus.Utilities.StaticData
 
         public static DataTable QueryEveDb(string commandText, SQLiteConnection connection)
         {
-            try
+            using (connection)
             {
-                using (connection)
+                try
                 {
                     connection.Open();
                     var command = connection.CreateCommand();
@@ -34,19 +30,15 @@ namespace REvernus.Utilities.StaticData
                     connection.Close();
                     return dataTable;
                 }
-            }
-            catch (Exception e)
-            {
-                if (e is SQLiteException)
+                catch (Exception e)
                 {
-                    SystemSounds.Asterisk.Play();
-                    MessageBox.Show(
-                        "There was an error accessing the Static Data Export local database.\nHave you downloaded the Static Data Export under 'File'?", "Error", MessageBoxButton.OK);
+                    Console.WriteLine(e);
                 }
-                Console.WriteLine(e);
-                return null;
             }
+
+            return null;
         }
+
 
         public static async Task Initialize()
         {
@@ -54,6 +46,7 @@ namespace REvernus.Utilities.StaticData
             {
                 CreateUserDataTable();
             }
+            InitializeUserDataTable();
 
             if (!File.Exists(Paths.SdeDataBasePath))
             {
@@ -62,16 +55,14 @@ namespace REvernus.Utilities.StaticData
 
                 if (boxResult == MessageBoxResult.No) Application.Current.Shutdown(-2);
 
-                var sdeDownloader = new SdeDownloader();
                 Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                var sdeDownloader = new SdeDownloader();
                 await sdeDownloader.DownloadLatestSde();
                 Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             }
-
-            // todo: and and verify user.db settings table
         }
 
-        private static void CreateUserDataTable()   
+        private static void CreateUserDataTable()
         {
             try
             {
@@ -80,12 +71,30 @@ namespace REvernus.Utilities.StaticData
                     Directory.CreateDirectory(Paths.DataBaseFolderPath);
                 }
                 SQLiteConnection.CreateFile(Paths.UserDataBasePath);
-                var connection = new SQLiteConnection(UserDataDbConnection);
-                connection.Open();
-                // Create settings table
-                using var sqLiteCommand = new SQLiteCommand(@"CREATE TABLE settings (settingName INT, settingValue INT)", connection);
-                sqLiteCommand.ExecuteNonQuery();
-                connection.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public static readonly string RefreshTokenTableName = "refreshTokens";
+
+        private static void InitializeUserDataTable()
+        {
+            try
+            {
+                var userDbConnection = new SQLiteConnection(UserDataDbConnection);
+                userDbConnection.Open();
+
+                // Verify/Initialize refreshTokens table
+                if (!TableExists("refreshTokens", userDbConnection))
+                {
+                    using var sqLiteCommand = new SQLiteCommand(@"CREATE TABLE refreshTokens (refreshToken TEXT)", userDbConnection);
+                    sqLiteCommand.ExecuteNonQuery();
+                }
+
+                userDbConnection.Close();
             }
             catch (Exception e)
             {
@@ -94,11 +103,12 @@ namespace REvernus.Utilities.StaticData
             }
         }
 
-        private static T ByteToObject<T>(byte[] param)
+        public static bool TableExists(string tableName, SQLiteConnection connection)
         {
-            using MemoryStream ms = new MemoryStream(param);
-            IFormatter br = new BinaryFormatter();
-            return (T)br.Deserialize(ms);
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = $"SELECT * FROM sqlite_master WHERE type = 'table' AND name = '{tableName}'";
+            return (cmd.ExecuteScalar() != null);
         }
+
     }
 }
