@@ -63,7 +63,9 @@ namespace REvernus.Utilities.StaticData
                 if (boxResult == MessageBoxResult.No) Application.Current.Shutdown(-2);
 
                 var sdeDownloader = new SdeDownloader();
+                Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 await sdeDownloader.DownloadLatestSde();
+                Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             }
 
             // todo: and and verify user.db settings table
