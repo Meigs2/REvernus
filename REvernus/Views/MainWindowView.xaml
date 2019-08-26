@@ -7,7 +7,7 @@
         xmlns:characterManager="clr-namespace:REvernus.Core"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="REvernus" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Title="REvernus" Height="450" Width="800"
         xmlns:views="clr-namespace:REvernus.Views">
     <Window.DataContext>
         <local:MainWindowViewModel/>

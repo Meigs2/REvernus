@@ -9,8 +9,12 @@ namespace REvernus.Utilities
     {
         // Directories
         public static string CurrentDirectory => Environment.CurrentDirectory;
+
         public static string DataFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "REvernus", "Data");
+
         public static string DataBaseFolderPath => Path.Combine(DataFolderPath, "db");
+        public static string SerializedDataFolder => Path.Combine(DataFolderPath, "Serialized Data");
+
         public static string EveDocumentsFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EVE");
         public static string EveFleetLogsFolderPath => Path.Combine(EveDocumentsFolderPath, "logs", "Fleetlogs");
         public static string EveMarketLogsFolderPath => Path.Combine(EveDocumentsFolderPath, "logs", "Marketlogs");

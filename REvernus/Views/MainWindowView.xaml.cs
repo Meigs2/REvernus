@@ -26,6 +26,8 @@ namespace REvernus
         {
             InitializeComponent();
             CharacterComboBox.DataContext = CharacterManager.CurrentInstance;
+
+            Services.Tracker.Track(this);
         }
     }
 }
