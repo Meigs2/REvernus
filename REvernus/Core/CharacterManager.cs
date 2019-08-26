@@ -53,6 +53,7 @@ namespace REvernus.Core
                 if (value != CurrentInstance._selectedCharacter)
                 {
                     CurrentInstance.SetProperty(ref _currentInstance._selectedCharacter, value);
+                    App.Settings.PersistedSettings.SelectedCharacterName = value.CharacterName;
                     CurrentInstance.OnSelectedCharacterChanged();
                 }
             }
@@ -149,7 +150,18 @@ namespace REvernus.Core
             }
 
             CharacterList = await GenerateCharacterList(list);
-            SelectedCharacter = CharacterList[0];
+
+            if (App.Settings.PersistedSettings.SelectedCharacterName == "")
+            {
+                SelectedCharacter = CharacterList[0];
+            }
+            else
+            {
+                var selectedCharacter = CharacterList.SingleOrDefault(c =>
+                    c.CharacterName == App.Settings.PersistedSettings.SelectedCharacterName);
+
+                SelectedCharacter = selectedCharacter ?? CharacterList[0];
+            }
         }
 
         private static async Task<ObservableCollection<REvernusCharacter>> GenerateCharacterList(List<string> refreshTokenList)

@@ -5,11 +5,14 @@ using Jot.Configuration;
 
 namespace REvernus.Settings
 {
-    class AppSettings : ITrackingAware<AppSettings>
+    public class AppSettings : ITrackingAware<AppSettings>
     {
+        public PersistedSettings PersistedSettings { get; set; } = new PersistedSettings();
+
         public void ConfigureTracking(TrackingConfiguration<AppSettings> configuration)
         {
-            throw new NotImplementedException();
+            configuration.Properties(s => new {s.PersistedSettings});
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) => { configuration.Tracker.Persist(this); };
         }
     }
 }

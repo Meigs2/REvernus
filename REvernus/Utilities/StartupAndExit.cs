@@ -14,6 +14,8 @@ namespace REvernus.Utilities
         {
             Logging.SetupLogging();
 
+            Services.Tracker.Track(App.Settings);
+
             await DatabaseManager.Initialize();
 
             await CharacterManager.Initialize();

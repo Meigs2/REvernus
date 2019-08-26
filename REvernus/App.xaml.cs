@@ -1,6 +1,7 @@
 ﻿using REvernus.Utilities;
 using System;
 using System.Windows;
+using REvernus.Settings;
 
 namespace REvernus
 {
@@ -12,6 +13,7 @@ namespace REvernus
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public static AppSettings Settings = new AppSettings();
         public new static MainWindowView MainWindow { get; private set; }
 
         private async void Application_Startup(object sender, StartupEventArgs e)
