@@ -112,8 +112,12 @@ namespace REvernus.ViewModels
         private uint _jumpsOut;
         public uint JumpsOut
         {
-            get => _jumpsOut;
-            set => SetProperty(ref _jumpsOut, value);
+            get => App.Settings.MarginToolSettings.JumpsOut;
+            set
+            {
+                SetProperty(ref _jumpsOut, value);
+                App.Settings.MarginToolSettings.JumpsOut = value;
+            }
         }
 
         private double _buyBroker = 0.05;
