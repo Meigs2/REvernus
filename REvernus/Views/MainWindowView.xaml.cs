@@ -28,6 +28,13 @@ namespace REvernus
             CharacterComboBox.DataContext = CharacterManager.CurrentInstance;
 
             Services.Tracker.Track(this);
+
+            this.Closing += MainWindowView_Closing;
+        }
+
+        private void MainWindowView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Environment.Exit(-1);
         }
     }
 }

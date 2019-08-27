@@ -55,10 +55,8 @@ namespace REvernus.Utilities
 
                 if (boxResult == MessageBoxResult.No) Application.Current.Shutdown(-2);
 
-                Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 var sdeDownloader = new SdeDownloader();
                 await sdeDownloader.DownloadLatestSde();
-                Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             }
         }
 
