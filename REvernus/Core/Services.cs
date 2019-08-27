@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using Jot;
 using Jot.Configuration;
 using Jot.Storage;
+using REvernus.ViewModels;
 
 namespace REvernus.Core
 {
@@ -21,12 +23,11 @@ namespace REvernus.Core
         {
             // Tell the tracker how we want to track Window classes
             Tracker
-                .Configure<Window>()
+                .Configure<MainWindowView>()
                 .Id(w => w.Name, SystemInformation.VirtualScreen.Size)
                 .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
-                .PersistOn(nameof(Window.Closing))
-                .StopTrackingOn(nameof(Window.Closing));
-
+                .PersistOn(nameof(MainWindowView.Closing))
+                .StopTrackingOn(nameof(MainWindowView.Closing));
         }
     }
 }

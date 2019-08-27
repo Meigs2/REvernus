@@ -258,6 +258,8 @@ namespace REvernus.ViewModels
 
             TensDataTable = tempTable.Clone();
             FivesDataTable = tempTable.Clone();
+
+            JumpsOut = App.Settings.MarginToolSettings.JumpsOut;
         }
 
         private void WatcherOnChanged(object sender, FileSystemEventArgs e)

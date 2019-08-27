@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Navigation;
 using Gma.System.MouseKeyHook;
+using Jot;
 using Prism.Commands;
 using REvernus.Core;
 using REvernus.Models;
