@@ -39,7 +39,7 @@ namespace REvernus.Utilities.StaticData
                     {
                         _window = new Window
                         {
-                            Title = "Character Manager",
+                            Title = "SDE Download",
                             Content = new SdeDownloadProgressView(),
                             Width = 500,
                             Height = 300,
