@@ -325,8 +325,17 @@ namespace REvernus.ViewModels
                 {
                     _buyPrice = filteredBuyOrders[0].Price + 0.01;
                 }
-
-                ItemName = e.Name.Split('-')[1];
+                string[] temp = e.Name.Split('.');
+                string[] fullName = temp[0].Split('-');
+                DateTime exValue;
+                if (DateTime.TryParseExact(fullName[2], "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out exValue))
+                {
+                    ItemName = fullName[1];
+                } 
+                else
+                {
+                    ItemName = fullName[1] + "-" + fullName[2];
+                }
                 Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
                 NumBuyOrders = filteredBuyOrders.Count.ToString();
                 NumSellOrders = filteredSellOrders.Count.ToString();
