@@ -325,38 +325,19 @@ namespace REvernus.ViewModels
                 {
                     _buyPrice = filteredBuyOrders[0].Price + 0.01;
                 }
+
+
                 string[] temp = e.Name.Split('.');
-                string[] fullName = temp[0].Split('-');
-                List<string> itemBuilder = new List<string>();
-                DateTime exValue;
+                List<string> tempList = temp[0].Split('-').ToList<string>();
+                tempList.RemoveAt(0);
+                tempList.RemoveAt(tempList.Count - 1);
+                ItemName = string.Join("-", tempList.ToArray());
 
 
-                foreach(string s in fullName)
-                {
-                    if(DateTime.TryParseExact(s, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out exValue))
-                    {
-                        //do nothing, its the year in the title
-                    }
-                    else
-                    {
-                        itemBuilder.Add(s);
-                    }
-                }
-                itemBuilder.RemoveAt(0);
-                 string t = "";
-                foreach(string s in itemBuilder)
-                {
-                    if(t.Length == 0)
-                    {
-                        t = s;
-                    }
-                    else
-                    {
-                        t = t + "-" + s;
-                    }
-                }
+                
 
-                ItemName = t;
+
+
                 Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
                 NumBuyOrders = filteredBuyOrders.Count.ToString();
                 NumSellOrders = filteredSellOrders.Count.ToString();
