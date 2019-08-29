@@ -327,15 +327,36 @@ namespace REvernus.ViewModels
                 }
                 string[] temp = e.Name.Split('.');
                 string[] fullName = temp[0].Split('-');
+                List<string> itemBuilder = new List<string>();
                 DateTime exValue;
-                if (DateTime.TryParseExact(fullName[2], "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out exValue))
+
+
+                foreach(string s in fullName)
                 {
-                    ItemName = fullName[1];
-                } 
-                else
-                {
-                    ItemName = fullName[1] + "-" + fullName[2];
+                    if(DateTime.TryParseExact(s, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out exValue))
+                    {
+                        //do nothing, its the year in the title
+                    }
+                    else
+                    {
+                        itemBuilder.Add(s);
+                    }
                 }
+                itemBuilder.RemoveAt(0);
+                 string t = "";
+                foreach(string s in itemBuilder)
+                {
+                    if(t.Length == 0)
+                    {
+                        t = s;
+                    }
+                    else
+                    {
+                        t = t + "-" + s;
+                    }
+                }
+
+                ItemName = t;
                 Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
                 NumBuyOrders = filteredBuyOrders.Count.ToString();
                 NumSellOrders = filteredSellOrders.Count.ToString();
