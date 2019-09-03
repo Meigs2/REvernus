@@ -337,6 +337,9 @@ namespace REvernus.ViewModels
                 SellOrderFulfillment =
                     $"{filteredSellOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredSellOrders.Sum(o => o.VolumeEntered)}";
 
+                SellCopyPrice = _sellPrice.ToString("N");
+                BuyCopyPrice = _buyPrice.ToString("N");
+
                 switch (SelectedEnum)
                 {
                     case CopyEnum.Sell:
@@ -350,9 +353,6 @@ namespace REvernus.ViewModels
                     default:
                         throw new ArgumentOutOfRangeException(nameof(SelectedEnum), SelectedEnum, null);
                 }
-
-                SellCopyPrice = _sellPrice.ToString("N");
-                BuyCopyPrice = _buyPrice.ToString("N");
             }
             catch (Exception exception)
             {
@@ -441,7 +441,8 @@ namespace REvernus.ViewModels
         {
             try
             {
-                Clipboard.SetText(BuyCopyPrice);
+                if (Application.Current.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(BuyCopyPrice));
             }
             catch (Exception e)
             {
@@ -454,7 +455,8 @@ namespace REvernus.ViewModels
         {
             try
             {
-                Clipboard.SetText(SellCopyPrice);
+                if (Application.Current.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(SellCopyPrice));
             }
             catch (Exception e)
             {
