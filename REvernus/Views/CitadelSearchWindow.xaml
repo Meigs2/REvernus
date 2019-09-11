@@ -13,12 +13,25 @@
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="100"/>
-                </Grid.ColumnDefinitions>
-                <TextBox Margin="5" Text="{Binding SearchBoxText, Mode=TwoWay}"></TextBox>
-                <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}">Search</Button>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Margin="5" Text="{Binding SearchBoxText, Mode=TwoWay}"></TextBox>
+                    <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}">Search</Button>
+                </Grid>
+                <Grid Grid.Row="1" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="Exclude Public Citadels" IsChecked="{Binding ExcludePublicCitadels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
             </Grid>
             <Grid DockPanel.Dock="Bottom">
                 <Grid.ColumnDefinitions>
@@ -51,7 +64,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="1">
-                                <TextBlock Text="{Binding CitadelName}"/>
+                                <TextBlock Text="{Binding Name}"/>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
