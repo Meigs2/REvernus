@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
-using System.Threading.Tasks;
+using REvernus.Views;
 
-namespace REvernus.Utilities.StaticData
+namespace REvernus.Utilities
 {
     public class Structures
     {
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public static Dictionary<long, string> StructureDictionary { get; set; } = new Dictionary<long, string>();
 
         public static string GetStructureName(long structureId)
         {
@@ -37,6 +34,9 @@ namespace REvernus.Utilities.StaticData
             return string.Empty;
         }
 
-        // todo: add static method to add a structure to DB
+        public static void Initialize()
+        {
+
+        }
     }
 }

@@ -169,7 +169,16 @@ namespace REvernus.ViewModels
             await downloader.DownloadLatestSde();
         });
 
+        public DelegateCommand OpenCitadelManagerCommand { get; set; } = new DelegateCommand(OpenCitadelManager);
+
+        private static void OpenCitadelManager()
+        {
+            var a = new CitadelManagerView();
+            a.Show();
+        }
+
         public DelegateCommand AboutBoxOpenCommand { get; set; } = new DelegateCommand(OpenAboutBox);
+
         private static void OpenAboutBox()
         {
             var a = new Views.SimpleViews.AboutBox();
