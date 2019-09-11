@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using EVEStandard.Models;
+﻿using EVEStandard.Models;
 using EVEStandard.Models.API;
 using Prism.Commands;
 using Prism.Mvvm;
-using REvernus.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Universe = EVEStandard.API.Universe;
 
 namespace REvernus.ViewModels
 {
     public class CitadelSearchWindowViewModel : BindableBase
     {
-        private ObservableCollection<EVEStandard.Models.Structure> _citadelListItems = new ObservableCollection<Structure>();
+        private ObservableCollection<Structure> _citadelListItems = new ObservableCollection<Structure>();
         private string _searchBoxText;
+        private bool _excludePublicCitadels;
 
-        public ObservableCollection<EVEStandard.Models.Structure> CitadelListItems
+        public ObservableCollection<Structure> CitadelListItems
         {
             get => _citadelListItems;
             set => SetProperty(ref _citadelListItems, value);
@@ -28,6 +26,12 @@ namespace REvernus.ViewModels
         {
             get => _searchBoxText;
             set => SetProperty(ref _searchBoxText, value);
+        }
+
+        public bool ExcludePublicCitadels
+        {
+            get => _excludePublicCitadels;
+            set => SetProperty(ref _excludePublicCitadels, value);
         }
 
         public CitadelSearchWindowViewModel()
@@ -48,8 +52,7 @@ namespace REvernus.ViewModels
 
             CitadelListItems.Clear();
 
-            var characterSearchResult = await Core.ESI.EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() {EVEStandard.Enumerations.SearchCategory.STRUCTURE}, SearchBoxText);
-            var allPublicStructures = await Core.ESI.EsiData.EsiClient.Universe.ListAllPublicStructuresV1Async(Universe.StructureHas.NoFilter);
+            var characterSearchResult = await Core.ESI.EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { EVEStandard.Enumerations.SearchCategory.STRUCTURE }, SearchBoxText);
 
             if (characterSearchResult.Model.Structure != null)
             {
@@ -61,20 +64,24 @@ namespace REvernus.ViewModels
                             await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
                         CitadelListItems.Add(structureInfo.Model);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // ignored
                     }
                 }
             }
 
-            foreach (var structure in allPublicStructures.Model)
+            if (!ExcludePublicCitadels)
             {
-                var structureInfo =
-                    await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
-                if (structureInfo.Model.Name.Contains(SearchBoxText))
+                var allPublicStructures = await Core.ESI.EsiData.EsiClient.Universe.ListAllPublicStructuresV1Async(Universe.StructureHas.NoFilter);
+                foreach (var structure in allPublicStructures.Model)
                 {
-                    CitadelListItems.Add(structureInfo.Model);
+                    var structureInfo =
+                        await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
+                    if (structureInfo.Model.Name.Contains(SearchBoxText))
+                    {
+                        CitadelListItems.Add(structureInfo.Model);
+                    }
                 }
             }
         }
