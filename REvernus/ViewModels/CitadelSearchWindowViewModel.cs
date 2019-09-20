@@ -3,18 +3,26 @@ using EVEStandard.Models.API;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using REvernus.Core.ESI;
 using Universe = EVEStandard.API.Universe;
 
 namespace REvernus.ViewModels
 {
     public class CitadelSearchWindowViewModel : BindableBase
     {
+        private static readonly log4net.ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ObservableCollection<Structure> _citadelListItems = new ObservableCollection<Structure>();
         private string _searchBoxText;
-        private bool _excludePublicCitadels;
+        private bool _includePublicCitadels;
 
         public ObservableCollection<Structure> CitadelListItems
         {
@@ -28,18 +36,33 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _searchBoxText, value);
         }
 
-        public bool ExcludePublicCitadels
+        public bool IncludePublicCitadels
         {
-            get => _excludePublicCitadels;
-            set => SetProperty(ref _excludePublicCitadels, value);
+            get => _includePublicCitadels;
+            set => SetProperty(ref _includePublicCitadels, value);
         }
 
         public CitadelSearchWindowViewModel()
         {
             SearchCommand = new DelegateCommand(async () => await SearchEsiForCitadels());
+            SelectCommand = new DelegateCommand<IList>(SelectCitadels);
+        }
+
+        public List<Structure> SelectedStructures { get; set; } = new List<Structure>();
+
+        private void SelectCitadels(IList selectedStructures)
+        {
+            SelectedStructures.Clear();
+
+            foreach (var structure in selectedStructures)
+            {
+                SelectedStructures.Add(structure as Structure);
+            }
         }
 
         public DelegateCommand SearchCommand { get; set; }
+
+        public DelegateCommand<IList> SelectCommand { get; set; }
 
         private async Task SearchEsiForCitadels()
         {
@@ -52,17 +75,31 @@ namespace REvernus.ViewModels
 
             CitadelListItems.Clear();
 
-            var characterSearchResult = await Core.ESI.EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { EVEStandard.Enumerations.SearchCategory.STRUCTURE }, SearchBoxText);
+            var taskList = new List<Task>();
+            var citadelList = new ConcurrentBag<Structure>(); 
 
-            if (characterSearchResult.Model.Structure != null)
+            var citadelSearchResult = await Core.ESI.EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { EVEStandard.Enumerations.SearchCategory.STRUCTURE }, SearchBoxText);
+
+            if (citadelSearchResult.Model.Structure != null)
             {
-                foreach (var structure in characterSearchResult.Model.Structure)
+                foreach (var structure in citadelSearchResult.Model.Structure)
                 {
                     try
                     {
-                        var structureInfo =
-                            await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
-                        CitadelListItems.Add(structureInfo.Model);
+                        taskList.Add(Task.Run(async () =>
+                        {
+                            var statusHandle = new Utilities.StatusHandle();
+                            try
+                            {
+                                var structureInfo =
+                                    await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
+                                citadelList.Add(structureInfo.Model);
+                            }
+                            finally
+                            {
+                                statusHandle.Dispose();
+                            }
+                        }));
                     }
                     catch (Exception)
                     {
@@ -71,19 +108,33 @@ namespace REvernus.ViewModels
                 }
             }
 
-            if (!ExcludePublicCitadels)
+            if (IncludePublicCitadels)
             {
                 var allPublicStructures = await Core.ESI.EsiData.EsiClient.Universe.ListAllPublicStructuresV1Async(Universe.StructureHas.NoFilter);
-                foreach (var structure in allPublicStructures.Model)
+                foreach (var structureId in allPublicStructures.Model)
                 {
-                    var structureInfo =
-                        await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
-                    if (structureInfo.Model.Name.Contains(SearchBoxText))
+                    taskList.Add(Task.Run(async () =>
                     {
-                        CitadelListItems.Add(structureInfo.Model);
-                    }
+                        try
+                        {
+                            var structureInfo =
+                                await EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structureId);
+                            if (structureInfo.Model.Name.Contains(SearchBoxText))
+                            {
+                                CitadelListItems.Add(structureInfo.Model);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Ignored
+                        }
+                    }));
                 }
             }
+
+            await Task.WhenAll(taskList);
+
+            CitadelListItems = new ObservableCollection<Structure>(citadelList);
         }
     }
 }
