@@ -6,10 +6,15 @@
         xmlns:local="clr-namespace:REvernus.Views.SimpleViews"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="EsiSearchWindow" Height="353" Width="490">
+        Title="Citadel Search" Height="353" Width="490">
     <Window.DataContext>
         <viewModels:CitadelSearchWindowViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Top">
@@ -26,49 +31,30 @@
                     <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}">Search</Button>
                 </Grid>
                 <Grid Grid.Row="1" Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <CheckBox Content="Exclude Public Citadels" IsChecked="{Binding ExcludePublicCitadels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox Content="Include Public Citadels (longer search time)" IsChecked="{Binding IncludePublicCitadels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </Grid>
-            <Grid DockPanel.Dock="Bottom">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-
+            <Grid DockPanel.Dock="Bottom" Margin="5">
+                <Button Content="Select" Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItems, ElementName=CitadelListbox}"/>
             </Grid>
             <Grid>
-                <ListBox Margin="5"
-                         VerticalAlignment="Stretch"
+                <ListView Margin="5"
+                          x:Name="CitadelListbox"
+                          VerticalAlignment="Stretch"
                          ItemsSource="{Binding CitadelListItems}"
                          SelectionMode="Multiple">
-                    <ListBox.Resources>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="OverridesDefaultStyle" Value="true" />
-                            <Setter Property="SnapsToDevicePixels" Value="true" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListBoxItem">
-                                        <CheckBox Margin="5"
-                                                  IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                            <ContentPresenter />
-                                        </CheckBox>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Citadel" DisplayMemberBinding="{Binding Name}" Width="400" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                         </Style>
-                    </ListBox.Resources>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="1">
-                                <TextBlock Text="{Binding Name}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+
             </Grid>
         </DockPanel>
     </Grid>
