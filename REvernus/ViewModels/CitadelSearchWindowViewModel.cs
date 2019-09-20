@@ -78,26 +78,20 @@ namespace REvernus.ViewModels
             var taskList = new List<Task>();
             var citadelList = new ConcurrentBag<Structure>(); 
 
-            var citadelSearchResult = await Core.ESI.EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { EVEStandard.Enumerations.SearchCategory.STRUCTURE }, SearchBoxText);
+            var citadelSearchResult = await EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { EVEStandard.Enumerations.SearchCategory.STRUCTURE }, SearchBoxText);
 
             if (citadelSearchResult.Model.Structure != null)
             {
-                foreach (var structure in citadelSearchResult.Model.Structure)
+                foreach (var structureId in citadelSearchResult.Model.Structure)
                 {
                     try
                     {
                         taskList.Add(Task.Run(async () =>
                         {
-                            var statusHandle = new Utilities.StatusHandle();
-                            try
+                            var structure = await Citadels.GetStructureInfoAsync(auth, structureId);
+                            if (structure != null)
                             {
-                                var structureInfo =
-                                    await Core.ESI.EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structure);
-                                citadelList.Add(structureInfo.Model);
-                            }
-                            finally
-                            {
-                                statusHandle.Dispose();
+                                citadelList.Add(structure);
                             }
                         }));
                     }
@@ -110,23 +104,15 @@ namespace REvernus.ViewModels
 
             if (IncludePublicCitadels)
             {
-                var allPublicStructures = await Core.ESI.EsiData.EsiClient.Universe.ListAllPublicStructuresV1Async(Universe.StructureHas.NoFilter);
+                var allPublicStructures = await EsiData.EsiClient.Universe.ListAllPublicStructuresV1Async(Universe.StructureHas.NoFilter);
                 foreach (var structureId in allPublicStructures.Model)
                 {
                     taskList.Add(Task.Run(async () =>
                     {
-                        try
+                        var structure = await Citadels.GetStructureInfoAsync(auth, structureId, SearchBoxText);
+                        if (structure != null)
                         {
-                            var structureInfo =
-                                await EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structureId);
-                            if (structureInfo.Model.Name.Contains(SearchBoxText))
-                            {
-                                CitadelListItems.Add(structureInfo.Model);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Ignored
+                            citadelList.Add(structure);
                         }
                     }));
                 }
