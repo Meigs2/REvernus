@@ -41,8 +41,9 @@
                 <ListView Margin="5"
                           x:Name="CitadelListbox"
                           VerticalAlignment="Stretch"
-                         ItemsSource="{Binding CitadelListItems}"
-                         SelectionMode="Multiple">
+                          ItemsSource="{Binding CitadelListItems}"
+                          SelectionMode="Multiple"
+                          IsEnabled="{Binding IsEnabled}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Citadel" DisplayMemberBinding="{Binding Name}" Width="400" />
