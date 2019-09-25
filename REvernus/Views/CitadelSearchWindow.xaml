@@ -27,8 +27,8 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="5" Text="{Binding SearchBoxText, Mode=TwoWay}"></TextBox>
-                    <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}">Search</Button>
+                    <TextBox Margin="5" Text="{Binding SearchBoxText, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"></TextBox>
+                    <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}" IsEnabled="{Binding IsEnabled}">Search</Button>
                 </Grid>
                 <Grid Grid.Row="1" Margin="5">
                     <CheckBox Content="Include Public Citadels (longer search time)" IsChecked="{Binding IncludePublicCitadels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
