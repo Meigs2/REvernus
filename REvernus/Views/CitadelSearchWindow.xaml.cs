@@ -13,7 +13,7 @@ namespace REvernus.Views
     /// </summary>
     public partial class CitadelSearchWindow : Window
     {
-        public List<Structure> SelectedStructures { get; set; } = new List<Structure>();
+        public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
 
         protected override void OnInitialized(EventArgs e)
         {
