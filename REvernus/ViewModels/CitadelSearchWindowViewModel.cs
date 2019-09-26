@@ -67,6 +67,8 @@ namespace REvernus.ViewModels
             {
                 SelectedStructures.Add(structure as Structure);
             }
+
+            OnSelectPressed();
         }
 
         public DelegateCommand SearchCommand { get; set; }
@@ -139,6 +141,18 @@ namespace REvernus.ViewModels
             {
                 IsEnabled = true;
             }
+        }
+
+        public event EventHandler<CitadelSearchEventArgs> SelectPressed;
+
+        protected virtual void OnSelectPressed()
+        {
+            SelectPressed?.Invoke(this, new CitadelSearchEventArgs(){ SelectedStructures = SelectedStructures });
+        }
+
+        public class CitadelSearchEventArgs : EventArgs
+        {
+            public List<Structure> SelectedStructures { get; set; } = new List<Structure>();
         }
     }
 }
