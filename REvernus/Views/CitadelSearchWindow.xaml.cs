@@ -1,5 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using EVEStandard.Models;
 using REvernus.Models;
+using REvernus.ViewModels;
 
 namespace REvernus.Views
 {
@@ -8,7 +13,21 @@ namespace REvernus.Views
     /// </summary>
     public partial class CitadelSearchWindow : Window
     {
-        public CitadelListItem CitadelList { get; set; }
+        public List<Structure> SelectedStructures { get; set; } = new List<Structure>();
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            if (DataContext is CitadelSearchWindowViewModel a) a.SelectPressed += CloseWindow;
+        }
+
+        private void CloseWindow(object sender, CitadelSearchWindowViewModel.CitadelSearchEventArgs e)
+        {
+            SelectedStructures = e.SelectedStructures;
+
+            Close();
+        }
 
         public CitadelSearchWindow()
         {
