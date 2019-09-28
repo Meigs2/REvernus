@@ -107,15 +107,7 @@ namespace REvernus.ViewModels
                                 var structure = await Citadels.GetStructureInfoAsync(auth, structureId);
                                 if (structure != null)
                                 {
-                                    var playerStructure = new PlayerStructure()
-                                    {
-                                        StructureId = structureId, 
-                                        OwnerId = structure.OwnerId,
-                                        Name = structure.Name, 
-                                        Position = structure.Position, 
-                                        SolarSystemId = structure.SolarSystemId, 
-                                        TypeId = structure.TypeId
-                                    };
+                                    var playerStructure = StructureToPlayerStructure(structureId, structure);
                                     citadelList.Add(playerStructure);
                                 }
                             }));
@@ -137,15 +129,7 @@ namespace REvernus.ViewModels
                             var structure = await Citadels.GetStructureInfoAsync(auth, structureId, SearchBoxText);
                             if (structure != null)
                             {
-                                var playerStructure = new PlayerStructure()
-                                {
-                                    StructureId = structureId,
-                                    OwnerId = structure.OwnerId,
-                                    Name = structure.Name,
-                                    Position = structure.Position,
-                                    SolarSystemId = structure.SolarSystemId,
-                                    TypeId = structure.TypeId
-                                };
+                                var playerStructure = StructureToPlayerStructure(structureId, structure);
                                 citadelList.Add(playerStructure);
                             }
                         }));
@@ -160,6 +144,19 @@ namespace REvernus.ViewModels
             {
                 IsEnabled = true;
             }
+        }
+
+        private static PlayerStructure StructureToPlayerStructure(long structureId, Structure structure)
+        {
+            return new PlayerStructure()
+            {
+                StructureId = structureId,
+                OwnerId = structure.OwnerId,
+                Name = structure.Name,
+                Position = structure.Position,
+                SolarSystemId = structure.SolarSystemId,
+                TypeId = structure.TypeId
+            };
         }
 
         public event EventHandler<CitadelSearchEventArgs> SelectPressed;

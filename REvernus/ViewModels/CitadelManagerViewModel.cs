@@ -16,8 +16,12 @@ namespace REvernus.ViewModels
         public DelegateCommand AddCitadelsCommand { get; set; } = new DelegateCommand(AddNewCitadels);
         private static void AddNewCitadels()
         {
-            var a = new CitadelSearchWindow();
-            a.ShowDialog();
+            var citadelSearchWindow = new CitadelSearchWindow();
+            citadelSearchWindow.ShowDialog();
+
+            var selectedStructures = citadelSearchWindow.SelectedStructures;
+
+
         }
     }
 }
