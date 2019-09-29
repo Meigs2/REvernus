@@ -18,7 +18,7 @@ using Universe = EVEStandard.API.Universe;
 
 namespace REvernus.ViewModels
 {
-    public class CitadelSearchWindowViewModel : BindableBase
+    public class CitadelSearchViewModel : BindableBase
     {
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -52,7 +52,7 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _isEnabled, value);
         }
 
-        public CitadelSearchWindowViewModel()
+        public CitadelSearchViewModel()
         {
             SearchCommand = new DelegateCommand(async () => await SearchEsiForCitadels());
             SelectCommand = new DelegateCommand<IList>(SelectCitadels);

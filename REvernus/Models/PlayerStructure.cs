@@ -12,7 +12,6 @@ namespace REvernus.Models
         public long StructureId { get; set; }
         public string Name { get; set; }
         public int OwnerId { get; set; }
-        public Position Position { get; set; }
         public int SolarSystemId { get; set; }
         public int? TypeId { get; set; }
     }

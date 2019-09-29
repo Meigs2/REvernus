@@ -77,7 +77,7 @@ namespace REvernus.Utilities
         }
 
         public static readonly string RefreshTokenTableName = "refreshTokens";
-        public static readonly string StructuresTokenTableName = "structures";
+        public static readonly string StructuresTableName = "structures";
 
         private static void InitializeUserDataTable()
         {
@@ -94,9 +94,6 @@ namespace REvernus.Utilities
                                             "structureId INTEGER NOT NULL PRIMARY KEY," +
                                             "name TEXT," +
                                             "ownerId INTEGER," +
-                                            "X REAL," +
-                                            "y REAL," +
-                                            "Z REAL," +
                                             "solarSystemId INTEGER," +
                                             "typeId INTEGER)";
                 sqLiteCommand.ExecuteNonQuery();
