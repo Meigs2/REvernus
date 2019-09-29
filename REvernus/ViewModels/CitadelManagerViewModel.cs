@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Text;
 using Prism.Commands;
+using REvernus.Models;
+using REvernus.Utilities;
 using REvernus.Views;
 
 namespace REvernus.ViewModels
@@ -22,6 +25,40 @@ namespace REvernus.ViewModels
             var selectedStructures = citadelSearchWindow.SelectedStructures;
 
 
+            if (selectedStructures.Count <= 0) return;
+
+            foreach (var structure in selectedStructures)
+            {
+                InsertStructureIntoDatabase(structure);
+            }
+        }
+
+        private static void InsertStructureIntoDatabase(PlayerStructure structure)
+        {
+            var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
+            connection.Open();
+
+            using var sqLiteCommand = new SQLiteCommand($"INSERT OR REPLACE INTO structures " +
+                                                        $"(structureId, name, ownerId, solarSystemId, typeId) " +
+                                                        $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId)", connection);
+
+            sqLiteCommand.Parameters.AddWithValue("@structureId", structure.StructureId);
+            sqLiteCommand.Parameters.AddWithValue("@name", structure.Name);
+            sqLiteCommand.Parameters.AddWithValue("@ownerId", structure.OwnerId);
+            sqLiteCommand.Parameters.AddWithValue("@solarSystemId", structure.SolarSystemId);
+            sqLiteCommand.Parameters.AddWithValue("@typeId",structure.TypeId);
+
+            try
+            {
+                sqLiteCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
+            sqLiteCommand.Dispose();
+            connection.Close();
         }
     }
 }
