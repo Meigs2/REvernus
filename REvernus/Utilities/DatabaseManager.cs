@@ -95,7 +95,10 @@ namespace REvernus.Utilities
                                             "name TEXT," +
                                             "ownerId INTEGER," +
                                             "solarSystemId INTEGER," +
-                                            "typeId INTEGER)";
+                                            "typeId INTEGER," +
+                                            "addedBy INTEGER," +
+                                            "addedAt DATETIME," +
+                                            "enabled INTEGER)";
                 sqLiteCommand.ExecuteNonQuery();
                 sqLiteCommand.Parameters.Clear();
 

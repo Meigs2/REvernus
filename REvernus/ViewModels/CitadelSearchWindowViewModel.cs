@@ -20,6 +20,8 @@ namespace REvernus.ViewModels
 {
     public class CitadelSearchWindowViewModel : BindableBase
     {
+        public static REvernusCharacter SelectedCharacter => CharacterManager.SelectedCharacter;
+
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -107,7 +109,8 @@ namespace REvernus.ViewModels
                                 var structure = await Citadels.GetStructureInfoAsync(auth, structureId);
                                 if (structure != null)
                                 {
-                                    var playerStructure = StructureToPlayerStructure(structureId, structure);
+                                    var playerStructure =
+                                        StructureToPlayerStructure(structureId, structure, SelectedCharacter);
                                     citadelList.Add(playerStructure);
                                 }
                             }));
@@ -129,7 +132,7 @@ namespace REvernus.ViewModels
                             var structure = await Citadels.GetStructureInfoAsync(auth, structureId, SearchBoxText);
                             if (structure != null)
                             {
-                                var playerStructure = StructureToPlayerStructure(structureId, structure);
+                                var playerStructure = StructureToPlayerStructure(structureId, structure, SelectedCharacter);
                                 citadelList.Add(playerStructure);
                             }
                         }));
@@ -146,7 +149,7 @@ namespace REvernus.ViewModels
             }
         }
 
-        private static PlayerStructure StructureToPlayerStructure(long structureId, Structure structure)
+        private static PlayerStructure StructureToPlayerStructure(long structureId, Structure structure, REvernusCharacter selectedCharacter)
         {
             return new PlayerStructure()
             {
@@ -154,7 +157,10 @@ namespace REvernus.ViewModels
                 OwnerId = structure.OwnerId,
                 Name = structure.Name,
                 SolarSystemId = structure.SolarSystemId,
-                TypeId = structure.TypeId
+                TypeId = structure.TypeId,
+                AddedBy = SelectedCharacter.CharacterDetails.CharacterId,
+                AddedAt = null,
+                Enabled = null
             };
         }
 
