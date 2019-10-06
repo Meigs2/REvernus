@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:REvernus.Views"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
+        xmlns:p="clr-namespace:REvernus.Core"
         Title="CitadelManagerView" d:DesignHeight="450" d:DesignWidth="800">
     <Window.DataContext>
         <viewModels:CitadelManagerViewModel/>
@@ -20,11 +21,11 @@
                 <Button Margin="3" Grid.Column="0" Content="Add Citadel" Command="{Binding AddCitadelsCommand}"/>
                 <Button Margin="3" Grid.Column="1" Content="Remove Citadel(s)"/>
             </Grid>
-            <ListView x:Name="CharacterListView" Margin="5" >
+            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Source={x:Static p:CitadelManager.Structures}, Mode=Default}" >
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Citadel Name" DisplayMemberBinding="{Binding CharacterDetails.CharacterId}"/>
-                        <GridViewColumn Header="Citadel Location" DisplayMemberBinding="{Binding CharacterDetails.CharacterName}"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Added At" DisplayMemberBinding="{Binding AddedAt}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
