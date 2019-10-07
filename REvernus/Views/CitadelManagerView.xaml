@@ -7,10 +7,15 @@
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
         xmlns:p="clr-namespace:REvernus.Core"
+        xmlns:converters="clr-namespace:REvernus.Utilities.Converters"
         Title="CitadelManagerView" d:DesignHeight="450" d:DesignWidth="800">
     <Window.DataContext>
         <viewModels:CitadelManagerViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <converters:CharacterIdToNameConverter x:Key="CharacterIdToNameConverter"/>
+        <converters:TypeIdToNameConverter x:Key="TypeIdToNameConverter"/>
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Bottom">
@@ -26,6 +31,8 @@
                     <GridView>
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="Added At" DisplayMemberBinding="{Binding AddedAt}"/>
+                        <GridViewColumn Header="Added By" DisplayMemberBinding="{Binding AddedBy, Converter={StaticResource CharacterIdToNameConverter}}"/>
+                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding TypeId, Converter={StaticResource TypeIdToNameConverter}}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
