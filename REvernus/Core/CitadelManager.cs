@@ -36,18 +36,26 @@ namespace REvernus.Core
                 using var reader = sqLiteCommand.ExecuteReader();
                 while (reader.Read())
                 {
-                    var structure = new PlayerStructure
+                    try
                     {
-                        StructureId = (long)reader[0],
-                        Name = (string)reader[1],
-                        OwnerId = Convert.ToInt32((long)reader[2]),
-                        SolarSystemId = Convert.ToInt32((long)reader[3]),
-                        TypeId = Convert.ToInt32((long?)reader[4]),
-                        AddedBy = (long?)reader[5],
-                        AddedAt = (DateTime?)reader[6],
-                        Enabled = Convert.ToBoolean((long?)reader[7])
-                    };
-                    Structures.Add(structure);
+                        var structure = new PlayerStructure
+                        {
+                            StructureId = (long)reader[0],
+                            Name = (string)reader[1],
+                            OwnerId = Convert.ToInt32((long)reader[2]),
+                            SolarSystemId = Convert.ToInt32((long)reader[3]),
+                            TypeId = Convert.ToInt32((long?)reader[4]),
+                            AddedBy = (long?)reader[5],
+                            AddedAt = (DateTime?)reader[6],
+                            Enabled = Convert.ToBoolean((long?)reader[7])
+                        };
+                        Structures.Add(structure);
+                    }
+                    catch (Exception e)
+                    {
+                        if ((e is IndexOutOfRangeException)) continue;
+                        throw;
+                    }
                 }
             }
             finally
