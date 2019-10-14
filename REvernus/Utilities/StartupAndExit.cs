@@ -17,9 +17,9 @@ namespace REvernus.Utilities
 
             Services.Tracker.Track(App.Settings);
 
-            CitadelManager.Initialize();
-
             await DatabaseManager.Initialize();
+
+            CitadelManager.Initialize();
 
             await CharacterManager.Initialize();
 
