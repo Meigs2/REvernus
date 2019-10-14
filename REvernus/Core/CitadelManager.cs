@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
@@ -97,6 +98,35 @@ namespace REvernus.Core
                 sqLiteCommand.Dispose();
                 connection.Close();
             }
+
+            LoadCitadelsFromDatabase();
+        }
+
+        public static void RemoveStructuresFromDatabase(IList structures)
+        {
+            var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
+            connection.Open();
+
+            try
+            {
+                // ReSharper disable once IdentifierTypo
+                foreach (var structure in structures)
+                {
+                    using var command = new SQLiteCommand("DELETE FROM structures WHERE structureId = @structureId", connection);
+                    command.Parameters.AddWithValue("@structureId", ((PlayerStructure) structure).StructureId);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+                // Ignored
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            LoadCitadelsFromDatabase();
         }
     }
 }
