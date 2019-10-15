@@ -273,7 +273,7 @@ namespace REvernus.ViewModels
             // various other fields do not get populated with the correct data.
             // Sleeping the thread seems to fix the problem
             
-            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread.Sleep(5);
             
             try
             {
