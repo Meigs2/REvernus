@@ -8,10 +8,7 @@ using REvernus.ViewModels;
 
 namespace REvernus.Views
 {
-    /// <summary>
-    /// Interaction logic for EsiSearchWindow.xaml
-    /// </summary>
-    public partial class CitadelSearchWindow : Window
+    public partial class StructureSearchView : Window
     {
         public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
 
@@ -19,17 +16,17 @@ namespace REvernus.Views
         {
             base.OnInitialized(e);
 
-            if (DataContext is CitadelSearchWindowViewModel a) a.SelectPressed += CloseWindow;
+            if (DataContext is StructureSearchViewModel a) a.SelectPressed += CloseWindow;
         }
 
-        private void CloseWindow(object sender, CitadelSearchWindowViewModel.CitadelSearchEventArgs e)
+        private void CloseWindow(object sender, StructureSearchViewModel.StructureSearchEventArgs e)
         {
             SelectedStructures = e.SelectedStructures;
 
             Close();
         }
 
-        public CitadelSearchWindow()
+        public StructureSearchView()
         {
             InitializeComponent();
         }

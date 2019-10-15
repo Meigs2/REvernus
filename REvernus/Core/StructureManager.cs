@@ -10,22 +10,22 @@ using REvernus.Views;
 
 namespace REvernus.Core
 {
-    public static class CitadelManager
+    public static class StructureManager
     {
         public static ObservableCollection<PlayerStructure> Structures = new ObservableCollection<PlayerStructure>();
 
         public static void Initialize()
         {
-            LoadCitadelsFromDatabase();
+            LoadStructuresFromDatabase();
         }
 
-        public static void ShowCitadelManagementWindow()
+        public static void ShowStructureManagementWindow()
         {
-            var citadelManagerView = new CitadelManagerView();
-            citadelManagerView.Show();
+            var structureManagerView = new StructureManagerView();
+            structureManagerView.Show();
         }
 
-        public static void LoadCitadelsFromDatabase()
+        public static void LoadStructuresFromDatabase()
         {
             Structures.Clear();
             using var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
@@ -52,10 +52,9 @@ namespace REvernus.Core
                         };
                         Structures.Add(structure);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        if ((e is IndexOutOfRangeException)) continue;
-                        throw;
+                        // ignored
                     }
                 }
             }
@@ -71,35 +70,36 @@ namespace REvernus.Core
             {
                 var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
                 connection.Open();
-
-                using var sqLiteCommand = new SQLiteCommand($"INSERT OR REPLACE INTO structures " +
-                                                            $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled) " +
-                                                            $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled)", connection);
-
-                sqLiteCommand.Parameters.AddWithValue("@structureId", structure.StructureId);
-                sqLiteCommand.Parameters.AddWithValue("@name", structure.Name);
-                sqLiteCommand.Parameters.AddWithValue("@ownerId", structure.OwnerId);
-                sqLiteCommand.Parameters.AddWithValue("@solarSystemId", structure.SolarSystemId);
-                sqLiteCommand.Parameters.AddWithValue("@typeId", structure.TypeId);
-                sqLiteCommand.Parameters.AddWithValue("@addedBy", structure.AddedBy);
-                sqLiteCommand.Parameters.AddWithValue("@addedAt", DateTime.UtcNow);
-                sqLiteCommand.Parameters.AddWithValue("@enabled", true);
-
-                sqLiteCommand.CommandTimeout = 1;
                 try
                 {
+                    using var sqLiteCommand = new SQLiteCommand($"INSERT OR REPLACE INTO structures " +
+                                                                $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled) " +
+                                                                $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled)",
+                        connection);
+
+                    sqLiteCommand.Parameters.AddWithValue("@structureId", structure.StructureId);
+                    sqLiteCommand.Parameters.AddWithValue("@name", structure.Name);
+                    sqLiteCommand.Parameters.AddWithValue("@ownerId", structure.OwnerId);
+                    sqLiteCommand.Parameters.AddWithValue("@solarSystemId", structure.SolarSystemId);
+                    sqLiteCommand.Parameters.AddWithValue("@typeId", structure.TypeId);
+                    sqLiteCommand.Parameters.AddWithValue("@addedBy", structure.AddedBy);
+                    sqLiteCommand.Parameters.AddWithValue("@addedAt", DateTime.UtcNow);
+                    sqLiteCommand.Parameters.AddWithValue("@enabled", true);
+
+                    sqLiteCommand.CommandTimeout = 1;
                     sqLiteCommand.ExecuteNonQuery();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
-
-                sqLiteCommand.Dispose();
-                connection.Close();
+                finally
+                {
+                    connection.Close();
+                }
             }
 
-            LoadCitadelsFromDatabase();
+            LoadStructuresFromDatabase();
         }
 
         public static void RemoveStructuresFromDatabase(IList structures)
@@ -126,7 +126,7 @@ namespace REvernus.Core
                 connection.Close();
             }
 
-            LoadCitadelsFromDatabase();
+            LoadStructuresFromDatabase();
         }
     }
 }

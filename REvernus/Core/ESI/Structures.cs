@@ -7,7 +7,7 @@ using EVEStandard.Models.API;
 
 namespace REvernus.Core.ESI
 {
-    public static class Citadels
+    public static class Structures
     {
         public static async Task<Structure> GetStructureInfoAsync(AuthDTO auth, long structureId, string searchString = "")
         {
