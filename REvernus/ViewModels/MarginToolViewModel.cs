@@ -272,7 +272,9 @@ namespace REvernus.ViewModels
             // There appears to be some sort of timing error resulting in NaN in the window under Margin and Markup
             // various other fields do not get populated with the correct data.
             // Sleeping the thread seems to fix the problem
+            
             System.Threading.Thread.Sleep(50);
+            
             try
             {
                 var currentChar = CharacterManager.SelectedCharacter;
