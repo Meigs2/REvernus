@@ -273,7 +273,7 @@ namespace REvernus.ViewModels
             // various other fields do not get populated with the correct data.
             // Sleeping the thread seems to fix the problem
             
-            System.Threading.Thread.Sleep(5);
+            System.Threading.Thread.Sleep(50);
             
             try
             {
@@ -285,7 +285,7 @@ namespace REvernus.ViewModels
                     {
                         try
                         {
-                            var firstline = reader.ReadLine().Split(','); // read first line and disregard
+                            reader.ReadLine(); // read first line and disregard
                             while (!reader.EndOfStream)
                             {
                             
