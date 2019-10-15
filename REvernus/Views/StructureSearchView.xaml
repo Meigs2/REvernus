@@ -1,4 +1,4 @@
-﻿<Window x:Class="REvernus.Views.CitadelSearchWindow"
+﻿<Window x:Class="REvernus.Views.StructureSearchView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:REvernus.Views.SimpleViews"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="Citadel Search" Height="353" Width="490">
+        Title="Structure Search" Height="353" Width="490">
     <Window.DataContext>
-        <viewModels:CitadelSearchWindowViewModel/>
+        <viewModels:StructureSearchViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="ListViewItem">
@@ -31,22 +31,22 @@
                     <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}" IsEnabled="{Binding IsEnabled}">Search</Button>
                 </Grid>
                 <Grid Grid.Row="1" Margin="5">
-                    <CheckBox Content="Include Public Citadels (longer search time)" IsChecked="{Binding IncludePublicCitadels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox Content="Include Public Structures (longer search time)" IsChecked="{Binding IncludePublicStructures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </Grid>
             <Grid DockPanel.Dock="Bottom" Margin="5">
-                <Button Content="Select" Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItems, ElementName=CitadelListbox}"/>
+                <Button Content="Select" Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItems, ElementName=StructureListbox}"/>
             </Grid>
             <Grid>
                 <ListView Margin="5"
-                          x:Name="CitadelListbox"
+                          x:Name="StructureListbox"
                           VerticalAlignment="Stretch"
-                          ItemsSource="{Binding CitadelListItems}"
+                          ItemsSource="{Binding StructureListItems}"
                           SelectionMode="Multiple"
                           IsEnabled="{Binding IsEnabled}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Citadel" DisplayMemberBinding="{Binding Name}" Width="400" />
+                            <GridViewColumn Header="Structure" DisplayMemberBinding="{Binding Name}" Width="400" />
                         </GridView>
                     </ListView.View>
                     <ListView.ItemContainerStyle>
@@ -55,7 +55,6 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-
             </Grid>
         </DockPanel>
     </Grid>

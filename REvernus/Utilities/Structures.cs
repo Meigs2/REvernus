@@ -18,7 +18,7 @@ namespace REvernus.Utilities
                     $"SELECT stationName FROM staStations WHERE stationId = {structureId}", new SQLiteConnection(DatabaseManager.ReadOnlyEveDbConnection));
                if (result.Rows.Count == 0)
                {
-                   return "Unknown Citadel";
+                   return "Unknown Structure";
                }
                else
                {

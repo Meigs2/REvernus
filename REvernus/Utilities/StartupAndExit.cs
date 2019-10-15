@@ -19,7 +19,7 @@ namespace REvernus.Utilities
 
             await DatabaseManager.Initialize();
 
-            CitadelManager.Initialize();
+            StructureManager.Initialize();
 
             await CharacterManager.Initialize();
 

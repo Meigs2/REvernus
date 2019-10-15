@@ -18,22 +18,22 @@ using Universe = EVEStandard.API.Universe;
 
 namespace REvernus.ViewModels
 {
-    public class CitadelSearchWindowViewModel : BindableBase
+    public class StructureSearchViewModel : BindableBase
     {
         public static REvernusCharacter SelectedCharacter => CharacterManager.SelectedCharacter;
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ObservableCollection<PlayerStructure> _citadelListItems = new ObservableCollection<PlayerStructure>();
+        private ObservableCollection<PlayerStructure> _structureListItems = new ObservableCollection<PlayerStructure>();
         private string _searchBoxText;
-        private bool _includePublicCitadels;
+        private bool _includePublicStructures;
         private bool _isEnabled = true;
 
-        public ObservableCollection<PlayerStructure> CitadelListItems
+        public ObservableCollection<PlayerStructure> StructureListItems
         {
-            get => _citadelListItems;
-            set => SetProperty(ref _citadelListItems, value);
+            get => _structureListItems;
+            set => SetProperty(ref _structureListItems, value);
         }
 
         public string SearchBoxText
@@ -42,10 +42,10 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _searchBoxText, value);
         }
 
-        public bool IncludePublicCitadels
+        public bool IncludePublicStructures
         {
-            get => _includePublicCitadels;
-            set => SetProperty(ref _includePublicCitadels, value);
+            get => _includePublicStructures;
+            set => SetProperty(ref _includePublicStructures, value);
         }
 
         public bool IsEnabled
@@ -54,15 +54,15 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _isEnabled, value);
         }
 
-        public CitadelSearchWindowViewModel()
+        public StructureSearchViewModel()
         {
-            SearchCommand = new DelegateCommand(async () => await SearchEsiForCitadels());
-            SelectCommand = new DelegateCommand<IList>(SelectCitadels);
+            SearchCommand = new DelegateCommand(async () => await SearchEsiForStructures());
+            SelectCommand = new DelegateCommand<IList>(SelectStructures);
         }
 
         public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
 
-        private void SelectCitadels(IList selectedStructures)
+        private void SelectStructures(IList selectedStructures)
         {
             SelectedStructures.Clear();
 
@@ -78,7 +78,7 @@ namespace REvernus.ViewModels
 
         public DelegateCommand<IList> SelectCommand { get; set; }
 
-        private async Task SearchEsiForCitadels()
+        private async Task SearchEsiForStructures()
         {
             IsEnabled = false;
 
@@ -91,27 +91,27 @@ namespace REvernus.ViewModels
                     Scopes = Scopes.ESI_SEARCH_SEARCH_STRUCTURES_1 + Scopes.ESI_CORPORATIONS_READ_STRUCTURES_1 + Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
                 };
 
-                CitadelListItems.Clear();
+                StructureListItems.Clear();
 
                 var taskList = new List<Task>();
-                var citadelList = new ConcurrentBag<PlayerStructure>(); 
+                var structureList = new ConcurrentBag<PlayerStructure>(); 
 
-                var citadelSearchResult = await EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { SearchCategory.STRUCTURE }, SearchBoxText);
+                var structureSearchResult = await EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { SearchCategory.STRUCTURE }, SearchBoxText);
 
-                if (citadelSearchResult.Model.Structure != null)
+                if (structureSearchResult.Model.Structure != null)
                 {
-                    foreach (var structureId in citadelSearchResult.Model.Structure)
+                    foreach (var structureId in structureSearchResult.Model.Structure)
                     {
                         try
                         {
                             taskList.Add(Task.Run(async () =>
                             {
-                                var structure = await Citadels.GetStructureInfoAsync(auth, structureId);
+                                var structure = await Structures.GetStructureInfoAsync(auth, structureId);
                                 if (structure != null)
                                 {
                                     var playerStructure =
                                         StructureToPlayerStructure(structureId, structure, SelectedCharacter);
-                                    citadelList.Add(playerStructure);
+                                    structureList.Add(playerStructure);
                                 }
                             }));
                         }
@@ -122,18 +122,18 @@ namespace REvernus.ViewModels
                     }
                 }
 
-                if (IncludePublicCitadels)
+                if (IncludePublicStructures)
                 {
                     var allPublicStructures = await EsiData.EsiClient.Universe.ListAllPublicStructuresV1Async(Universe.StructureHas.NoFilter);
                     foreach (var structureId in allPublicStructures.Model)
                     {
                         taskList.Add(Task.Run(async () =>
                         {
-                            var structure = await Citadels.GetStructureInfoAsync(auth, structureId, SearchBoxText);
+                            var structure = await Structures.GetStructureInfoAsync(auth, structureId, SearchBoxText);
                             if (structure != null)
                             {
                                 var playerStructure = StructureToPlayerStructure(structureId, structure, SelectedCharacter);
-                                citadelList.Add(playerStructure);
+                                structureList.Add(playerStructure);
                             }
                         }));
                     }
@@ -141,7 +141,7 @@ namespace REvernus.ViewModels
 
                 await Task.WhenAll(taskList);
 
-                CitadelListItems = new ObservableCollection<PlayerStructure>(citadelList);
+                StructureListItems = new ObservableCollection<PlayerStructure>(structureList);
             }
             finally
             {
@@ -164,14 +164,14 @@ namespace REvernus.ViewModels
             };
         }
 
-        public event EventHandler<CitadelSearchEventArgs> SelectPressed;
+        public event EventHandler<StructureSearchEventArgs> SelectPressed;
 
         protected virtual void OnSelectPressed()
         {
-            SelectPressed?.Invoke(this, new CitadelSearchEventArgs(){ SelectedStructures = SelectedStructures });
+            SelectPressed?.Invoke(this, new StructureSearchEventArgs(){ SelectedStructures = SelectedStructures });
         }
 
-        public class CitadelSearchEventArgs : EventArgs
+        public class StructureSearchEventArgs : EventArgs
         {
             public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
         }

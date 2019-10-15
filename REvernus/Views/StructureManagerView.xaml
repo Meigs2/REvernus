@@ -1,4 +1,4 @@
-﻿<Window x:Class="REvernus.Views.CitadelManagerView"
+﻿<Window x:Class="REvernus.Views.StructureManagerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         xmlns:p="clr-namespace:REvernus.Core"
         xmlns:converters="clr-namespace:REvernus.Utilities.Converters"
-        Title="CitadelManagerView" d:DesignHeight="450" d:DesignWidth="800">
+        Title="Structure Manager" Height="500" Width="700">
     <Window.DataContext>
-        <viewModels:CitadelManagerViewModel/>
+        <viewModels:StructureManagerViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <converters:CharacterIdToNameConverter x:Key="CharacterIdToNameConverter"/>
@@ -23,17 +23,18 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Margin="3" Grid.Column="0" Content="Add Citadel" Command="{Binding AddCitadelsCommand}"/>
-                <Button Margin="3" Grid.Column="1" Content="Remove Citadel(s)" Command="{Binding RemoveCitadelsCommand}" 
+                <Button Margin="3" Grid.Column="0" Content="Add Structure" Command="{Binding AddStructuresCommand}"/>
+                <Button Margin="3" Grid.Column="1" Content="Remove Structures(s)" Command="{Binding RemoveStructuresCommand}" 
                         CommandParameter="{Binding SelectedItems, ElementName=CharacterListView}"/>
             </Grid>
-            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Source={x:Static p:CitadelManager.Structures}, Mode=Default}" >
+            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Source={x:Static p:StructureManager.Structures}, Mode=Default}" >
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="Added At" DisplayMemberBinding="{Binding AddedAt}"/>
                         <GridViewColumn Header="Added By" DisplayMemberBinding="{Binding AddedBy, Converter={StaticResource CharacterIdToNameConverter}}"/>
                         <GridViewColumn Header="Type" DisplayMemberBinding="{Binding TypeId, Converter={StaticResource TypeIdToNameConverter}}"/>
+                        <GridViewColumn Header="Structure Id" DisplayMemberBinding="{Binding StructureId}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
