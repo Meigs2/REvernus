@@ -281,16 +281,13 @@ namespace REvernus.ViewModels
                 {
                     using (var reader = new StreamReader(file))
                     {
-                        int lineCounter = 0;
-                        while (!reader.EndOfStream)
+                        try
                         {
-                            try
+                            var firstline = reader.ReadLine().Split(','); // read first line and disregard
+                            while (!reader.EndOfStream)
                             {
-                                
-                                var values = reader.ReadLine().Split(',');
-                                lineCounter++;
-                                if (lineCounter > 1) // Do not parse the 1st line of the file
-                                {
+                            
+                                    var values = reader.ReadLine().Split(',');
                                     var order = new ExportedOrderModel();
                                     order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
                                     order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
@@ -308,12 +305,12 @@ namespace REvernus.ViewModels
                                     order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
 
                                     Orders.Add(order);
-                                }
+                           
                             }
-                            catch (Exception)
-                            {
-                                // ignored
-                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // ignored
                         }
                     }
                 }
