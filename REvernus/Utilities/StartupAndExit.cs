@@ -19,6 +19,8 @@ namespace REvernus.Utilities
 
             await DatabaseManager.Initialize();
 
+            StructureManager.Initialize();
+
             await CharacterManager.Initialize();
 
             EveItems.Initialize();

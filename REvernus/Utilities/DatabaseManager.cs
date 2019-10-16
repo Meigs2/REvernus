@@ -77,6 +77,7 @@ namespace REvernus.Utilities
         }
 
         public static readonly string RefreshTokenTableName = "refreshTokens";
+        public static readonly string StructuresTableName = "structures";
 
         private static void InitializeUserDataTable()
         {
@@ -85,12 +86,21 @@ namespace REvernus.Utilities
                 var userDbConnection = new SQLiteConnection(UserDataDbConnection);
                 userDbConnection.Open();
 
-                // Verify/Initialize refreshTokens table
-                if (!TableExists("refreshTokens", userDbConnection))
-                {
-                    using var sqLiteCommand = new SQLiteCommand(@"CREATE TABLE refreshTokens (refreshToken TEXT)", userDbConnection);
-                    sqLiteCommand.ExecuteNonQuery();
-                }
+                using var sqLiteCommand = new SQLiteCommand(@"CREATE TABLE IF NOT EXISTS refreshTokens (refreshToken TEXT)", userDbConnection);
+                sqLiteCommand.ExecuteNonQuery();
+                sqLiteCommand.Parameters.Clear();
+
+                sqLiteCommand.CommandText = "CREATE TABLE IF NOT EXISTS structures (" +
+                                            "structureId INTEGER NOT NULL PRIMARY KEY," +
+                                            "name TEXT," +
+                                            "ownerId INTEGER," +
+                                            "solarSystemId INTEGER," +
+                                            "typeId INTEGER," +
+                                            "addedBy INTEGER," +
+                                            "addedAt DATETIME," +
+                                            "enabled INTEGER)";
+                sqLiteCommand.ExecuteNonQuery();
+                sqLiteCommand.Parameters.Clear();
 
                 userDbConnection.Close();
             }
@@ -99,13 +109,6 @@ namespace REvernus.Utilities
                 Console.WriteLine(e);
                 throw;
             }
-        }
-
-        public static bool TableExists(string tableName, SQLiteConnection connection)
-        {
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = $"SELECT * FROM sqlite_master WHERE type = 'table' AND name = '{tableName}'";
-            return (cmd.ExecuteScalar() != null);
         }
 
     }

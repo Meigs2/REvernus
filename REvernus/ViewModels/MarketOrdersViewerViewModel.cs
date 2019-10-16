@@ -13,7 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
+using REvernus.Utilities;
 using Market = REvernus.Utilities.Esi.Market;
+using Structures = REvernus.Utilities.Structures;
 
 namespace REvernus.ViewModels
 {

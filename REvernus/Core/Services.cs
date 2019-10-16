@@ -8,6 +8,7 @@ using Jot;
 using Jot.Configuration;
 using Jot.Storage;
 using REvernus.ViewModels;
+using REvernus.Views;
 
 namespace REvernus.Core
 {

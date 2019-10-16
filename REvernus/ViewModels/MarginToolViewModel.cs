@@ -2,6 +2,7 @@
 using Prism.Commands;
 using REvernus.Core;
 using REvernus.Utilities;
+using REvernus.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -268,6 +269,12 @@ namespace REvernus.ViewModels
 
         private void WatcherOnChanged(object sender, FileSystemEventArgs e)
         {
+            // There appears to be some sort of timing error resulting in NaN in the window under Margin and Markup
+            // various other fields do not get populated with the correct data.
+            // Sleeping the thread seems to fix the problem
+            
+            System.Threading.Thread.Sleep(50);
+            
             try
             {
                 var currentChar = CharacterManager.SelectedCharacter;
@@ -276,34 +283,36 @@ namespace REvernus.ViewModels
                 {
                     using (var reader = new StreamReader(file))
                     {
-
-                        while (!reader.EndOfStream)
+                        try
                         {
-                            try
+                            reader.ReadLine(); // read first line and disregard
+                            while (!reader.EndOfStream)
                             {
-                                var values = reader.ReadLine().Split(',');
-                                var order = new ExportedOrderModel();
-                                order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
-                                order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
-                                order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
-                                order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
-                                order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
-                                order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
-                                order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
-                                order.IsBuyOrder = bool.Parse(values[7]);
-                                order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
-                                order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
-                                order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
-                                order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
-                                order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
-                                order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
+                            
+                                    var values = reader.ReadLine().Split(',');
+                                    var order = new ExportedOrderModel();
+                                    order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
+                                    order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
+                                    order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
+                                    order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
+                                    order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
+                                    order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
+                                    order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
+                                    order.IsBuyOrder = bool.Parse(values[7]);
+                                    order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
+                                    order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
+                                    order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
+                                    order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
+                                    order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
+                                    order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
 
-                                Orders.Add(order);
+                                    Orders.Add(order);
+                           
                             }
-                            catch (Exception)
-                            {
-                                // ignored
-                            }
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
                         }
                     }
                 }
@@ -347,6 +356,9 @@ namespace REvernus.ViewModels
                 SellOrderFulfillment =
                     $"{filteredSellOrders.Sum(o => o.VolumeEntered - o.VolumeRemaining)}/{filteredSellOrders.Sum(o => o.VolumeEntered)}";
 
+                SellCopyPrice = _sellPrice.ToString("N");
+                BuyCopyPrice = _buyPrice.ToString("N");
+
                 switch (SelectedEnum)
                 {
                     case CopyEnum.Sell:
@@ -360,9 +372,6 @@ namespace REvernus.ViewModels
                     default:
                         throw new ArgumentOutOfRangeException(nameof(SelectedEnum), SelectedEnum, null);
                 }
-
-                SellCopyPrice = _sellPrice.ToString("N");
-                BuyCopyPrice = _buyPrice.ToString("N");
             }
             catch (Exception exception)
             {
@@ -451,7 +460,8 @@ namespace REvernus.ViewModels
         {
             try
             {
-                Clipboard.SetText(BuyCopyPrice);
+                if (Application.Current.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(BuyCopyPrice));   
             }
             catch (Exception e)
             {
@@ -464,7 +474,8 @@ namespace REvernus.ViewModels
         {
             try
             {
-                Clipboard.SetText(SellCopyPrice);
+                if (Application.Current.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(SellCopyPrice));
             }
             catch (Exception e)
             {
@@ -472,22 +483,4 @@ namespace REvernus.ViewModels
             }
         }
     }
-}
-
-class ExportedOrderModel
-{
-    public double Price { get; set; }
-    public int VolumeRemaining { get; set; }
-    public int TypeId { get; set; }
-    public int Range { get; set; }
-    public long OrderId { get; set; }
-    public int VolumeEntered { get; set; }
-    public int MinVolume { get; set; }
-    public bool IsBuyOrder { get; set; }
-    public DateTime DateIssued { get; set; }
-    public int Duration { get; set; }
-    public long StationId { get; set; }
-    public int RegionId { get; set; }
-    public int SystemId { get; set; }
-    public int NumJumpsAway { get; set; }
 }
