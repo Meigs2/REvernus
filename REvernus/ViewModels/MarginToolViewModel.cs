@@ -310,7 +310,7 @@ namespace REvernus.ViewModels
                            
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // ignored
                         }

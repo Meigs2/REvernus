@@ -31,7 +31,21 @@
                     <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}" IsEnabled="{Binding IsEnabled}">Search</Button>
                 </Grid>
                 <Grid Grid.Row="1" Margin="5">
-                    <CheckBox Content="Include Public Structures (longer search time)" IsChecked="{Binding IncludePublicStructures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="Include Public Structures" IsChecked="{Binding IncludePublicStructures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Center">Search and add with:</Label>
+                        <ComboBox Grid.Row="1" Margin="5" ItemsSource="{Binding Characters}"
+                                  SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}"
+                                  DisplayMemberPath="CharacterName"/>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid DockPanel.Dock="Bottom" Margin="5">

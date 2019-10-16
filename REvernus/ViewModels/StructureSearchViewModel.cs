@@ -20,8 +20,6 @@ namespace REvernus.ViewModels
 {
     public class StructureSearchViewModel : BindableBase
     {
-        public static REvernusCharacter SelectedCharacter => CharacterManager.SelectedCharacter;
-
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -29,6 +27,19 @@ namespace REvernus.ViewModels
         private string _searchBoxText;
         private bool _includePublicStructures;
         private bool _isEnabled = true;
+        private REvernusCharacter _selectedCharacter;
+
+        public ObservableCollection<REvernusCharacter> Characters { get; set; }
+
+        public REvernusCharacter SelectedCharacter
+        {
+            get => _selectedCharacter;
+            set
+            {
+                _selectedCharacter = value;
+                StructureListItems.Clear();
+            }
+        }
 
         public ObservableCollection<PlayerStructure> StructureListItems
         {
@@ -58,6 +69,9 @@ namespace REvernus.ViewModels
         {
             SearchCommand = new DelegateCommand(async () => await SearchEsiForStructures());
             SelectCommand = new DelegateCommand<IList>(SelectStructures);
+
+            Characters = new ObservableCollection<REvernusCharacter>(CharacterManager.CharacterList);
+            SelectedCharacter = CharacterManager.SelectedCharacter;
         }
 
         public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
@@ -86,8 +100,8 @@ namespace REvernus.ViewModels
             {
                 var auth = new AuthDTO()
                 {
-                    AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
-                    CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
+                    AccessToken = SelectedCharacter.AccessTokenDetails,
+                    CharacterId = SelectedCharacter.CharacterDetails.CharacterId,
                     Scopes = Scopes.ESI_SEARCH_SEARCH_STRUCTURES_1 + Scopes.ESI_CORPORATIONS_READ_STRUCTURES_1 + Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
                 };
 
@@ -158,7 +172,7 @@ namespace REvernus.ViewModels
                 Name = structure.Name,
                 SolarSystemId = structure.SolarSystemId,
                 TypeId = structure.TypeId,
-                AddedBy = SelectedCharacter.CharacterDetails.CharacterId,
+                AddedBy = selectedCharacter.CharacterDetails.CharacterId,
                 AddedAt = null,
                 Enabled = null
             };
