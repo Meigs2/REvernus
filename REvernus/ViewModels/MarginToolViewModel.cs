@@ -335,7 +335,18 @@ namespace REvernus.ViewModels
                     _buyPrice = filteredBuyOrders[0].Price + 0.01;
                 }
 
-                ItemName = e.Name.Split('-')[1];
+
+                string[] temp = e.Name.Split('.');
+                List<string> tempList = temp[0].Split('-').ToList<string>();
+                tempList.RemoveAt(0);
+                tempList.RemoveAt(tempList.Count - 1);
+                ItemName = string.Join("-", tempList.ToArray());
+
+
+                
+
+
+
                 Buyout = filteredSellOrders.Sum(o => o.Price * o.VolumeRemaining).ToString("N");
                 NumBuyOrders = filteredBuyOrders.Count.ToString();
                 NumSellOrders = filteredSellOrders.Count.ToString();
