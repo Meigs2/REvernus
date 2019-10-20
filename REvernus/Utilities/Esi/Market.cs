@@ -23,23 +23,52 @@ namespace REvernus.Utilities.Esi
         /// <returns></returns>
         public static async Task<List<MarketOrder>> GetOrdersFromStation(AuthDTO auth, long typeId, long stationId, int range = 0)
         {
-            try
-            {
-                var pageNum = 0;
-                var orders = new List<MarketOrder>();
-                do
-                {
-                    var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, typeId, ++pageNum);
-                    if (result.Model.Count == 0) break;
-                    orders.AddRange(result.Model);
 
-                } while (true);
-                return orders;
-            }
-            catch (Exception)
+            if (StructureManager.TryGetNpcStation(stationId, out var station))
             {
-                return new List<MarketOrder>();
+                try
+                {
+                    var pageNum = 0;
+                    var orders = new List<MarketOrder>();
+                    do
+                    {
+                        var result = await EsiData.EsiClient.Market.ListOrdersInRegionV1Async(10000002, typeId, ++pageNum);
+                        if (result.Model.Count == 0) break;
+                        result.Model.RemoveAll(a => a.LocationId != stationId);
+                        orders = orders.Union(result.Model).ToList();
+
+                    } while (true);
+                    return orders;
+                }
+                catch (Exception)
+                {
+                    return new List<MarketOrder>();
+                }
             }
+
+            if (StructureManager.TryGetPlayerStructure(stationId, out var playerStructure))
+            {
+                try
+                {
+                    var pageNum = 0;
+                    var orders = new List<MarketOrder>();
+                    do
+                    {
+                        var result = await EsiData.EsiClient.Market.ListOrdersInRegionV1Async(10000002, typeId, ++pageNum);
+                        if (result.Model.Count == 0) break;
+                        result.Model.RemoveAll(o => o.TypeId != typeId);
+                        orders = orders.Union(result.Model).ToList();
+
+                    } while (true);
+                    return orders;
+                }
+                catch (Exception)
+                {
+                    return new List<MarketOrder>();
+                }
+            }
+
+            return new List<MarketOrder>();
         }
 
         public static void GetBestBuySell(List<MarketOrder> orderList, out MarketOrder bestBuyOrder, out MarketOrder bestSellOrder)
