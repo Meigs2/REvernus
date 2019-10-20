@@ -1,9 +1,7 @@
 ﻿using EVEStandard.Models;
-using EVEStandard.Models.API;
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;
-using REvernus.Core.ESI;
 using REvernus.Utilities.StaticData;
 using System;
 using System.Collections.Concurrent;
@@ -11,11 +9,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Gma.System.MouseKeyHook;
-using REvernus.Utilities;
+using EVEStandard.Models.API;
+using ICSharpCode.SharpZipLib.Core;
+using REvernus.Models;
 using Market = REvernus.Utilities.Esi.Market;
-using Structures = REvernus.Utilities.Structures;
 
 namespace REvernus.ViewModels
 {
@@ -48,7 +45,7 @@ namespace REvernus.ViewModels
             try
             {
                 var marketOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
-                var selectedCharacter = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId;
+                var selectedCharacter = CharacterManager.SelectedCharacter;
 
                 var (sellOrderDataTable, buyOrderDataTable) = await MarketOrdersToOrderData(marketOrders, selectedCharacter);
                 SellOrdersDataTable = sellOrderDataTable;
@@ -60,14 +57,13 @@ namespace REvernus.ViewModels
             }
         }
 
-        private readonly string _tableName = "Orders";
-        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, int selectedCharacterId)
+        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, REvernusCharacter selectedCharacterId)
         {
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
 
-            var sellOrdersDataTable = new DataTable {TableName = _tableName};
+            var sellOrdersDataTable = new DataTable {TableName = "Sell Orders" };
             sellOrdersDataTable.Columns.Add("Item Name", typeof(string));
             sellOrdersDataTable.Columns.Add("Item Id", typeof(int));
             sellOrdersDataTable.Columns.Add("Location", typeof(string));
@@ -87,12 +83,21 @@ namespace REvernus.ViewModels
                 if ((order.IsBuyOrder == true))
                 {
                     var row = buyOrdersDataTable.NewRow();
-                    taskList.Add(Task.Run(async () => await MarketTask(order, row)));
+                    taskList.Add(Task.Run(async () => await MarketTask(
+                        new AuthDTO() {AccessToken = selectedCharacterId.AccessTokenDetails, 
+                        CharacterId = selectedCharacterId.CharacterDetails.CharacterId, 
+                        Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1}, order, row, buyOrderRows)));
                 }
                 else
                 {
                     var row = sellOrdersDataTable.NewRow();
-                    taskList.Add(Task.Run(async () => await MarketTask(order, row)));
+                    taskList.Add(Task.Run(async () => await MarketTask(
+                        new AuthDTO()
+                        {
+                            AccessToken = selectedCharacterId.AccessTokenDetails,
+                            CharacterId = selectedCharacterId.CharacterDetails.CharacterId,
+                            Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
+                        }, order, row, sellOrderRows)));
                 }
             }
 
@@ -110,44 +115,48 @@ namespace REvernus.ViewModels
 
             return (sellOrdersDataTable, buyOrdersDataTable);
 
-            async Task MarketTask(CharacterMarketOrder characterItemOrder, DataRow row)
+            async Task MarketTask(AuthDTO auth, CharacterMarketOrder order, DataRow row, ConcurrentBag<DataRow> orderRows)
             {
                 try
                 {
                     using var handle = Utilities.Status.GetNewStatusHandle();
-                    var stationOrders = await Market.GetStationOrders(characterItemOrder.TypeId, 60003760);
+                    var stationOrders = await Market.GetOrdersFromStation(auth, order.TypeId, order.LocationId);
                     Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
 
-                    row["Item Name"] = EveItems.TypeIdToTypeName(characterItemOrder.TypeId);
-                    row["Item Id"] = characterItemOrder.TypeId;
-                    row["Location"] = Structures.GetStructureName(characterItemOrder.LocationId);
-                    row["Price"] = characterItemOrder.Price;
-                    row["Outbid"] = IsOutbid(characterItemOrder, bestBuyOrder, bestSellOrder, out var difference);
-                    row["Difference"] = Math.Round(difference, 2, MidpointRounding.ToEven);
-                    row["Volume"] = $"{characterItemOrder.VolumeRemain}/{characterItemOrder.VolumeTotal}";
-                    row["Total Value"] = Math.Round(characterItemOrder.Price * characterItemOrder.VolumeRemain, 2, MidpointRounding.ToEven);
+                    var name = "Unknown Location";
 
-                    if (characterItemOrder.VolumeTotal != characterItemOrder.VolumeRemain)
+                    if (StructureManager.TryGetPlayerStructure(order.LocationId, out var playerStructure))
                     {
-                        row["Completion ETA"] = ((DateTime.Now - characterItemOrder.Issued) / (characterItemOrder.VolumeTotal - characterItemOrder.VolumeRemain)
-                                                 * characterItemOrder.VolumeRemain).ToString(@"dd\:hh\:mm\:ss");
+                        name = playerStructure.Name;
+                    }
+                    if (StructureManager.TryGetNpcStation(order.LocationId, out var station))
+                    {
+                        name = station.Name;
+                    }
+
+                    row["Item Name"] = EveItems.TypeIdToTypeName(order.TypeId);
+                    row["Item Id"] = order.TypeId;
+                    row["Location"] = name;
+                    row["Price"] = order.Price;
+                    row["Outbid"] = IsOutbid(order, bestBuyOrder, bestSellOrder, out var difference);
+                    row["Difference"] = Math.Round(difference, 2, MidpointRounding.ToEven);
+                    row["Volume"] = $"{order.VolumeRemain}/{order.VolumeTotal}";
+                    row["Total Value"] = Math.Round(order.Price * order.VolumeRemain, 2, MidpointRounding.ToEven);
+
+                    if (order.VolumeTotal != order.VolumeRemain)
+                    {
+                        row["Completion ETA"] = ((DateTime.Now - order.Issued) / (order.VolumeTotal - order.VolumeRemain)
+                                                 * order.VolumeRemain).ToString(@"dd\:hh\:mm\:ss");
                     }
                     else
                     {
                         row["Completion ETA"] = "Infinite";
                     }
 
-                    if ((characterItemOrder.IsBuyOrder == true))
-                    {
-                        buyOrderRows.Add(row);
-                    }
-                    else
-                    {
-                        sellOrderRows.Add(row);
-                    }
+                    orderRows.Add(row);
 
                     row["Owner"] = CharacterManager.CharacterList
-                        .FirstOrDefault(s => s.CharacterDetails.CharacterId == selectedCharacterId)
+                        .FirstOrDefault(s => s.CharacterDetails.CharacterId == auth.CharacterId)
                         ?.CharacterName;
                 }
                 catch (Exception e)

@@ -3,7 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
+using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
+using System.Net.Sockets;
 using System.Text;
+using EVEStandard.Enumerations;
+using EVEStandard.Models;
 using REvernus.Models;
 using REvernus.Utilities;
 using REvernus.Views;
@@ -127,6 +132,60 @@ namespace REvernus.Core
             }
 
             LoadStructuresFromDatabase();
+        }
+
+        public static bool TryGetPlayerStructure(long structureId, out PlayerStructure playerStructure)
+        {
+            playerStructure = Structures.FirstOrDefault(s => s.StructureId == structureId);
+            return playerStructure != null;
+        }
+
+        public static bool TryGetNpcStation(long stationId, out Station station)
+        {
+            station = new Station();
+
+            using var connection = new SQLiteConnection(DatabaseManager.ReadOnlyEveDbConnection);
+            connection.Open();
+            try
+            {
+                using var command = new SQLiteCommand("SELECT * FROM staStations WHERE stationId = @stationId", connection);
+                command.Parameters.AddWithValue("@stationId", stationId);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var dockableVolume = Convert.ToString(reader[3]);
+                    var officeRentalCost = Convert.ToString(reader[4]);
+                    var reprocessingEfficiency = Convert.ToString(reader[16]);
+                    var reprocessingStationsTake = Convert.ToString(reader[17]);
+
+                    station = new Station();
+                    station.MaxDockableShipVolume = float.Parse(dockableVolume);
+                    station.Name = (string)reader[11];
+                    station.OfficeRentalCost = float.Parse(officeRentalCost);
+                    station.Owner = Convert.ToInt32(reader[8]);
+                    station.Position = new Position() { X = Convert.ToDouble(reader[12]), Y = Convert.ToDouble(reader[13]), Z = Convert.ToDouble(reader[14]) };
+                    station.RaceId = null;
+                    station.ReprocessingEfficiency = float.Parse(reprocessingEfficiency);
+                    station.ReprocessingStationsTake = float.Parse(reprocessingStationsTake);
+                    station.Services = new List<ServicesEnum>();
+                    station.StationId = Convert.ToInt32(reader[0]);
+                    station.SystemId = Convert.ToInt32(reader[8]);
+                    station.TypeId = Convert.ToInt32(reader[6]);
+
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return false;
         }
     }
 }
