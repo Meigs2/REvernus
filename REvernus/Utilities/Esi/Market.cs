@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
+using EVEStandard.Enumerations;
 using EVEStandard.Models;
+using EVEStandard.Models.API;
+using REvernus.Core;
 using REvernus.Core.ESI;
 
 namespace REvernus.Utilities.Esi
@@ -11,22 +16,30 @@ namespace REvernus.Utilities.Esi
         /// <summary>
         /// Returns a list of 
         /// </summary>
+        /// <param name="auth"></param>
         /// <param name="typeId"></param>
         /// <param name="stationId"></param>
+        /// <param name="range"></param>
         /// <returns></returns>
-        public static async Task<List<MarketOrder>> GetStationOrders(long typeId, long stationId)
+        public static async Task<List<MarketOrder>> GetOrdersFromStation(AuthDTO auth, long typeId, long stationId, int range = 0)
         {
-            var pageNum = 0;
-            var orders = new List<MarketOrder>();
-            do
+            try
             {
-                var result = await EsiData.EsiClient.Market.ListOrdersInRegionV1Async(10000002, typeId, ++pageNum);
-                result.Model.RemoveAll(a => a.LocationId != stationId);
-                orders = orders.Union(result.Model).ToList();
-                if (result.Model.Count == 0) break;
+                var pageNum = 0;
+                var orders = new List<MarketOrder>();
+                do
+                {
+                    var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, typeId, ++pageNum);
+                    if (result.Model.Count == 0) break;
+                    orders.AddRange(result.Model);
 
-            } while (true);
-            return orders;
+                } while (true);
+                return orders;
+            }
+            catch (Exception)
+            {
+                return new List<MarketOrder>();
+            }
         }
 
         public static void GetBestBuySell(List<MarketOrder> orderList, out MarketOrder bestBuyOrder, out MarketOrder bestSellOrder)
