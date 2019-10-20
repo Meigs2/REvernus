@@ -53,7 +53,8 @@ namespace REvernus.Core
                             TypeId = Convert.ToInt32((long?)reader[4]),
                             AddedBy = (long?)reader[5],
                             AddedAt = (DateTime?)reader[6],
-                            Enabled = Convert.ToBoolean((long?)reader[7])
+                            Enabled = Convert.ToBoolean((long?)reader[7]),
+                            isPublic = Convert.ToBoolean((long?)reader[8])
                         };
                         Structures.Add(structure);
                     }
@@ -78,8 +79,8 @@ namespace REvernus.Core
                 try
                 {
                     using var sqLiteCommand = new SQLiteCommand($"INSERT OR REPLACE INTO structures " +
-                                                                $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled) " +
-                                                                $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled)",
+                                                                $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled, isPublic) " +
+                                                                $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled, @isPublic)",
                         connection);
 
                     sqLiteCommand.Parameters.AddWithValue("@structureId", structure.StructureId);
@@ -90,6 +91,7 @@ namespace REvernus.Core
                     sqLiteCommand.Parameters.AddWithValue("@addedBy", structure.AddedBy);
                     sqLiteCommand.Parameters.AddWithValue("@addedAt", DateTime.UtcNow);
                     sqLiteCommand.Parameters.AddWithValue("@enabled", true);
+                    sqLiteCommand.Parameters.AddWithValue("@isPublic", structure.isPublic);
 
                     sqLiteCommand.CommandTimeout = 1;
                     sqLiteCommand.ExecuteNonQuery();
