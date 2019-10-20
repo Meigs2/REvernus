@@ -124,7 +124,7 @@ namespace REvernus.ViewModels
                                 if (structure != null)
                                 {
                                     var playerStructure =
-                                        StructureToPlayerStructure(structureId, structure, SelectedCharacter);
+                                        StructureToPlayerStructure(structureId, structure, SelectedCharacter, false);
                                     structureList.Add(playerStructure);
                                 }
                             }));
@@ -146,7 +146,7 @@ namespace REvernus.ViewModels
                             var structure = await Structures.GetStructureInfoAsync(auth, structureId, SearchBoxText);
                             if (structure != null)
                             {
-                                var playerStructure = StructureToPlayerStructure(structureId, structure, SelectedCharacter);
+                                var playerStructure = StructureToPlayerStructure(structureId, structure, SelectedCharacter, true);
                                 structureList.Add(playerStructure);
                             }
                         }));
@@ -163,7 +163,7 @@ namespace REvernus.ViewModels
             }
         }
 
-        private static PlayerStructure StructureToPlayerStructure(long structureId, Structure structure, REvernusCharacter selectedCharacter)
+        private static PlayerStructure StructureToPlayerStructure(long structureId, Structure structure, REvernusCharacter selectedCharacter, bool isPublic)
         {
             return new PlayerStructure()
             {
@@ -174,7 +174,8 @@ namespace REvernus.ViewModels
                 TypeId = structure.TypeId,
                 AddedBy = selectedCharacter.CharacterDetails.CharacterId,
                 AddedAt = null,
-                Enabled = null
+                Enabled = null,
+                isPublic = isPublic
             };
         }
 
