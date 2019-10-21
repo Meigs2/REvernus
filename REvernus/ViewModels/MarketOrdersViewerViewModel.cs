@@ -59,6 +59,8 @@ namespace REvernus.ViewModels
 
         private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, REvernusCharacter selectedCharacterId)
         {
+            var orderDictionary = CreateOrderDictionary(orderList);
+
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
@@ -164,6 +166,33 @@ namespace REvernus.ViewModels
                     Log.Error(e);
                 }
             }
+        }
+
+        private void CreateOrderDictionary(List<CharacterMarketOrder> orderList)
+        {
+            // get list of npc stations
+            var stations = new HashSet<Station>();
+            var structures = new HashSet<PlayerStructure>();
+
+            foreach (var characterMarketOrder in orderList)
+            {
+                // if location is small, its a npc station
+                if (characterMarketOrder.LocationId < 70000000)
+                {
+                    if (StructureManager.TryGetNpcStation(characterMarketOrder.LocationId, out var station))
+                    {
+                        stations.Add(station);
+                    }
+                }
+
+                if (StructureManager.TryGetPlayerStructure(characterMarketOrder.LocationId, out var playerStructure))
+                {
+                    structures.Add(playerStructure);
+                }
+            }
+
+            // get list of player structures
+            
         }
 
         private bool IsOutbid(CharacterMarketOrder characterItemOrder, MarketOrder bestBuyOrder, MarketOrder bestSellOrder, out double outbidDifference)
