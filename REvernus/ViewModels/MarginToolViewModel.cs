@@ -251,6 +251,7 @@ namespace REvernus.ViewModels
 
             BuyCopyCommand = new DelegateCommand(BuyPriceClipboardCopy);
             SellCopyCommand = new DelegateCommand(SellPriceClipboardCopy);
+            ItemNameCopyCommand = new DelegateCommand(ItemNameClipboardCopy);
 
             // Define SampleDataTables
             var tempTable = new DataTable();
@@ -476,6 +477,21 @@ namespace REvernus.ViewModels
             {
                 if (Application.Current.Dispatcher != null)
                     Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(SellCopyPrice));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public DelegateCommand ItemNameCopyCommand { get; set; }
+        // Copy the item name to the clipboard
+        private void ItemNameClipboardCopy()
+        {
+            try
+            {
+                if (Application.Current.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(ItemName));
             }
             catch (Exception e)
             {
