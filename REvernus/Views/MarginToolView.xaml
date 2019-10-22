@@ -28,9 +28,16 @@
                         <CheckBox Content="Always On Top" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxChecked"/>
                         <CheckBox Content="Show Sample Profit Data" Checked="SampleDataCheckboxChecked" Unchecked="SampleDataCheckboxChecked" Grid.Column="1" HorizontalAlignment="Right"/>
                     </Grid>
+
                     <Grid DockPanel.Dock="Top" Height="30">
-                        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}" FontSize="15"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}" FontSize="15"/>
+                            <Button HorizontalAlignment="right" Width="16" Height="16" Command="{Binding ItemNameCopyCommand}" VerticalAlignment="Center">
+                                <Image Source="/Resources/content-copy.png" Stretch="Fill" ToolTip="Copy Item Name to Clipboard"/>
+                            </Button>
+                        </StackPanel>
                     </Grid>
+
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.2*"/>
