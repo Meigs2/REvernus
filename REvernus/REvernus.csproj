@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <None Remove="Core\ESI\VerificationWindow.xaml" />
-    <None Remove="Resources\content-copy.png" />
     <None Remove="Resources\Revernus-2k.png" />
     <None Remove="Resources\REvernus-Full-2k.png" />
     <None Remove="Views\CharacterManagerView.xaml" />
@@ -29,12 +28,6 @@
     <None Remove="Views\MarginToolView.xaml" />
     <None Remove="Views\MarketOrdersViewerView.xaml" />
     <None Remove="Views\SimpleViews\SdeDownloadProgressView.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Resources\content-copy.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
