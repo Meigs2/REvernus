@@ -25,8 +25,8 @@
                         <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Tools">
-                        <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}"/>
-                        <MenuItem Header="Open Structure Manager" Command="{Binding OpenStructureManagerCommand}" InputGestureText="Ctrl+M"/>
+                        <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}" InputGestureText="Ctrl+M"/>
+                        <MenuItem Header="Open Structure Manager" Command="{Binding OpenStructureManagerCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Characters">
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
