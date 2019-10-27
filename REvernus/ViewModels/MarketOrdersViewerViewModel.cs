@@ -57,9 +57,9 @@ namespace REvernus.ViewModels
             }
         }
 
-        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, REvernusCharacter selectedCharacterId)
+        private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, REvernusCharacter selectedCharacter)
         {
-            var orderDictionary = CreateOrderDictionary(orderList);
+            var orderDictionary = CreateOrderDictionary(orderList, selectedCharacter);
 
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
@@ -86,8 +86,8 @@ namespace REvernus.ViewModels
                 {
                     var row = buyOrdersDataTable.NewRow();
                     taskList.Add(Task.Run(async () => await MarketTask(
-                        new AuthDTO() {AccessToken = selectedCharacterId.AccessTokenDetails, 
-                        CharacterId = selectedCharacterId.CharacterDetails.CharacterId, 
+                        new AuthDTO() {AccessToken = selectedCharacter.AccessTokenDetails, 
+                        CharacterId = selectedCharacter.CharacterDetails.CharacterId, 
                         Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1}, order, row, buyOrderRows)));
                 }
                 else
@@ -96,8 +96,8 @@ namespace REvernus.ViewModels
                     taskList.Add(Task.Run(async () => await MarketTask(
                         new AuthDTO()
                         {
-                            AccessToken = selectedCharacterId.AccessTokenDetails,
-                            CharacterId = selectedCharacterId.CharacterDetails.CharacterId,
+                            AccessToken = selectedCharacter.AccessTokenDetails,
+                            CharacterId = selectedCharacter.CharacterDetails.CharacterId,
                             Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
                         }, order, row, sellOrderRows)));
                 }
@@ -168,11 +168,10 @@ namespace REvernus.ViewModels
             }
         }
 
-        private void CreateOrderDictionary(List<CharacterMarketOrder> orderList)
+        private void CreateOrderDictionary(List<CharacterMarketOrder> orderList, REvernusCharacter character)
         {
-            // get list of npc stations
             var stations = new HashSet<Station>();
-            var structures = new HashSet<PlayerStructure>();
+            var playerStructures = new HashSet<PlayerStructure>();
 
             foreach (var characterMarketOrder in orderList)
             {
@@ -187,12 +186,17 @@ namespace REvernus.ViewModels
 
                 if (StructureManager.TryGetPlayerStructure(characterMarketOrder.LocationId, out var playerStructure))
                 {
-                    structures.Add(playerStructure);
+                    playerStructures.Add(playerStructure);
                 }
             }
 
-            // get list of player structures
-            
+            foreach (var playerStructure in playerStructures)
+            {
+                if (!playerStructure.isPublic)
+                {
+                    
+                }
+            }
         }
 
         private bool IsOutbid(CharacterMarketOrder characterItemOrder, MarketOrder bestBuyOrder, MarketOrder bestSellOrder, out double outbidDifference)
