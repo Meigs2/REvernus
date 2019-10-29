@@ -71,6 +71,19 @@ namespace REvernus.Utilities.Esi
             return new List<MarketOrder>();
         }
 
+        public static void GetMarketOrders(List<long> systemIds, List<long> itemIds)
+        {
+            // get regions orders are in for pubic orders
+
+            // get structures orders are in for private orders
+
+            // Get orders for public orders
+
+            // Get orders in private citadels
+
+            // build dictionary
+        }
+
         public static void GetBestBuySell(List<MarketOrder> orderList, out MarketOrder bestBuyOrder, out MarketOrder bestSellOrder)
         {
             bestBuyOrder = new MarketOrder();

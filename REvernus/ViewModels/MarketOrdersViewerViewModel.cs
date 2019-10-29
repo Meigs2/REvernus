@@ -59,8 +59,6 @@ namespace REvernus.ViewModels
 
         private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, REvernusCharacter selectedCharacter)
         {
-            var orderDictionary = CreateOrderDictionary(orderList, selectedCharacter);
-
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
