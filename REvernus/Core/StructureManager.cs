@@ -166,7 +166,7 @@ namespace REvernus.Core
                     station.OfficeRentalCost = float.Parse(officeRentalCost);
                     station.Owner = Convert.ToInt32(reader[8]);
                     station.Position = new Position() { X = Convert.ToDouble(reader[12]), Y = Convert.ToDouble(reader[13]), Z = Convert.ToDouble(reader[14]) };
-                    station.RaceId = null;
+                    station.RaceId = 0;
                     station.ReprocessingEfficiency = float.Parse(reprocessingEfficiency);
                     station.ReprocessingStationsTake = float.Parse(reprocessingStationsTake);
                     station.Services = new List<ServicesEnum>();

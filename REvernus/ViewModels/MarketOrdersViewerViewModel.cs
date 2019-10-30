@@ -59,6 +59,17 @@ namespace REvernus.ViewModels
 
         private async Task<(DataTable sellOrderDataTable, DataTable buyOrderDataTable)> MarketOrdersToOrderData(List<CharacterMarketOrder> orderList, REvernusCharacter selectedCharacter)
         {
+            var locations = new List<long>();
+            var items = new List<int>();
+
+            foreach (var characterMarketOrder in orderList)
+            {
+                locations.Add(characterMarketOrder.LocationId);
+                items.Add(characterMarketOrder.TypeId);
+            }
+
+            Market.GetOrdersFromOrders(locations);
+
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
@@ -114,112 +125,6 @@ namespace REvernus.ViewModels
             }
 
             return (sellOrdersDataTable, buyOrdersDataTable);
-
-            async Task MarketTask(AuthDTO auth, CharacterMarketOrder order, DataRow row, ConcurrentBag<DataRow> orderRows)
-            {
-                try
-                {
-                    using var handle = Utilities.Status.GetNewStatusHandle();
-                    var stationOrders = await Market.GetOrdersFromStation(auth, order.TypeId, order.LocationId);
-                    Market.GetBestBuySell(stationOrders, out var bestBuyOrder, out var bestSellOrder);
-
-                    var name = "Unknown Location";
-
-                    if (StructureManager.TryGetPlayerStructure(order.LocationId, out var playerStructure))
-                    {
-                        name = playerStructure.Name;
-                    }
-                    if (StructureManager.TryGetNpcStation(order.LocationId, out var station))
-                    {
-                        name = station.Name;
-                    }
-
-                    row["Item Name"] = EveItems.TypeIdToTypeName(order.TypeId);
-                    row["Item Id"] = order.TypeId;
-                    row["Location"] = name;
-                    row["Price"] = order.Price;
-                    row["Outbid"] = IsOutbid(order, bestBuyOrder, bestSellOrder, out var difference);
-                    row["Difference"] = Math.Round(difference, 2, MidpointRounding.ToEven);
-                    row["Volume"] = $"{order.VolumeRemain}/{order.VolumeTotal}";
-                    row["Total Value"] = Math.Round(order.Price * order.VolumeRemain, 2, MidpointRounding.ToEven);
-
-                    if (order.VolumeTotal != order.VolumeRemain)
-                    {
-                        row["Completion ETA"] = ((DateTime.Now - order.Issued) / (order.VolumeTotal - order.VolumeRemain)
-                                                 * order.VolumeRemain).ToString(@"dd\:hh\:mm\:ss");
-                    }
-                    else
-                    {
-                        row["Completion ETA"] = "Infinite";
-                    }
-
-                    orderRows.Add(row);
-
-                    row["Owner"] = CharacterManager.CharacterList
-                        .FirstOrDefault(s => s.CharacterDetails.CharacterId == auth.CharacterId)
-                        ?.CharacterName;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e);
-                }
-            }
-        }
-
-        private void CreateOrderDictionary(List<CharacterMarketOrder> orderList, REvernusCharacter character)
-        {
-            var stations = new HashSet<Station>();
-            var playerStructures = new HashSet<PlayerStructure>();
-
-            foreach (var characterMarketOrder in orderList)
-            {
-                // if location is small, its a npc station
-                if (characterMarketOrder.LocationId < 70000000)
-                {
-                    if (StructureManager.TryGetNpcStation(characterMarketOrder.LocationId, out var station))
-                    {
-                        stations.Add(station);
-                    }
-                }
-
-                if (StructureManager.TryGetPlayerStructure(characterMarketOrder.LocationId, out var playerStructure))
-                {
-                    playerStructures.Add(playerStructure);
-                }
-            }
-
-            foreach (var playerStructure in playerStructures)
-            {
-                if (!playerStructure.isPublic)
-                {
-                    
-                }
-            }
-        }
-
-        private bool IsOutbid(CharacterMarketOrder characterItemOrder, MarketOrder bestBuyOrder, MarketOrder bestSellOrder, out double outbidDifference)
-        {
-            outbidDifference = 0.0;
-
-            if (characterItemOrder.IsBuyOrder is true)
-            {
-                if (characterItemOrder.Price < bestBuyOrder.Price)
-                {
-                    outbidDifference = bestBuyOrder.Price - characterItemOrder.Price;
-                    return true;
-                }
-            }
-
-            if (characterItemOrder.IsBuyOrder == null || characterItemOrder.IsBuyOrder is false)
-            {
-                if (characterItemOrder.Price > bestSellOrder.Price)
-                {
-                    outbidDifference = bestSellOrder.Price - characterItemOrder.Price;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         public DelegateCommand GetOrdersCommand { get; set; }
