@@ -68,8 +68,6 @@ namespace REvernus.ViewModels
                 items.Add(characterMarketOrder.TypeId);
             }
 
-            Market.GetOrdersFromOrders(locations);
-
             var sellOrderRows = new ConcurrentBag<DataRow>();
             var buyOrderRows = new ConcurrentBag<DataRow>();
             var taskList = new List<Task>();
@@ -89,28 +87,35 @@ namespace REvernus.ViewModels
             var buyOrdersDataTable = sellOrdersDataTable.Clone();
             buyOrdersDataTable.TableName = "Buy Orders";
 
-            foreach (var order in orderList)
+            var a = await Market.GetOrdersInStructure(new AuthDTO()
             {
-                if ((order.IsBuyOrder == true))
-                {
-                    var row = buyOrdersDataTable.NewRow();
-                    taskList.Add(Task.Run(async () => await MarketTask(
-                        new AuthDTO() {AccessToken = selectedCharacter.AccessTokenDetails, 
-                        CharacterId = selectedCharacter.CharacterDetails.CharacterId, 
-                        Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1}, order, row, buyOrderRows)));
-                }
-                else
-                {
-                    var row = sellOrdersDataTable.NewRow();
-                    taskList.Add(Task.Run(async () => await MarketTask(
-                        new AuthDTO()
-                        {
-                            AccessToken = selectedCharacter.AccessTokenDetails,
-                            CharacterId = selectedCharacter.CharacterDetails.CharacterId,
-                            Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
-                        }, order, row, sellOrderRows)));
-                }
-            }
+                AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
+                CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
+                Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
+            }, 1028858195912, new List<long>() {193,199,210});
+
+            //foreach (var order in orderList)
+            //{
+            //    if ((order.IsBuyOrder == true))
+            //    {
+            //        var row = buyOrdersDataTable.NewRow();
+            //        taskList.Add(Task.Run(async () => await MarketTask(
+            //            new AuthDTO() {AccessToken = selectedCharacter.AccessTokenDetails, 
+            //            CharacterId = selectedCharacter.CharacterDetails.CharacterId, 
+            //            Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1}, order, row, buyOrderRows)));
+            //    }
+            //    else
+            //    {
+            //        var row = sellOrdersDataTable.NewRow();
+            //        taskList.Add(Task.Run(async () => await MarketTask(
+            //            new AuthDTO()
+            //            {
+            //                AccessToken = selectedCharacter.AccessTokenDetails,
+            //                CharacterId = selectedCharacter.CharacterDetails.CharacterId,
+            //                Scopes = EVEStandard.Enumerations.Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
+            //            }, order, row, sellOrderRows)));
+            //    }
+            //}
 
             await Task.WhenAll(taskList);
 

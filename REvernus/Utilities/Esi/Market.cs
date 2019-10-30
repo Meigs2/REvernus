@@ -17,38 +17,74 @@ namespace REvernus.Utilities.Esi
         /// <summary>
         /// Retrieves orders in a NPC Station or player owned public structure.
         /// </summary>
-        /// <param name="auth">AuthDTO of a character with public structure access.</param>
-        /// <param name="typeId"></param>
+        /// <param name="publicAuth">AuthDTO of a character with public structure access. If a private citadel id is provided,
+        /// the character who added that citadel will be used.</param>
         /// <param name="structureId"></param>
+        /// <param name="typeIds"></param>
         /// <returns></returns>
-        public static async Task<List<MarketOrder>> GetOrdersInPublicStructure(AuthDTO auth, long structureId, long? typeId = 0)
+        public static async Task<Dictionary<long, List<MarketOrder>>> GetOrdersInStructure(AuthDTO publicAuth, long structureId, List<long> typeIds = null)
         {
-            if (StructureManager.TryGetNpcStation(structureId, out var station))
+            try
             {
-                if (EveUniverse.TryGetRegionFromSystem(station.SystemId, out var regionId))
+                var taskList = new List<Task>();
+
+                var ordersList = new Dictionary<long, List<MarketOrder>>();
+
+                // check for NPC station
+                if (StructureManager.TryGetNpcStation(structureId, out var station))
                 {
-                    if (regionId != null)
+                    if (EveUniverse.TryGetRegionFromSystem(station.SystemId, out var regionId))
                     {
-                        var orders = await GetOrdersInRegion((int)regionId, typeId);
-                        return orders.Where(o => o.LocationId == structureId).ToList();
+                        if (regionId != null)
+                        {
+                            if (typeIds != null)
+                                foreach (var typeId in typeIds)
+                                {
+                                    taskList.Add(Task.Run(async () =>
+                                    {
+                                        var orders = await GetOrdersInRegion((int) regionId, typeId);
+                                        ordersList.Add(typeId, orders.Where(o => o.LocationId == structureId).ToList());
+                                    }));
+                                }
+                        }
                     }
                 }
-            }
-
-            var result = await EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structureId);
-            if (result.RemainingErrors == 0)
-            {
-                if (EveUniverse.TryGetRegionFromSystem(result.Model.SolarSystemId, out var regionId))
+                else
                 {
-                    if (regionId != null)
+                    var result = await EsiData.EsiClient.Universe.GetStructureInfoV2Async(publicAuth, structureId);
+                    if (result.RemainingErrors == 0)
                     {
-                        var orders = await GetOrdersInRegion((int)regionId, typeId);
-                        return orders.Where(o => o.LocationId == structureId).ToList();
+                        if (EveUniverse.TryGetRegionFromSystem(result.Model.SolarSystemId, out var regionId))
+                        {
+                            if (regionId != null)
+                            {
+                                if (typeIds != null)
+                                    foreach (var typeId in typeIds)
+                                    {
+                                        taskList.Add(Task.Run(async () =>
+                                        {
+                                            var orders = await GetOrdersInRegion((int)regionId, typeId);
+                                            ordersList.Add(typeId, orders.Where(o => o.LocationId == structureId).ToList());
+                                        }));
+                                    }
+                            }
+                        }
                     }
                 }
-            }
 
-            return null;
+                // check if its a public structure
+
+                // check if its a private structure
+
+                await Task.WhenAll(taskList);
+
+                return ordersList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public static async Task<List<MarketOrder>> GetOrdersInRegion(int region, long? typeId = null)
@@ -79,7 +115,7 @@ namespace REvernus.Utilities.Esi
             return ordersHashSet.ToList();
         }
 
-        public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(long structureId)
+        public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(long structureId, long? typeId = 0)
         {
             var ordersHashSet = new HashSet<MarketOrder>();
             var taskList = new List<Task>();

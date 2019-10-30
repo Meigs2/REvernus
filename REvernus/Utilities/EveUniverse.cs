@@ -7,9 +7,9 @@ namespace REvernus.Utilities
 {
     public static class EveUniverse
     {
-        public static bool TryGetRegionFromSystem(int systemId, out int? regionId)
+        public static bool TryGetRegionFromSystem(int systemId, out int regionId)
         {
-            regionId = null;
+            regionId = 0;
 
             var connection = new SQLiteConnection(DatabaseManager.ReadOnlyEveDbConnection);
             connection.Open();
