@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using EVEStandard.Enumerations;
 using EVEStandard.Models;
@@ -9,6 +10,7 @@ using EVEStandard.Models.API;
 using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
+using Type = System.Type;
 
 namespace REvernus.Utilities.Esi
 {
@@ -22,31 +24,37 @@ namespace REvernus.Utilities.Esi
         /// <param name="structureId"></param>
         /// <param name="typeIds"></param>
         /// <returns></returns>
-        public static async Task<Dictionary<long, List<MarketOrder>>> GetOrdersInStructure(AuthDTO publicAuth, long structureId, List<long> typeIds = null)
+        public static async Task<Dictionary<int, List<MarketOrder>>> GetOrdersInStructure(AuthDTO publicAuth, long structureId, List<int> typeIds = null)
         {
             try
             {
                 var taskList = new List<Task>();
 
-                var ordersList = new Dictionary<long, List<MarketOrder>>();
+                var ordersList = new Dictionary<int, List<MarketOrder>>();
+
+                if (typeIds != null)
+                {
+                    var typeHash = typeIds.ToHashSet();
+                    foreach (var typeId in typeHash)
+                    {
+                        ordersList.Add(typeId, new List<MarketOrder>());
+                    }
+                }
 
                 // check for NPC station
                 if (StructureManager.TryGetNpcStation(structureId, out var station))
                 {
                     if (EveUniverse.TryGetRegionFromSystem(station.SystemId, out var regionId))
                     {
-                        if (regionId != null)
-                        {
-                            if (typeIds != null)
-                                foreach (var typeId in typeIds)
+                        if (typeIds != null)
+                            foreach (var typeId in typeIds)
+                            {
+                                taskList.Add(Task.Run(async () =>
                                 {
-                                    taskList.Add(Task.Run(async () =>
-                                    {
-                                        var orders = await GetOrdersInRegion((int) regionId, typeId);
-                                        ordersList.Add(typeId, orders.Where(o => o.LocationId == structureId).ToList());
-                                    }));
-                                }
-                        }
+                                    var orders = await GetOrdersInRegion(regionId, typeId);
+                                    ordersList[typeId].AddRange(orders.Where(o => o.LocationId == structureId).ToList());
+                                }));
+                            }
                     }
                 }
                 else
@@ -56,25 +64,43 @@ namespace REvernus.Utilities.Esi
                     {
                         if (EveUniverse.TryGetRegionFromSystem(result.Model.SolarSystemId, out var regionId))
                         {
-                            if (regionId != null)
-                            {
-                                if (typeIds != null)
-                                    foreach (var typeId in typeIds)
+                            if (typeIds != null)
+                                foreach (var typeId in typeIds)
+                                {
+                                    taskList.Add(Task.Run(async () =>
                                     {
-                                        taskList.Add(Task.Run(async () =>
-                                        {
-                                            var orders = await GetOrdersInRegion((int)regionId, typeId);
-                                            ordersList.Add(typeId, orders.Where(o => o.LocationId == structureId).ToList());
-                                        }));
-                                    }
-                            }
+                                        var orders = await GetOrdersInRegion(regionId, typeId);
+                                        ordersList[typeId].AddRange(orders.Where(o => o.LocationId == structureId).ToList());
+                                    }));
+                                }
                         }
                     }
                 }
+                if (StructureManager.TryGetPlayerStructure(structureId, out var structure))
+                {
+                    if (typeIds != null)
+                        taskList.Add(Task.Run(async () =>
+                        {
+                            var addedBy = CharacterManager.CharacterList.FirstOrDefault(c =>
+                                c.CharacterDetails.CharacterId == structure.AddedBy);
 
-                // check if its a public structure
+                            if (addedBy != null)
+                            {
+                                var auth = new AuthDTO()
+                                {
+                                    AccessToken = addedBy.AccessTokenDetails,
+                                    CharacterId = addedBy.CharacterDetails.CharacterId,
+                                    Scopes = Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
+                                };
 
-                // check if its a private structure
+                                var orders = await GetOrdersInPrivateStructure(auth, structure, typeIds);
+                                foreach (var marketOrder in orders)
+                                {
+                                    ordersList[marketOrder.TypeId].AddRange(orders.Where(o => o.TypeId == marketOrder.TypeId).ToList());
+                                }
+                            }
+                        }));
+                }
 
                 await Task.WhenAll(taskList);
 
@@ -83,7 +109,7 @@ namespace REvernus.Utilities.Esi
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                return null;
             }
         }
 
@@ -111,57 +137,76 @@ namespace REvernus.Utilities.Esi
             }
 
             await Task.WhenAll(taskList);
-            
+
+            ordersHashSet.RemoveWhere(o => o == null);
+
             return ordersHashSet.ToList();
         }
 
-        public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(long structureId, long? typeId = 0)
+        public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(AuthDTO auth, PlayerStructure structure, List<int> typeIds = null)
         {
             var ordersHashSet = new HashSet<MarketOrder>();
             var taskList = new List<Task>();
 
-            if (StructureManager.TryGetPlayerStructure(structureId, out var playerStructure))
+            var addedBy = CharacterManager.CharacterList.FirstOrDefault(c =>
+                    c.CharacterDetails.CharacterId == structure.AddedBy);
+
+            if (addedBy == null)
             {
-                var addedBy = CharacterManager.CharacterList.FirstOrDefault(c =>
-                    c.CharacterDetails.CharacterId == playerStructure.AddedBy);
+                return null;
+            }
 
-                if (addedBy == null)
+            var firstResult = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId);
+            var maxPages = firstResult.MaxPages;
+
+            ordersHashSet.UnionWith(firstResult.Model);
+
+            if (maxPages > 1)
+            {
+                for (var i = 2; i <= maxPages; i++)
                 {
-                    return null;
-                }
-
-                var auth = new AuthDTO()
-                {
-                    AccessToken = addedBy.AccessTokenDetails, 
-                    CharacterId = addedBy.CharacterDetails.CharacterId, 
-                    Scopes = Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
-                };
-
-                var firstResult = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structureId);
-                var maxPages = firstResult.MaxPages;
-
-                ordersHashSet.UnionWith(firstResult.Model);
-
-                if (maxPages > 1)
-                {
-                    for (var i = 2; i <= maxPages; i++)
+                    var i1 = i;
+                    taskList.Add(Task.Run(async () =>
                     {
-                        var i1 = i;
-                        taskList.Add(Task.Run(async () =>
+                        var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId, i1);
+                        ordersHashSet.UnionWith(result.Model);
+                    }));
+                }
+            }
+
+            await Task.WhenAll(taskList);
+
+            if (typeIds == null) return ordersHashSet.ToList();
+
+            var hashTypeIds = new HashSet<int>(typeIds);
+            var returnOrders = new List<MarketOrder>();
+            
+
+            try
+            {
+                ordersHashSet.RemoveWhere(o => o == null);
+
+                foreach (var marketOrder in ordersHashSet.ToList())
+                {
+                    try
+                    {
+                        if (hashTypeIds.Contains(marketOrder.TypeId))
                         {
-                            var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structureId, i1);
-                            ordersHashSet.UnionWith(result.Model);
-                        }));
+                            returnOrders.Add(marketOrder);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
                     }
                 }
 
-                await Task.WhenAll(taskList);
-
-                return ordersHashSet.ToList();
+                return returnOrders;
             }
-
-            return null;
+            catch (Exception e)
+            {
+                return null;
+            }
         }
-
     }
 }

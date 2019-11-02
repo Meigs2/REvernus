@@ -92,7 +92,7 @@ namespace REvernus.ViewModels
                 AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
                 CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
                 Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
-            }, 1028858195912, new List<long>() {193,199,210});
+            }, 1028858195912, orderList.Select(o => o.TypeId).ToHashSet().ToList());
 
             //foreach (var order in orderList)
             //{
