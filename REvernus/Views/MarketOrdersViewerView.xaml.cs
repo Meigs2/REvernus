@@ -116,9 +116,9 @@ namespace REvernus.Views
 
                 var difference = ((double) (row.Row.ItemArray[row.Row.Table.Columns["Difference"].Ordinal]));
                 var price = ((double) (row.Row.ItemArray[row.Row.Table.Columns["Price"].Ordinal]));
-                var overbid = difference > 0 ? -1 : 1;
+                var overbid = difference > 0 ? 1.0 : -1.0;
 
-                Clipboard.SetText(Math.Round((difference + price + overbid),2, MidpointRounding.ToEven).ToString());
+                Clipboard.SetText(Math.Round((difference + price + overbid),2, MidpointRounding.ToEven).ToString(CultureInfo.CurrentCulture));
 
                 SystemSounds.Beep.Play();
             }
@@ -175,6 +175,14 @@ namespace REvernus.Views
             if (clickedDataGrid != BuyOnlyDataGrid)
             {
                 BuyOnlyDataGrid.UnselectAll();
+            }
+        }
+
+        private void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyType == typeof(double))
+            {
+                ((DataGridTextColumn) e.Column).Binding.StringFormat = "0,0.00";
             }
         }
     }

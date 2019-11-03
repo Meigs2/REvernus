@@ -6,8 +6,11 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using EVEStandard.Enumerations;
 using EVEStandard.Models;
+using EVEStandard.Models.API;
+using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Utilities;
 using REvernus.Views;
@@ -187,6 +190,22 @@ namespace REvernus.Core
             }
 
             return false;
+        }
+
+        public static async Task<string> GetStructureName(long structureId, AuthDTO auth)
+        {
+            // check for NPC station
+            if (StructureManager.TryGetNpcStation(structureId, out var station))
+            {
+                return station.Name;
+            }
+            if (StructureManager.TryGetPlayerStructure(structureId, out var structure))
+            {
+                return structure.Name;
+            }
+
+            var result = await EsiData.EsiClient.Universe.GetStructureInfoV2Async(auth, structureId);
+            return result.Model.Name;
         }
     }
 }

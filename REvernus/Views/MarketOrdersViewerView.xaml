@@ -22,24 +22,24 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown">
+                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGeneratingColumn="OnAutoGeneratingColumn">
                         </DataGrid>
                         <DataGrid x:Name="BuyAndSellOrdersBuyDataGrid" ItemsSource="{Binding BuyOrdersDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="1" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown">
+                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="1" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGeneratingColumn="OnAutoGeneratingColumn">
                         </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Buy Only">
                     <Grid>
                         <DataGrid x:Name="BuyOnlyDataGrid" ItemsSource="{Binding BuyOrdersDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown">
+                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGeneratingColumn="OnAutoGeneratingColumn">
                         </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Sell Only">
                     <Grid>
                         <DataGrid x:Name="SellOnlyDataGrid" ItemsSource="{Binding SellOrdersDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown">
+                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGeneratingColumn="OnAutoGeneratingColumn">
                         </DataGrid>
                     </Grid>
                 </TabItem>
