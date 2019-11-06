@@ -6,6 +6,7 @@ using REvernus.Utilities.StaticData;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -20,20 +21,9 @@ namespace REvernus.ViewModels
 {
     public class MarketOrdersViewerViewModel : BindableBase
     {
-        private DataTable _sellOrdersDataTable;
-        public DataTable SellOrdersDataTable
-        {
-            get => _sellOrdersDataTable ??= new DataTable();
-            set => SetProperty(ref _sellOrdersDataTable, value);
-        }
-
-        private DataTable _buyOrdersDataTable;
-        public DataTable BuyOrdersDataTable
-        {
-            get => _buyOrdersDataTable ??= new DataTable();
-            set => SetProperty(ref _buyOrdersDataTable, value);
-        }
-
+        public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
+        public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
+            
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -46,6 +36,9 @@ namespace REvernus.ViewModels
         {
             try
             {
+                SellOrdersCollection.Clear();
+                BuyOrdersCollection.Clear();
+
                 var auth = new AuthDTO(){AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails, 
                     CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId, 
                     Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1};
@@ -62,22 +55,6 @@ namespace REvernus.ViewModels
                 }
 
                 var taskList = new List<Task>();
-
-                var sellOrdersDataTable = new DataTable { TableName = "Sell Orders" };
-                sellOrdersDataTable.Columns.Add("Item Name", typeof(string));
-                sellOrdersDataTable.Columns.Add("Item Id", typeof(int));
-                sellOrdersDataTable.Columns.Add("Location", typeof(string));
-                sellOrdersDataTable.Columns.Add("Price", typeof(double));
-                sellOrdersDataTable.Columns.Add("Outbid", typeof(bool));
-                sellOrdersDataTable.Columns.Add("Difference", typeof(double));
-                sellOrdersDataTable.Columns.Add("Volume", typeof(string));
-                sellOrdersDataTable.Columns.Add("Total Value", typeof(double));
-                sellOrdersDataTable.Columns.Add("Completion ETA", typeof(string));
-                sellOrdersDataTable.Columns.Add("Owner", typeof(string));
-
-                var buyOrdersDataTable = sellOrdersDataTable.Clone();
-                buyOrdersDataTable.TableName = "Buy Orders";
-
 
                 // Dictionary contains the key of a location, and a dictionary of item ids to a list of orders
                 var ordersDict = new Dictionary<long, Dictionary<int, List<MarketOrder>>>();
@@ -102,45 +79,18 @@ namespace REvernus.ViewModels
                     // If something didnt go wrong along the way, we now have all the public orders in the location of our current order
                     if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
                     {
-                        var dataRow = characterOrder.IsBuyOrder == true ? buyOrdersDataTable.NewRow() : sellOrdersDataTable.NewRow();
+                        var dataRow = new MarketOrderInfoModel(characterOrder);
 
-                        dataRow["Item Name"] = EveItems.TypeIdToTypeName(characterOrder.TypeId);
-                        dataRow["Item Id"] = characterOrder.TypeId;
-                        dataRow["Location"] = await StructureManager.GetStructureName(characterOrder.LocationId, auth);
-                        dataRow["Price"] = characterOrder.Price;
-                        dataRow["Outbid"] = IsOutbid(marketOrders, characterOrder, out var difference);
-                        dataRow["Difference"] = Math.Round(difference, 2, MidpointRounding.AwayFromZero);
-                        dataRow["Volume"] = characterOrder.VolumeRemain + "/" + characterOrder.VolumeTotal;
-                        dataRow["Total Value"] =
-                            Math.Round(characterOrder.VolumeRemain * characterOrder.Price, MidpointRounding.AwayFromZero).ToString(CultureInfo.CurrentCulture);
-                        dataRow["Owner"] =
-                            CharacterManager.CharacterList.FirstOrDefault(c =>
-                                c.CharacterDetails.CharacterId == auth.CharacterId)
-                                ?.CharacterName;
-
-                        if (characterOrder.VolumeTotal != characterOrder.VolumeRemain)
+                        if (dataRow.IsBuyOrder)
                         {
-                            dataRow["Completion ETA"] = ((DateTime.Now - characterOrder.Issued) / (characterOrder.VolumeTotal - characterOrder.VolumeRemain)
-                                                     * characterOrder.VolumeRemain).ToString(@"dd\:hh\:mm\:ss");
+                            BuyOrdersCollection.Add(dataRow);
                         }
                         else
                         {
-                            dataRow["Completion ETA"] = "Infinite";
-                        }
-
-                        if (characterOrder.IsBuyOrder == true)
-                        {
-                            buyOrdersDataTable.Rows.Add(dataRow.ItemArray);
-                        }
-                        else
-                        {
-                            sellOrdersDataTable.Rows.Add(dataRow.ItemArray);
+                            SellOrdersCollection.Add(dataRow);
                         }
                     }
                 }
-
-                SellOrdersDataTable = sellOrdersDataTable;
-                BuyOrdersDataTable = buyOrdersDataTable;
             }
             catch (Exception e)
             {
