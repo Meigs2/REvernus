@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using EVEStandard.Models;
+using EVEStandard.Models.API;
+using REvernus.Core;
+using REvernus.Core.ESI;
 using REvernus.Utilities.StaticData;
 
 namespace REvernus.Models
@@ -15,7 +19,8 @@ namespace REvernus.Models
         public bool IsBuyOrder => Order.IsBuyOrder == true;
         public string ItemName  => EveItems.TypeIdToTypeName(Order.TypeId);
         public int ItemId => Order.TypeId;
-        public string Location => Order.LocationId.ToString();
+        public string Location { get; set; }
+
         public double Price => Order.Price;
         public bool IsOutbid { get; set; } = false;
         public int OutbidDelta { get; set; } = 0;
@@ -24,12 +29,14 @@ namespace REvernus.Models
         public int VolumeTotal => Order.VolumeTotal;
         public string VolumeRatio => VolumeRemaining + "/" + VolumeTotal;
         public double TotalValue { get; set; } = 0.0;
-        public TimeSpan CompletionEta { get; set; }
-        public TimeSpan OrderAge => Order.Issued - DateTime.Now;
+        public TimeSpan CompletionEta { get; set; } = TimeSpan.Zero;
+        public TimeSpan OrderAge => DateTime.UtcNow - Order.Issued;
 
-        public MarketOrderInfoModel(CharacterMarketOrder order)
+        public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string location)
         {
             Order = order;
+            Owner = owner.CharacterName;
+            Location = location;
         }
     }
 }

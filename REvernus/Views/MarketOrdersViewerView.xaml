@@ -22,24 +22,76 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown">
+                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding Location}"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge}"/>
+                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                            </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid x:Name="BuyAndSellOrdersBuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="1" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown">
+                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="1" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding Location}"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge}"/>
+                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                            </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Buy Only">
                     <Grid>
                         <DataGrid x:Name="BuyOnlyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGeneratingColumn="OnAutoGeneratingColumn">
+                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding Location}"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge}"/>
+                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                            </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Sell Only">
                     <Grid>
                         <DataGrid x:Name="SellOnlyDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGeneratingColumn="OnAutoGeneratingColumn">
+                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding Location}"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge}"/>
+                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                            </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                 </TabItem>

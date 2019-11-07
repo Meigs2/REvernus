@@ -11,6 +11,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Forms.VisualStyles;
 using EVEStandard.Models.API;
 using ICSharpCode.SharpZipLib.Core;
@@ -74,23 +75,43 @@ namespace REvernus.ViewModels
 
                 await Task.WhenAll(taskList);
 
+                taskList.Clear();
+
+                // Enable asynchronous access to a bindable collection for faster population of the datagrids.
+                var buysLock = new object();
+                var sellsLock = new object();
+                BindingOperations.EnableCollectionSynchronization(BuyOrdersCollection, buysLock);
+                BindingOperations.EnableCollectionSynchronization(SellOrdersCollection, sellsLock);
+
                 foreach (var characterOrder in characterOrders)
                 {
-                    // If something didnt go wrong along the way, we now have all the public orders in the location of our current order
-                    if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
+                    taskList.Add(Task.Run(async () =>
                     {
-                        var dataRow = new MarketOrderInfoModel(characterOrder);
+                        // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
+                        if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
+                        {
+                            var location = await StructureManager.GetStructureName(characterOrder.LocationId, auth);
+                            var dataRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location);
 
-                        if (dataRow.IsBuyOrder)
-                        {
-                            BuyOrdersCollection.Add(dataRow);
+                            if (dataRow.IsBuyOrder)
+                            {
+                                lock (buysLock)
+                                {
+                                    BuyOrdersCollection.Add(dataRow);
+                                }
+                            }
+                            else
+                            {
+                                lock (sellsLock)
+                                {
+                                    SellOrdersCollection.Add(dataRow);
+                                }
+                            }
                         }
-                        else
-                        {
-                            SellOrdersCollection.Add(dataRow);
-                        }
-                    }
+                    }));
                 }
+
+                await Task.WhenAll(taskList);
             }
             catch (Exception e)
             {
@@ -128,6 +149,10 @@ namespace REvernus.ViewModels
             return false;
         }
 
+        public void RemoveItem(ObservableCollection<MarketOrderInfoModel> collection, MarketOrderInfoModel instance)
+        {
+            collection.Remove(collection.Single(i => i.Order.OrderId == instance.Order.OrderId));
+        }
         public DelegateCommand GetOrdersCommand { get; set; }
     }
 }
