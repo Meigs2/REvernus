@@ -16,13 +16,13 @@ namespace REvernus.Models
 
         public CharacterMarketOrder Order { get; set; }
         public List<MarketOrder> MarketOrders { get; set; }
-        public List<MarketOrder> BuyOrders => MarketOrders.Where(o => IsBuyOrder).OrderByDescending(o => o.Price).ToList();
-        public List<MarketOrder> SellOrders => MarketOrders.Where(o => IsBuyOrder).OrderBy(o => o.Price).ToList();
+        public List<MarketOrder> BuyOrders => MarketOrders.Where(o => o.IsBuyOrder).OrderByDescending(o => o.Price).ToList();
+        public List<MarketOrder> SellOrders => MarketOrders.Where(o => !o.IsBuyOrder).OrderBy(o => o.Price).ToList();
         public string Owner { get; set; }
         public bool IsBuyOrder => Order.IsBuyOrder == true;
         public string ItemName  => EveItems.TypeIdToTypeName(Order.TypeId);
         public int ItemId => Order.TypeId;
-        public string Location { get; set; }
+        public string LocationName { get; set; }
         public double Price => Order.Price;
         public bool IsOutbid
         {
@@ -33,12 +33,56 @@ namespace REvernus.Models
                 return isOutbid;
             }
         }
-        public int OutbidDelta { get; set; } = 0;
+        public int OutbidDelta
+        {
+            get
+            {
+                if (IsBuyOrder)
+                {
+                    return BuyOrders.FindIndex(o => o.OrderId == Order.OrderId);
+                }
+                else
+                {
+                    return SellOrders.FindIndex(o => o.OrderId == Order.OrderId);
+                }
+            }
+        }
         public double Difference { get; set; }
         public int VolumeRemaining => Order.VolumeRemain;
         public int VolumeTotal => Order.VolumeTotal;
         public string VolumeRatio => VolumeRemaining + "/" + VolumeTotal;
         public double TotalValue => Order.VolumeRemain * Order.Price;
+        public double TypeMargin
+        {
+            get
+            {
+                if (SellOrders[0] != null && BuyOrders[0] != null)
+                {
+                    return (SellOrders[0].Price - BuyOrders[0].Price) / SellOrders[0].Price;
+                }
+                else
+                {
+                    return double.PositiveInfinity;
+                }
+            }
+        }
+
+        public double CurrentMargin
+        {
+            get
+            {
+                if (IsBuyOrder && SellOrders[0] != null)
+                {
+                    return (SellOrders[0].Price - Order.Price) / SellOrders[0].Price;
+                }
+                if (!IsBuyOrder && BuyOrders[0] != null)
+                {
+                    return (Order.Price - BuyOrders[0].Price) / Order.Price;
+                }
+
+                return 0.0;
+            }
+        }
 
         public string CompletionEta
         {
@@ -54,11 +98,11 @@ namespace REvernus.Models
 
         public TimeSpan OrderAge => DateTime.UtcNow - Order.Issued;
 
-        public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string location, List<MarketOrder> marketOrders)
+        public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string locationName, List<MarketOrder> marketOrders)
         {
             Order = order;
             Owner = owner.CharacterName;
-            Location = location;
+            LocationName = locationName;
             MarketOrders = marketOrders;
         }
 

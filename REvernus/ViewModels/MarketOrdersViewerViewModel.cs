@@ -94,7 +94,7 @@ namespace REvernus.ViewModels
                         // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
                         if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
                         {
-                            var location = await StructureManager.GetStructureName(characterOrder.LocationId, auth);
+                            var location = await StructureManager.GetStructureName(characterOrder.LocationId);
                             var dataRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
 
                             if (dataRow.IsBuyOrder)
