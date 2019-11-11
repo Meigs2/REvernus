@@ -97,6 +97,7 @@ namespace REvernus.Models
         }
 
         public TimeSpan OrderAge => DateTime.UtcNow - Order.Issued;
+        public TimeSpan TimeLeft => TimeSpan.FromDays(Order.Duration) - OrderAge;
 
         public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string locationName, List<MarketOrder> marketOrders)
         {

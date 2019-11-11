@@ -35,6 +35,7 @@
                                 <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
                                 <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
                                 <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -52,48 +53,7 @@
                                 <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
                                 <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
-                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Buy Only">
-                    <Grid>
-                        <DataGrid x:Name="BuyOnlyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
-                                <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
-                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
-                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
-                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
-                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
-                                <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
-                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
-                                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
-                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
-                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
-                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Sell Only">
-                    <Grid>
-                        <DataGrid x:Name="SellOnlyDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
-                                <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
-                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
-                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
-                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
-                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
-                                <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
-                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
-                                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
-                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
-                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
                                 <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
                             </DataGrid.Columns>
                         </DataGrid>
