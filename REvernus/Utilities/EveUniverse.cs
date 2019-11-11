@@ -16,7 +16,7 @@ namespace REvernus.Utilities
 
             try
             {
-                var command = new SQLiteCommand("SELECT * FROM mapSolarSystems WHERE solarSystemId = @systemId",
+                using var command = new SQLiteCommand("SELECT * FROM mapSolarSystems WHERE solarSystemId = @systemId",
                     connection);
                 command.Parameters.AddWithValue("@systemId", systemId);
 

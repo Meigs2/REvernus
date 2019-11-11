@@ -16,7 +16,9 @@ using System.Windows.Forms.VisualStyles;
 using EVEStandard.Models.API;
 using ICSharpCode.SharpZipLib.Core;
 using REvernus.Models;
+using REvernus.Utilities;
 using Market = REvernus.Utilities.Esi.Market;
+using Status = REvernus.Utilities.Status;
 
 namespace REvernus.ViewModels
 {
@@ -69,6 +71,7 @@ namespace REvernus.ViewModels
                 {
                     taskList.Add(Task.Run(async () =>
                     {
+                        using var a = Status.GetNewStatusHandle();
                         ordersDict[location] = await Market.GetOrdersInStructure(auth, location, items.ToList());
                     }));
                 }
@@ -87,11 +90,12 @@ namespace REvernus.ViewModels
                 {
                     taskList.Add(Task.Run(async () =>
                     {
+                        using var a = Status.GetNewStatusHandle();
                         // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
                         if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
                         {
                             var location = await StructureManager.GetStructureName(characterOrder.LocationId, auth);
-                            var dataRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location);
+                            var dataRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
 
                             if (dataRow.IsBuyOrder)
                             {

@@ -24,7 +24,7 @@
                         <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                                   CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
                                 <DataGridTextColumn Header="Location" Binding="{Binding Location}"/>
                                 <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
@@ -33,7 +33,7 @@
                                 <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
                                 <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
-                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
                                 <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
                             </DataGrid.Columns>
                         </DataGrid>
