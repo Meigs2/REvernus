@@ -140,16 +140,6 @@ namespace REvernus.Views
                 return BuyAndSellOrdersBuyDataGrid;
             }
 
-            if (SellOnlyDataGrid.SelectedCells.Count > 0)
-            {
-                return SellOnlyDataGrid;
-            }
-
-            if (BuyOnlyDataGrid.SelectedCells.Count > 0)
-            {
-                return BuyOnlyDataGrid;
-            }
-
             return null;
         }
 
@@ -165,16 +155,6 @@ namespace REvernus.Views
             if (clickedDataGrid != BuyAndSellOrdersBuyDataGrid)
             {
                 BuyAndSellOrdersBuyDataGrid.UnselectAll();
-            }
-
-            if (clickedDataGrid != SellOnlyDataGrid)
-            {
-                SellOnlyDataGrid.UnselectAll();
-            }
-
-            if (clickedDataGrid != BuyOnlyDataGrid)
-            {
-                BuyOnlyDataGrid.UnselectAll();
             }
         }
 
