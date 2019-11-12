@@ -22,7 +22,8 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
+                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="0" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False" 
+                                  SelectedIndex="{Binding SellsSelectedIndex}" SelectedItem="{Binding SellsSelectedItem}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
                                 <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
@@ -31,6 +32,7 @@
                                 <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
                                 <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
+                                <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
                                 <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
                                 <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
@@ -40,7 +42,8 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid x:Name="BuyAndSellOrdersBuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="1" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False">
+                                  CanUserAddRows="False" IsReadOnly="True" Grid.Row="1" SelectionMode="Single" DataGridCell.Selected="DataGridMouseDown" AutoGenerateColumns="False" 
+                                  SelectedIndex="{Binding BuysSelectedIndex}" SelectedItem="{Binding BuysSelectedItem}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
                                 <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
@@ -49,6 +52,7 @@
                                 <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
                                 <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
+                                <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
                                 <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
                                 <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
                                 <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>

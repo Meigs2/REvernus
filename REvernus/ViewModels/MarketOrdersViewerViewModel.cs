@@ -13,7 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Forms.VisualStyles;
+using System.Windows.Input;
 using EVEStandard.Models.API;
+using Gma.System.MouseKeyHook;
 using ICSharpCode.SharpZipLib.Core;
 using REvernus.Models;
 using REvernus.Utilities;
@@ -26,13 +28,74 @@ namespace REvernus.ViewModels
     {
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
         public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
-            
+
+        public object SellsSelectedItem
+        {
+            get => _sellsSelectedItem;
+            set => SetProperty(ref _sellsSelectedItem, value);
+        }
+        public int SellsSelectedIndex
+        {
+            get => _sellsSelectedIndex;
+            set => SetProperty(ref _sellsSelectedIndex, value);
+        }
+        public object BuysSelectedItem
+        {
+            get => _buysSelectedItem;
+            set => SetProperty(ref _buysSelectedItem, value);
+        }
+        public int BuysSelectedIndex
+        {
+            get => _buysSelectedIndex;
+            set => SetProperty(ref _buysSelectedIndex, value);
+        }
+
+        private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
+        private int _sellsSelectedIndex;
+        private object _sellsSelectedItem;
+        private int _buysSelectedIndex;
+        private object _buysSelectedItem;
+
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MarketOrdersViewerViewModel()
         {
             GetOrdersCommand = new DelegateCommand(async () => await GetOrderInformation());
+            SubscribeHotKeys();
+            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+        }
+        private void UnsubscribeHotKeys(object sender, EventArgs e)
+        {
+            _keybindEvents.Dispose();
+        }
+
+        private void UnsubscribeHotKeys()
+        {
+            _keybindEvents.Dispose();
+        }
+
+        private void SubscribeHotKeys()
+        {
+            UnsubscribeHotKeys();
+
+            _keybindEvents = Hook.GlobalEvents();
+
+            var actions = new Dictionary<Combination, Action>()
+            {
+                {Combination.FromString("Shift+Up"),  KeyBindMoveUp},
+                {Combination.FromString("Shift+Down"), KeyBindMoveDown}
+            };
+
+            _keybindEvents.OnCombination(actions);
+        }
+
+        private void KeyBindMoveUp()
+        {
+        }
+
+        private void KeyBindMoveDown()
+        {
         }
 
         private async Task GetOrderInformation()

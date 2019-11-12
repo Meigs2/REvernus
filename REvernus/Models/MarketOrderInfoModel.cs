@@ -67,7 +67,7 @@ namespace REvernus.Models
             }
         }
 
-        public double CurrentMargin
+        public double OrderMargin
         {
             get
             {
