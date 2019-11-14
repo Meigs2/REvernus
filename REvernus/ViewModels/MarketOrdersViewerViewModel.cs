@@ -49,6 +49,7 @@ namespace REvernus.ViewModels
             get => _buysSelectedIndex;
             set => SetProperty(ref _buysSelectedIndex, value);
         }
+        public DelegateCommand GetOrdersEsiCommand { get; set; }
 
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
@@ -61,10 +62,11 @@ namespace REvernus.ViewModels
 
         public MarketOrdersViewerViewModel()
         {
-            GetOrdersCommand = new DelegateCommand(async () => await GetOrderInformation());
+            GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
         }
+
         private void UnsubscribeHotKeys(object sender, EventArgs e)
         {
             _keybindEvents.Dispose();
@@ -83,8 +85,8 @@ namespace REvernus.ViewModels
 
             var actions = new Dictionary<Combination, Action>()
             {
-                {Combination.FromString("Shift+Up"),  KeyBindMoveUp},
-                {Combination.FromString("Shift+Down"), KeyBindMoveDown}
+                {Combination.FromString("Alt+Up"),  KeyBindMoveUp},
+                {Combination.FromString("Alt+Down"), KeyBindMoveDown}
             };
 
             _keybindEvents.OnCombination(actions);
@@ -98,18 +100,19 @@ namespace REvernus.ViewModels
         {
         }
 
-        private async Task GetOrderInformation()
+        private async Task LoadOrdersFromEsi()
+        {
+            var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
+            await ImportOrders(characterOrders);
+        }
+
+        private async Task ImportOrders(List<CharacterMarketOrder> characterOrders)
         {
             try
             {
-                SellOrdersCollection.Clear();
-                BuyOrdersCollection.Clear();
-
                 var auth = new AuthDTO(){AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails, 
                     CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId, 
                     Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1};
-
-                var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
 
                 var locations = new HashSet<long>();
                 var items = new HashSet<int>();
@@ -158,20 +161,40 @@ namespace REvernus.ViewModels
                         if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
                         {
                             var location = await StructureManager.GetStructureName(characterOrder.LocationId);
-                            var dataRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
 
-                            if (dataRow.IsBuyOrder)
+                            var existingOrder = BuyOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
+                            if (existingOrder != null && characterOrder.IsBuyOrder == true)
+                            {
+                                existingOrder.Order = characterOrder;
+                                existingOrder.Owner = CharacterManager.SelectedCharacter.CharacterName;
+                                existingOrder.MarketOrders = marketOrders;
+                                existingOrder.LocationName = location;
+                                return;
+                            }
+
+                            existingOrder = SellOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
+                            if (existingOrder != null && characterOrder.IsBuyOrder != true)
+                            {
+                                existingOrder.Order = characterOrder;
+                                existingOrder.Owner = CharacterManager.SelectedCharacter.CharacterName;
+                                existingOrder.MarketOrders = marketOrders;
+                                existingOrder.LocationName = location;
+                                return;
+                            }
+
+                            var newRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
+                            if (characterOrder.IsBuyOrder == true)
                             {
                                 lock (buysLock)
                                 {
-                                    BuyOrdersCollection.Add(dataRow);
+                                    BuyOrdersCollection.Add(newRow);
                                 }
                             }
                             else
                             {
                                 lock (sellsLock)
                                 {
-                                    SellOrdersCollection.Add(dataRow);
+                                    SellOrdersCollection.Add(newRow);
                                 }
                             }
                         }
@@ -185,41 +208,5 @@ namespace REvernus.ViewModels
                 Log.Error(e);
             }
         }
-
-        private bool IsOutbid(List<MarketOrder> marketOrders, CharacterMarketOrder order, out double difference)
-        {
-            difference = 0;
-
-            if (order.IsBuyOrder == null || order.IsBuyOrder == false)
-            {
-                var buyOrders = marketOrders.Where(o => !o.IsBuyOrder).ToList();
-
-                var min = buyOrders.OrderBy(o => o.Price).FirstOrDefault();
-                if (min != null && order.OrderId != min.OrderId && min.Price <= order.Price)
-                {
-                    difference = min.Price - order.Price;
-                    return true;
-                }
-            }
-            else
-            {
-                var sellOrders = marketOrders.Where(o => o.IsBuyOrder).ToList();
-
-                var max = sellOrders.OrderByDescending(o => o.Price).FirstOrDefault();
-                if (max != null && order.OrderId != max.OrderId && max.Price >= order.Price)
-                {
-                    difference = max.Price - order.Price;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public void RemoveItem(ObservableCollection<MarketOrderInfoModel> collection, MarketOrderInfoModel instance)
-        {
-            collection.Remove(collection.Single(i => i.Order.OrderId == instance.Order.OrderId));
-        }
-        public DelegateCommand GetOrdersCommand { get; set; }
     }
 }

@@ -5,99 +5,215 @@ using System.Text;
 using System.Threading.Tasks;
 using EVEStandard.Models;
 using EVEStandard.Models.API;
+using Prism.Mvvm;
 using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Utilities.StaticData;
 
 namespace REvernus.Models
 {
-    public class MarketOrderInfoModel
+    public class MarketOrderInfoModel : BindableBase
     {
+        private CharacterMarketOrder _order;
+        private List<MarketOrder> _marketOrders;
+        private List<MarketOrder> _buyOrders = new List<MarketOrder>();
+        private List<MarketOrder> _sellOrders = new List<MarketOrder>();
+        private string _owner;
+        private bool _isBuyOrder;
+        private string _itemName;
+        private int _itemId;
+        private string _locationName;
+        private double _price;
+        private bool _isOutbid;
+        private int _outbidDelta;
+        private double _difference;
+        private int _volumeRemaining;
+        private int _volumeTotal;
+        private string _volumeRatio;
+        private double _totalValue;
+        private double _typeMargin;
+        private double _orderMargin;
+        private string _completionEta;
+        private TimeSpan _orderAge = TimeSpan.Zero;
+        private TimeSpan _timeLeft = TimeSpan.Zero;
 
-        public CharacterMarketOrder Order { get; set; }
-        public List<MarketOrder> MarketOrders { get; set; }
-        public List<MarketOrder> BuyOrders => MarketOrders.Where(o => o.IsBuyOrder).OrderByDescending(o => o.Price).ToList();
-        public List<MarketOrder> SellOrders => MarketOrders.Where(o => !o.IsBuyOrder).OrderBy(o => o.Price).ToList();
-        public string Owner { get; set; }
-        public bool IsBuyOrder => Order.IsBuyOrder == true;
-        public string ItemName  => EveItems.TypeIdToTypeName(Order.TypeId);
-        public int ItemId => Order.TypeId;
-        public string LocationName { get; set; }
-        public double Price => Order.Price;
+        public CharacterMarketOrder Order
+        {
+            get => _order;
+            set
+            {
+                SetProperty(ref _order, value);
+                IsBuyOrder = Order.IsBuyOrder == true;
+                ItemName = EveItems.TypeIdToTypeName(Order.TypeId);
+                ItemId = Order.TypeId;
+                Price = Order.Price;
+                VolumeRemaining = Order.VolumeRemain;
+                VolumeTotal = Order.VolumeTotal;
+                VolumeRatio = VolumeRemaining + "/" + VolumeTotal;
+                OrderAge = DateTime.UtcNow - Order.Issued;
+                TimeLeft = TimeSpan.FromDays(Order.Duration) - OrderAge;
+
+                CompletionEta = VolumeRemaining == VolumeTotal ? "Infinity" : ((OrderAge / (VolumeTotal - VolumeRemaining) * VolumeRemaining)).ToString(@"dd\:hh\:mm");
+            }
+        }
+
+        public List<MarketOrder> MarketOrders
+        {
+            get => _marketOrders;
+            set
+            {
+                SetProperty(ref _marketOrders, value);
+                BuyOrders = MarketOrders.Where(o => o.IsBuyOrder).OrderByDescending(o => o.Price).ToList();
+                SellOrders = MarketOrders.Where(o => !o.IsBuyOrder).OrderBy(o => o.Price).ToList();
+                IsOutbid = IsOrderOutbid(MarketOrders, Order, out var diff);
+                Difference = diff;
+                
+                // Outbid delta
+                OutbidDelta = IsBuyOrder ? BuyOrders.FindIndex(o => o.OrderId == Order.OrderId) : SellOrders.FindIndex(o => o.OrderId == Order.OrderId);
+                if (SellOrders.Count > 0 && BuyOrders.Count > 0)
+                {
+                    TypeMargin = (SellOrders[0].Price - BuyOrders[0].Price) / SellOrders[0].Price;
+                }
+                else
+                {
+                    TypeMargin = double.PositiveInfinity;
+                }
+
+                // OrderMargin
+                if (IsBuyOrder && SellOrders.Count > 0)
+                {
+                    OrderMargin = (SellOrders[0].Price - Order.Price) / SellOrders[0].Price;
+                }
+                else if (!IsBuyOrder && BuyOrders.Count > 0)
+                {
+                    OrderMargin = (Order.Price - BuyOrders[0].Price) / Order.Price;
+                }
+                else
+                {
+                    OrderMargin = 0.0;
+                }
+            }
+        }
+
+        public string Owner
+        {
+            get => _owner;
+            set => SetProperty(ref _owner, value);
+        }
+
+        public string LocationName
+        {
+            get => _locationName;
+            set => SetProperty(ref _locationName, value);
+        }
+
+        public List<MarketOrder> BuyOrders
+        {
+            get => _buyOrders;
+            set => SetProperty(ref _buyOrders, value);
+        }
+
+        public List<MarketOrder> SellOrders
+        {
+            get => _sellOrders;
+            set => SetProperty(ref _sellOrders, value);
+        }
+
+        public bool IsBuyOrder
+        {
+            get => _isBuyOrder;
+            set => SetProperty(ref _isBuyOrder, value);
+        }
+
+        public string ItemName
+        {
+            get => _itemName;
+            set => SetProperty(ref _itemName, value);
+        }
+
+        public int ItemId
+        {
+            get => _itemId;
+            set => SetProperty(ref _itemId, value);
+        }
+
+        public double Price
+        {
+            get => _price;
+            set => SetProperty(ref _price, value);
+        }
+
         public bool IsOutbid
         {
-            get
-            {
-                var isOutbid = IsOrderOutbid(MarketOrders, Order, out var diff);
-                Difference = diff;
-                return isOutbid;
-            }
+            get => _isOutbid;
+            set => SetProperty(ref _isOutbid, value);
         }
+
         public int OutbidDelta
         {
-            get
-            {
-                if (IsBuyOrder)
-                {
-                    return BuyOrders.FindIndex(o => o.OrderId == Order.OrderId);
-                }
-                else
-                {
-                    return SellOrders.FindIndex(o => o.OrderId == Order.OrderId);
-                }
-            }
+            get => _outbidDelta;
+            set => SetProperty(ref _outbidDelta, value);
         }
-        public double Difference { get; set; }
-        public int VolumeRemaining => Order.VolumeRemain;
-        public int VolumeTotal => Order.VolumeTotal;
-        public string VolumeRatio => VolumeRemaining + "/" + VolumeTotal;
-        public double TotalValue => Order.VolumeRemain * Order.Price;
+
+        public double Difference
+        {
+            get => _difference;
+            set => SetProperty(ref _difference, value);
+        }
+
+        public int VolumeRemaining
+        {
+            get => _volumeRemaining;
+            set => SetProperty(ref _volumeRemaining, value);
+        }
+
+        public int VolumeTotal
+        {
+            get => _volumeTotal;
+            set => SetProperty(ref _volumeTotal, value);
+        }
+
+        public string VolumeRatio
+        {
+            get => _volumeRatio;
+            set => SetProperty(ref _volumeRatio, value);
+        }
+
+        public double TotalValue
+        {
+            get => _totalValue;
+            set => SetProperty(ref _totalValue, value);
+        }
+
         public double TypeMargin
         {
-            get
-            {
-                if (SellOrders[0] != null && BuyOrders[0] != null)
-                {
-                    return (SellOrders[0].Price - BuyOrders[0].Price) / SellOrders[0].Price;
-                }
-                else
-                {
-                    return double.PositiveInfinity;
-                }
-            }
+            get => _typeMargin;
+            set => SetProperty(ref _typeMargin, value);
         }
 
         public double OrderMargin
         {
-            get
-            {
-                if (IsBuyOrder && SellOrders[0] != null)
-                {
-                    return (SellOrders[0].Price - Order.Price) / SellOrders[0].Price;
-                }
-                if (!IsBuyOrder && BuyOrders[0] != null)
-                {
-                    return (Order.Price - BuyOrders[0].Price) / Order.Price;
-                }
-
-                return 0.0;
-            }
+            get => _orderMargin;
+            set => SetProperty(ref _orderMargin, value);
         }
 
         public string CompletionEta
         {
-            get
-            {
-                if (VolumeRemaining == VolumeTotal)
-                {
-                    return "Infinity";
-                }
-                return ((OrderAge / (VolumeTotal - VolumeRemaining) * VolumeRemaining)).ToString(@"dd\:hh\:mm");
-            }
+            get => _completionEta;
+            set => SetProperty(ref _completionEta, value);
         }
 
-        public TimeSpan OrderAge => DateTime.UtcNow - Order.Issued;
-        public TimeSpan TimeLeft => TimeSpan.FromDays(Order.Duration) - OrderAge;
+        public TimeSpan OrderAge
+        {
+            get => _orderAge;
+            set => SetProperty(ref _orderAge, value);
+        }
+
+        public TimeSpan TimeLeft
+        {
+            get => _timeLeft;
+            set => SetProperty(ref _timeLeft, value);
+        }
 
         public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string locationName, List<MarketOrder> marketOrders)
         {
