@@ -10,13 +10,16 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Media;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using EVEStandard.Models.API;
 using Gma.System.MouseKeyHook;
 using ICSharpCode.SharpZipLib.Core;
+using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Utilities;
 using Market = REvernus.Utilities.Esi.Market;
@@ -85,19 +88,95 @@ namespace REvernus.ViewModels
 
             var actions = new Dictionary<Combination, Action>()
             {
-                {Combination.FromString("Alt+Up"),  KeyBindMoveUp},
-                {Combination.FromString("Alt+Down"), KeyBindMoveDown}
+                {Combination.FromString("Alt+Up"),  async () => await KeyBindMoveUp()},
+                {Combination.FromString("Alt+Down"), async () => await KeyBindMoveDown()}
             };
 
             _keybindEvents.OnCombination(actions);
         }
 
-        private void KeyBindMoveUp()
+        private async Task KeyBindMoveUp()
         {
+            await MoveSelectedRow(Key.Up);
         }
 
-        private void KeyBindMoveDown()
+        private async Task KeyBindMoveDown()
         {
+            await MoveSelectedRow(Key.Down);
+        }
+
+        private async Task MoveSelectedRow(Key direction)
+        {
+            try
+            {
+                ObservableCollection<MarketOrderInfoModel> selectedGrid = null;
+                MarketOrderInfoModel currentItem = null;
+                var isBuyCollection = false;
+                var currentRowIndex = 0;
+
+                if (SellsSelectedItem != null)
+                {
+                    selectedGrid = SellOrdersCollection;
+                    currentItem = (MarketOrderInfoModel) SellsSelectedItem;
+                    currentRowIndex = SellsSelectedIndex;
+                }
+
+                if (BuysSelectedItem != null)
+                {
+                    selectedGrid = BuyOrdersCollection;
+                    currentItem = (MarketOrderInfoModel) BuysSelectedItem;
+                    currentRowIndex = BuysSelectedIndex;
+                    isBuyCollection = true;
+                }
+
+                if (selectedGrid == null || currentItem == null) return;
+
+                var nextIndex = direction == Key.Up ? currentRowIndex - 1 : currentRowIndex + 1;
+
+                if (nextIndex < 0 || nextIndex >= selectedGrid.Count)
+                {
+                    return;
+                }
+
+                if (isBuyCollection)
+                {
+                    BuysSelectedIndex = nextIndex;
+                    currentItem = (MarketOrderInfoModel) BuysSelectedItem;
+                }
+                else
+                {
+                    SellsSelectedIndex = nextIndex;
+                    currentItem = (MarketOrderInfoModel) SellsSelectedItem;
+                }
+
+                var character = CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == currentItem.Owner);
+
+                if (character != null)
+                {
+                    try
+                    {
+                        var dto = new AuthDTO
+                        {
+                            CharacterId = character.CharacterDetails.CharacterId,
+                            Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1,
+                            AccessToken = character.AccessTokenDetails
+                        };
+                        await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
+
+                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + .1) : (currentItem.SellOrders[0].Price - .1), 2, MidpointRounding.ToEven).ToString("N"));
+
+                SystemSounds.Beep.Play();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private async Task LoadOrdersFromEsi()
