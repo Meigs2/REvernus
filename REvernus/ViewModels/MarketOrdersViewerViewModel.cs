@@ -12,10 +12,12 @@ using System.Globalization;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
+using System.Windows.Threading;
 using EVEStandard.Models.API;
 using Gma.System.MouseKeyHook;
 using ICSharpCode.SharpZipLib.Core;
@@ -54,6 +56,9 @@ namespace REvernus.ViewModels
         }
         public DelegateCommand GetOrdersEsiCommand { get; set; }
 
+        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
+        public bool AutoRefreshEnabled { get; set; } = false;
+
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
         private object _sellsSelectedItem;
@@ -65,6 +70,10 @@ namespace REvernus.ViewModels
 
         public MarketOrdersViewerViewModel()
         {
+            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(60);
+            AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
+            AutoRefreshTimer.Start();
+
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
