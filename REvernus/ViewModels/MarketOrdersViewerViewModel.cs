@@ -57,13 +57,38 @@ namespace REvernus.ViewModels
         public DelegateCommand GetOrdersEsiCommand { get; set; }
 
         public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
-        public bool AutoRefreshEnabled { get; set; } = false;
+
+        public bool AutoRefreshEnabled
+        {
+            get => _autoRefreshEnabled;
+            set
+            {
+                if (value)
+                {
+                    AutoRefreshTimer.Start();
+                }
+                else
+                {
+                    AutoRefreshTimer.Stop();
+                }
+
+                SetProperty(ref _autoRefreshEnabled, value);
+            }
+        }   
+
+        public uint RefreshMinutes
+        {
+            get => _refreshMinutes;
+            set => SetProperty(ref _refreshMinutes, value);
+        }
 
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
         private object _sellsSelectedItem;
         private int _buysSelectedIndex;
         private object _buysSelectedItem;
+        private uint _refreshMinutes = 5;
+        private bool _autoRefreshEnabled = false;
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -72,7 +97,6 @@ namespace REvernus.ViewModels
         {
             AutoRefreshTimer.Interval = TimeSpan.FromSeconds(60);
             AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
-            AutoRefreshTimer.Start();
 
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
             SubscribeHotKeys();

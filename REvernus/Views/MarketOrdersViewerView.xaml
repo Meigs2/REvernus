@@ -11,14 +11,36 @@
     </UserControl.DataContext>
     <Grid>
         <DockPanel>
-            <Grid x:Name="TopGrid"  DockPanel.Dock="Top" Height="30">
-                <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch orders" />
+            <Grid x:Name="TopGrid"  DockPanel.Dock="Top" MaxHeight="100" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From ESI" Margin="5" />
+                    <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From Exported Orders" Margin="5" Grid.Column="1"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="RefreshMinutesTextBox" Margin="5" Width="100" Text="{Binding RefreshMinutes, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label VerticalAlignment="Center" Content="Minutes" />
+                    </StackPanel>
+                    <CheckBox x:Name="EnabledCheckBox" Content="Enable Auto Refresher" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding AutoRefreshEnabled}"/>
+                </Grid>
             </Grid>
             <TabControl x:Name="MainTabControl">
                 <TabItem Header="Buy and Sell Orders">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
+                            <RowDefinition/>    
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
