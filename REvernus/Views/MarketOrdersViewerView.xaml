@@ -49,7 +49,7 @@
                             <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Content="{Binding SellVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding SellTotalValue, StringFormat=N2}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Content="{Binding SellTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
                         </StackPanel>
                     </Grid>
                     <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
@@ -81,7 +81,7 @@
                             <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Content="{Binding BuyVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding BuyTotalValue, StringFormat=N2}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Content="{Binding BuyTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
                         </StackPanel>
                     </Grid>
                     <DataGrid x:Name="BuyAndSellOrdersBuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"

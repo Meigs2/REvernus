@@ -82,13 +82,13 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _refreshMinutes, value);
         }
 
-        public string SellOrdersActiveOrders
+        public int SellOrdersActiveOrders
         {
             get => _sellOrdersActiveOrders;
             set => SetProperty(ref _sellOrdersActiveOrders, value);
         }
 
-        public string BuyOrdersActiveOrders
+        public int BuyOrdersActiveOrders
         {
             get => _buyOrdersActiveOrders;
             set => SetProperty(ref _buyOrdersActiveOrders, value);
@@ -125,8 +125,8 @@ namespace REvernus.ViewModels
         private object _buysSelectedItem;
         private uint _refreshMinutes = 5;
         private bool _autoRefreshEnabled = false;
-        private string _sellOrdersActiveOrders = "0";
-        private string _buyOrdersActiveOrders = "0";
+        private int _sellOrdersActiveOrders;
+        private int _buyOrdersActiveOrders;
         private string _sellVolumeRemaining = "0/0";
         private string _buyVolumeRemaining = "0/0";
         private double _sellTotalValue;
@@ -351,6 +351,14 @@ namespace REvernus.ViewModels
                                     SellOrdersCollection.Add(newRow);
                                 }
                             }
+                            SellOrdersActiveOrders = SellOrdersCollection.Count;
+                            BuyOrdersActiveOrders = BuyOrdersCollection.Count;
+
+                            SellTotalValue = SellOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
+                            BuyTotalValue = BuyOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
+
+                            SellVolumeRemaining = SellOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + SellOrdersCollection.Sum(o => o.VolumeTotal);
+                            BuyVolumeRemaining = BuyOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + BuyOrdersCollection.Sum(o => o.VolumeTotal);
                         }
                     }));
                 }
