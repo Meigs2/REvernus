@@ -82,6 +82,42 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _refreshMinutes, value);
         }
 
+        public string SellOrdersActiveOrders
+        {
+            get => _sellOrdersActiveOrders;
+            set => SetProperty(ref _sellOrdersActiveOrders, value);
+        }
+
+        public string BuyOrdersActiveOrders
+        {
+            get => _buyOrdersActiveOrders;
+            set => SetProperty(ref _buyOrdersActiveOrders, value);
+        }
+
+        public string SellVolumeRemaining
+        {
+            get => _sellVolumeRemaining;
+            set => SetProperty(ref _sellVolumeRemaining, value);
+        }
+
+        public string BuyVolumeRemaining
+        {
+            get => _buyVolumeRemaining;
+            set => SetProperty(ref _buyVolumeRemaining, value);
+        }
+
+        public double SellTotalValue
+        {
+            get => _sellTotalValue;
+            set => SetProperty(ref _sellTotalValue, value);
+        }
+
+        public double BuyTotalValue
+        {
+            get => _buyTotalValue;
+            set => SetProperty(ref _buyTotalValue, value);
+        }
+
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
         private object _sellsSelectedItem;
@@ -89,6 +125,12 @@ namespace REvernus.ViewModels
         private object _buysSelectedItem;
         private uint _refreshMinutes = 5;
         private bool _autoRefreshEnabled = false;
+        private string _sellOrdersActiveOrders = "0";
+        private string _buyOrdersActiveOrders = "0";
+        private string _sellVolumeRemaining = "0/0";
+        private string _buyVolumeRemaining = "0/0";
+        private double _sellTotalValue;
+        private double _buyTotalValue;
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
