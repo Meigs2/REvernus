@@ -52,7 +52,7 @@
                             <Label Content="{Binding SellTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
                         </StackPanel>
                     </Grid>
-                    <DataGrid x:Name="BuyAndSellOrdersSellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                    <DataGrid x:Name="SellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" PreviewMouseDown="DataGridMouseDown"
                           SelectedIndex="{Binding SellsSelectedIndex}" SelectedItem="{Binding SellsSelectedItem}">
                         <DataGrid.Columns>
@@ -88,7 +88,7 @@
                             <Label Content="{Binding IskToCover}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
                         </StackPanel>
                     </Grid>
-                    <DataGrid x:Name="BuyAndSellOrdersBuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                    <DataGrid x:Name="BuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" PreviewMouseDown="DataGridMouseDown"
                           SelectedIndex="{Binding BuysSelectedIndex}" SelectedItem="{Binding BuysSelectedItem}">
                         <DataGrid.Columns>

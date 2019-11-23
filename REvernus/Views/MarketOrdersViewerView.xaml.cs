@@ -35,14 +35,14 @@ namespace REvernus.Views
         {
             var clickedDataGrid = (DataGrid) sender;
 
-            if (clickedDataGrid != BuyAndSellOrdersSellDataGrid)
+            if (clickedDataGrid != SellDataGrid)
             {
-                BuyAndSellOrdersSellDataGrid.UnselectAll();
+                SellDataGrid.UnselectAll();
             }
 
-            if (clickedDataGrid != BuyAndSellOrdersBuyDataGrid)
+            if (clickedDataGrid != BuyDataGrid)
             {
-                BuyAndSellOrdersBuyDataGrid.UnselectAll();
+                BuyDataGrid.UnselectAll();
             }
         }
     }
