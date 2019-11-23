@@ -65,7 +65,7 @@
                             <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
                             <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
                             <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
-                            <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
+                            <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
                             <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
                             <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
                             <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
@@ -82,6 +82,10 @@
                             <Label Content="{Binding BuyVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Content="{Binding BuyTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                            <Label Content="Value In Escrow:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Content="{Binding TotalInEscrow}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                            <Label Content="Remaining Isk to cover:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Content="{Binding IskToCover}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
                         </StackPanel>
                     </Grid>
                     <DataGrid x:Name="BuyAndSellOrdersBuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
@@ -97,7 +101,7 @@
                             <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
                             <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
                             <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
-                            <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=N2}"/>
+                            <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
                             <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
                             <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
                             <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>

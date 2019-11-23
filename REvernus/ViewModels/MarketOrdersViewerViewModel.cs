@@ -118,6 +118,18 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _buyTotalValue, value);
         }
 
+        public double TotalInEscrow
+        {
+            get => _totalInEscrow;
+            set => SetProperty(ref _totalInEscrow, value);
+        }
+
+        public double IskToCover
+        {
+            get => _iskToCover;
+            set => SetProperty(ref _iskToCover, value);
+        }
+
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
         private object _sellsSelectedItem;
@@ -131,6 +143,8 @@ namespace REvernus.ViewModels
         private string _buyVolumeRemaining = "0/0";
         private double _sellTotalValue;
         private double _buyTotalValue;
+        private double _totalInEscrow;
+        private double _iskToCover;
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -364,6 +378,18 @@ namespace REvernus.ViewModels
                 }
 
                 await Task.WhenAll(taskList);
+
+
+                TotalInEscrow = 0.0;
+                IskToCover = 0.0;
+                foreach (var marketOrderInfoModel in BuyOrdersCollection)
+                {
+                    if (marketOrderInfoModel.Escrow == null) continue;
+
+                    var escrow = (double) marketOrderInfoModel.Escrow;
+                    TotalInEscrow += escrow;
+                    IskToCover += marketOrderInfoModel.OrderValue - escrow;
+                }
             }
             catch (Exception e)
             {

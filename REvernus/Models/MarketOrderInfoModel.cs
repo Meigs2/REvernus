@@ -30,12 +30,13 @@ namespace REvernus.Models
         private int _volumeRemaining;
         private int _volumeTotal;
         private string _volumeRatio;
-        private double _totalValue;
+        private double _orderValue;
         private double _typeMargin;
         private double _orderMargin;
         private string _completionEta;
         private TimeSpan _orderAge = TimeSpan.Zero;
         private TimeSpan _timeLeft = TimeSpan.Zero;
+        private double? _escrow;
 
         public CharacterMarketOrder Order
         {
@@ -50,8 +51,10 @@ namespace REvernus.Models
                 VolumeRemaining = Order.VolumeRemain;
                 VolumeTotal = Order.VolumeTotal;
                 VolumeRatio = VolumeRemaining + "/" + VolumeTotal;
+                OrderValue = Order.Price * Order.VolumeRemain;
                 OrderAge = DateTime.UtcNow - Order.Issued;
                 TimeLeft = TimeSpan.FromDays(Order.Duration) - OrderAge;
+                Escrow = Order.Escrow;
 
                 CompletionEta = VolumeRemaining == VolumeTotal ? "Infinity" : ((OrderAge / (VolumeTotal - VolumeRemaining) * VolumeRemaining)).ToString(@"dd\:hh\:mm");
             }
@@ -179,10 +182,10 @@ namespace REvernus.Models
             set => SetProperty(ref _volumeRatio, value);
         }
 
-        public double TotalValue
+        public double OrderValue
         {
-            get => _totalValue;
-            set => SetProperty(ref _totalValue, value);
+            get => _orderValue;
+            set => SetProperty(ref _orderValue, value);
         }
 
         public double TypeMargin
@@ -213,6 +216,12 @@ namespace REvernus.Models
         {
             get => _timeLeft;
             set => SetProperty(ref _timeLeft, value);
+        }
+
+        public double? Escrow
+        {
+            get => _escrow;
+            set => SetProperty(ref _escrow, value);
         }
 
         public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string locationName, List<MarketOrder> marketOrders)
