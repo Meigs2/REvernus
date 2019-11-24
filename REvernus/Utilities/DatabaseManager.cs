@@ -10,7 +10,6 @@ namespace REvernus.Utilities
 {
     public static class DatabaseManager
     {
-        public static readonly SQLiteConnection ReadOnlyEveDbConnection = new SQLiteConnection($"Data Source={Paths.SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True");
         public static readonly SQLiteConnection UserDataDbConnection = new SQLiteConnection($"Data Source={Paths.UserDataBasePath};Version=3;");
 
         public static DataTable QueryEveDb(string commandText, SQLiteConnection connection)
