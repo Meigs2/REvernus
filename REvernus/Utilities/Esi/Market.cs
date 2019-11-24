@@ -44,7 +44,7 @@ namespace REvernus.Utilities.Esi
                 // check for NPC station
                 if (StructureManager.TryGetNpcStation(structureId, out var station))
                 {
-                    if (EveUniverse.TryGetRegionFromSystem(station.SystemId, out var regionId))
+                    if (EveUniverse.TryGetRegionFromSystem(station.SolarSystemId, out var regionId))
                     {
                         if (typeIds != null)
                             foreach (var typeId in typeIds)
@@ -203,7 +203,7 @@ namespace REvernus.Utilities.Esi
 
                 return returnOrders;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

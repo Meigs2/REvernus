@@ -1,46 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 using System.Text;
+using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities
 {
     public static class EveUniverse
     {
-        public static bool TryGetRegionFromSystem(int systemId, out int regionId)
+        public static bool TryGetRegionFromSystem(long? systemId, out int regionId)
         {
             regionId = 0;
-
-            var connection = new SQLiteConnection(DatabaseManager.ReadOnlyEveDbConnection);
-            connection.Open();
-
+            using var db = new eveContext();
             try
             {
-                using var command = new SQLiteCommand("SELECT * FROM mapSolarSystems WHERE solarSystemId = @systemId",
-                    connection);
-                command.Parameters.AddWithValue("@systemId", systemId);
-
-                var reader = command.ExecuteReader();
-
-                while (reader.Read())
+                var solarSystem = db.MapSolarSystems.FirstOrDefault(o => o.SolarSystemId == systemId);
+                if (solarSystem != null)
                 {
-                    regionId = Convert.ToInt32(reader[0]);
-
-                    connection.Close();
-
+                    regionId = Convert.ToInt32(solarSystem.RegionId);
                     return true;
                 }
-            }
-            catch (Exception)
-            {
-                // ignored
+                else
+                {
+                    return false;
+                }
             }
             finally
             {
-                connection.Close();
+                db.Dispose();
             }
-
-            return false;
         }
     }
 }
