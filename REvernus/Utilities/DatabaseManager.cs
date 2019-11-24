@@ -12,7 +12,7 @@ namespace REvernus.Utilities
     {
         public static readonly SQLiteConnection UserDataDbConnection = new SQLiteConnection($"Data Source={Paths.UserDataBasePath};Version=3;");
 
-        public static DataTable QueryEveDb(string commandText, SQLiteConnection connection)
+        public static DataTable QueryDb(string commandText, SQLiteConnection connection)
         {
             using (connection)
             {
@@ -76,7 +76,6 @@ namespace REvernus.Utilities
         }
 
         public static readonly string RefreshTokenTableName = "refreshTokens";
-        public static readonly string StructuresTableName = "structures";
 
         private static void InitializeUserDataTable()
         {

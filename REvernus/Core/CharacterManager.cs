@@ -134,7 +134,7 @@ namespace REvernus.Core
 
         public static async Task Initialize()
         {
-            var results = DatabaseManager.QueryEveDb($"SELECT * FROM '{DatabaseManager.RefreshTokenTableName}'",
+            var results = DatabaseManager.QueryDb($"SELECT * FROM '{DatabaseManager.RefreshTokenTableName}'",
                 new SQLiteConnection(DatabaseManager.UserDataDbConnection));
 
             var list = new List<string>();
