@@ -365,20 +365,20 @@ namespace REvernus.ViewModels
                                     SellOrdersCollection.Add(newRow);
                                 }
                             }
-                            SellOrdersActiveOrders = SellOrdersCollection.Count;
-                            BuyOrdersActiveOrders = BuyOrdersCollection.Count;
-
-                            SellTotalValue = SellOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
-                            BuyTotalValue = BuyOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
-
-                            SellVolumeRemaining = SellOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + SellOrdersCollection.Sum(o => o.VolumeTotal);
-                            BuyVolumeRemaining = BuyOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + BuyOrdersCollection.Sum(o => o.VolumeTotal);
                         }
                     }));
                 }
 
                 await Task.WhenAll(taskList);
 
+                SellOrdersActiveOrders = SellOrdersCollection.Count;
+                BuyOrdersActiveOrders = BuyOrdersCollection.Count;
+
+                SellTotalValue = SellOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
+                BuyTotalValue = BuyOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
+
+                SellVolumeRemaining = SellOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + SellOrdersCollection.Sum(o => o.VolumeTotal);
+                BuyVolumeRemaining = BuyOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + BuyOrdersCollection.Sum(o => o.VolumeTotal);
 
                 TotalInEscrow = 0.0;
                 IskToCover = 0.0;
