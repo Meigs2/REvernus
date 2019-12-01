@@ -6,6 +6,7 @@ using REvernus.Utilities.StaticData;
 using REvernus.Views;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace REvernus.ViewModels
@@ -184,7 +185,8 @@ namespace REvernus.ViewModels
 
         private static void CloseMainWindow()
         {
-            Application.Current.MainWindow.Close();
+            Environment.Exit(0);
+
         }
 
         private static void OpenAboutBox()
@@ -194,10 +196,14 @@ namespace REvernus.ViewModels
         }
 
         private static void OpenSettingsView()
-        {   
-            //To be implemented soon(tm)
-            //var a = new Views.SettingsManagerView();
-            //a.Show();
+        {
+            if(App.Current.Windows.Cast<Window>().Where(a=>a.Title == "Settings Manager").Count() == 0)
+            {
+                var a = new Views.SettingsManagerView();
+                a.Show();
+            }
+
+
         }
     }
 }
