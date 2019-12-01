@@ -6,5 +6,8 @@ namespace REvernus.Settings
     public class MarketSettings
     {
         public int AutoUpdateTimer { get; set; } = 1200;
+
+        public double UndercutBy { get; set; } = 0.1;
+        public bool AutoUpdateTimerEnabled { get; set; } = true;
     }
 }

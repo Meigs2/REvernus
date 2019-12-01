@@ -31,9 +31,11 @@ namespace REvernus.ViewModels
 {
     public class MarketOrdersViewerViewModel : BindableBase
     {
+
+
+        #region Bindings
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
         public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
-
         public object SellsSelectedItem
         {
             get => _sellsSelectedItem;
@@ -54,34 +56,6 @@ namespace REvernus.ViewModels
             get => _buysSelectedIndex;
             set => SetProperty(ref _buysSelectedIndex, value);
         }
-        public DelegateCommand GetOrdersEsiCommand { get; set; }
-
-        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
-
-        public bool AutoRefreshEnabled
-        {
-            get => _autoRefreshEnabled;
-            set
-            {
-                if (value)
-                {
-                    AutoRefreshTimer.Start();
-                }
-                else
-                {
-                    AutoRefreshTimer.Stop();
-                }
-
-                SetProperty(ref _autoRefreshEnabled, value);
-            }
-        }   
-
-        public uint RefreshMinutes
-        {
-            get => _refreshMinutes;
-            set => SetProperty(ref _refreshMinutes, value);
-        }
-
         public int SellOrdersActiveOrders
         {
             get => _sellOrdersActiveOrders;
@@ -129,6 +103,37 @@ namespace REvernus.ViewModels
             get => _iskToCover;
             set => SetProperty(ref _iskToCover, value);
         }
+
+        #endregion
+        public DelegateCommand GetOrdersEsiCommand { get; set; }
+
+        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
+
+        public bool AutoRefreshEnabled
+        {
+            get => _autoRefreshEnabled;
+            set
+            {
+                if (value)
+                {
+                    AutoRefreshTimer.Start();
+                }
+                else
+                {
+                    AutoRefreshTimer.Stop();
+                }
+
+                SetProperty(ref _autoRefreshEnabled, value);
+            }
+        }   
+
+        public uint RefreshMinutes
+        {
+            get => _refreshMinutes;
+            set => SetProperty(ref _refreshMinutes, value);
+        }
+
+
 
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
