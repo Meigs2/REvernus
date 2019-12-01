@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using EVEStandard.Models;
-using REvernus.Models;
+﻿using REvernus.Models;
 using REvernus.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace REvernus.Views
 {

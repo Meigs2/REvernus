@@ -25,7 +25,7 @@ namespace EVEStandard.API
         /// <param name="maxWarId">Only return wars with ID smaller than this.</param>
         /// <param name="ifNoneMatch">ETag from a previous request. A 304 will be returned if this matches the current ETag.</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing a list of war IDs, in decending order by war_id.</returns>
-        public async Task<ESIModelDTO<List<int>>> ListWarsV1Async(int? maxWarId, string ifNoneMatch=null)
+        public async Task<ESIModelDTO<List<int>>> ListWarsV1Async(int? maxWarId, string ifNoneMatch = null)
         {
             var queryParameters = new Dictionary<string, string>
             {

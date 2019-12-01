@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
-using EVEStandard.Enumerations;
+﻿using EVEStandard.Enumerations;
 using EVEStandard.Models;
 using EVEStandard.Models.API;
 using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using Type = System.Type;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace REvernus.Utilities.Esi
 {
@@ -123,7 +120,7 @@ namespace REvernus.Utilities.Esi
 
             ordersHashSet.UnionWith(firstResult.Model);
 
-            if (maxPages > 1)   
+            if (maxPages > 1)
             {
                 for (var i = 2; i <= maxPages; i++)
                 {
@@ -180,7 +177,7 @@ namespace REvernus.Utilities.Esi
 
             var hashTypeIds = new HashSet<int>(typeIds);
             var returnOrders = new List<MarketOrder>();
-            
+
 
             try
             {

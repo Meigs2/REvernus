@@ -220,7 +220,7 @@ namespace EVEStandard.API
         /// <param name="corporationId">An EVE corporation ID.</param>
         /// <param name="ifNoneMatch">ETag from a previous request. A 304 will be returned if this matches the current ETag.</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing a list of open market orders.</returns>
-        public async Task<ESIModelDTO<List<CorporationMarketOrder>>> ListOpenOrdersFromCorporationV3Async(AuthDTO auth, int corporationId, int page  = 1, string ifNoneMatch = null)
+        public async Task<ESIModelDTO<List<CorporationMarketOrder>>> ListOpenOrdersFromCorporationV3Async(AuthDTO auth, int corporationId, int page = 1, string ifNoneMatch = null)
         {
             CheckAuth(auth, Scopes.ESI_MARKETS_READ_CORPORATION_ORDERS_1);
 

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using EVEStandard.Enumerations;
+﻿using EVEStandard.Enumerations;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace EVEStandard.Models
 {

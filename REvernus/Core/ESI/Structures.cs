@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Models;
+﻿using EVEStandard.Models;
 using EVEStandard.Models.API;
+using System;
+using System.Threading.Tasks;
 
 namespace REvernus.Core.ESI
 {

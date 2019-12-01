@@ -32,17 +32,17 @@ namespace EVEStandard.API
             this.dataSource = dataSource ?? "tranquility";
         }
 
-        internal async Task<APIResponse> GetAsync(string uri, string ifNoneMatch=null, Dictionary<string, string> queryParameters = null)
+        internal async Task<APIResponse> GetAsync(string uri, string ifNoneMatch = null, Dictionary<string, string> queryParameters = null)
         {
             return await GetAsync(uri, null, ifNoneMatch, queryParameters);
         }
 
-        internal async Task<APIResponse> GetAsync(string uri, AuthDTO auth, string ifNoneMatch=null, Dictionary<string, string> queryParameters = null)
+        internal async Task<APIResponse> GetAsync(string uri, AuthDTO auth, string ifNoneMatch = null, Dictionary<string, string> queryParameters = null)
         {
             return await RequestAsync(HttpMethod.Get, uri, auth, ifNoneMatch, queryParameters);
         }
 
-        internal async Task<APIResponse> PostAsync(string uri, AuthDTO auth, object body, string ifNoneMatch=null, Dictionary<string, string> queryParameters = null)
+        internal async Task<APIResponse> PostAsync(string uri, AuthDTO auth, object body, string ifNoneMatch = null, Dictionary<string, string> queryParameters = null)
         {
             return await RequestAsync(HttpMethod.Post, uri, auth, ifNoneMatch, queryParameters, body);
         }
@@ -57,7 +57,7 @@ namespace EVEStandard.API
             return await RequestAsync(HttpMethod.Delete, uri, auth, null, queryParameters);
         }
 
-        private async Task<APIResponse> RequestAsync(HttpMethod method, string uri, AuthDTO auth, string ifNoneMatch=null, Dictionary<string, string> queryParameters = null, object body = null)
+        private async Task<APIResponse> RequestAsync(HttpMethod method, string uri, AuthDTO auth, string ifNoneMatch = null, Dictionary<string, string> queryParameters = null, object body = null)
         {
             var queryParams = HttpUtility.ParseQueryString(String.Empty);
             queryParams.Add("datasource", dataSource);
@@ -69,7 +69,7 @@ namespace EVEStandard.API
                     queryParams.Add(query.Key, query.Value);
                 }
             }
-            
+
             try
             {
                 var builder = new UriBuilder(ESI_BASE)
@@ -280,7 +280,7 @@ namespace EVEStandard.API
                 LastModified = response.LastModified,
                 MaxPages = response.MaxPages,
                 Model = JsonConvert.DeserializeObject<T>(response.JSONString ?? "")
-        };
+            };
         }
     }
 }

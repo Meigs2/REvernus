@@ -1,6 +1,6 @@
-﻿using System;
-using EVEStandard.Enumerations;
+﻿using EVEStandard.Enumerations;
 using Newtonsoft.Json;
+using System;
 
 namespace EVEStandard.Models
 {

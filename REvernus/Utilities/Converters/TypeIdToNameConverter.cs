@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
+﻿using REvernus.Models.EveDbModels;
+using System;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
-using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities.Converters
 {

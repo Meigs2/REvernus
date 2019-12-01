@@ -29,7 +29,7 @@ namespace EVEStandard.API
         /// <param name="flag">Route security preference. Available values : shortest, secure, insecure. Default value: shortest.</param>
         /// <param name="ifNoneMatch">ETag from a previous request. A 304 will be returned if this matches the current ETag.</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing solar systems in route from origin to destination.</returns>
-        public async Task<ESIModelDTO<List<int>>> GetRouteV1Async(int origin, int destination, List<int> avoidSystems = null, List<int> connections = null, string flag=RoutePreference.SHORTEST, string ifNoneMatch=null)
+        public async Task<ESIModelDTO<List<int>>> GetRouteV1Async(int origin, int destination, List<int> avoidSystems = null, List<int> connections = null, string flag = RoutePreference.SHORTEST, string ifNoneMatch = null)
         {
             var queryParameters = new Dictionary<string, string>
             {

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using REvernus.Core;
+using REvernus.Models;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using REvernus.Core;
-using REvernus.Models;
 
 namespace REvernus.Views
 {

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard;
+﻿using EVEStandard;
 using EVEStandard.Enumerations;
 using EVEStandard.Models.SSO;
+using System;
 
 namespace REvernus.Core.ESI
 {
     internal class EsiData
     {
         public static string LocalUri = "https://meigs2.github.io/ESICallback/";
-        
+
         public static EVEStandardAPI EsiClient = new EVEStandardAPI(
             "REvernus",
             DataSource.Tranquility,

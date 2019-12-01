@@ -1,21 +1,21 @@
-﻿using System;
+﻿using EVEStandard.API;
+using EVEStandard.Enumerations;
+using EVEStandard.Models.API;
+using EVEStandard.Models.SSO;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using EVEStandard.API;
-using EVEStandard.Enumerations;
-using EVEStandard.Models.API;
-using EVEStandard.Models.SSO;
-using Microsoft.Extensions.Logging;
 
 namespace EVEStandard
 {
     public class EVEStandardAPI
     {
-        
+
         private static HttpClient http;
         private string userAgent;
         private readonly string dataSource;

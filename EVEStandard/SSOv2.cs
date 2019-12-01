@@ -163,7 +163,7 @@ namespace EVEStandard
                     values.Add(new KeyValuePair<string, string>("code_verifier", model.CodeVerifier));
                 }
 
-                var stringContent = new FormUrlEncodedContent(values);                
+                var stringContent = new FormUrlEncodedContent(values);
 
                 var request = new HttpRequestMessage
                 {
@@ -264,7 +264,7 @@ namespace EVEStandard
                 TokenType = "JWT"
             };
 
-            return characterDetails;            
+            return characterDetails;
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace EVEStandard
         public async Task<bool> RevokeRefreshTokenAsync(string token)
         {
             try
-            {                
+            {
                 var stringContent = new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("token_type_hint","refresh_token"),

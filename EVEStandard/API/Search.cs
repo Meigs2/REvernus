@@ -64,7 +64,7 @@ namespace EVEStandard.API
         /// <param name="language">Language to use in the response, takes precedence over Accept-Language. Available values : de, en-us, fr, ja, ru, zh. Default value : en-us.</param>
         /// <param name="ifNoneMatch">ETag from a previous request. A 304 will be returned if this matches the current ETag.</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing a list of search results.</returns>
-        public async Task<ESIModelDTO<Models.Search>> SearchV2Async(List<string> categories, string search, bool strict = false, string language = Language.English, string ifNoneMatch=null)
+        public async Task<ESIModelDTO<Models.Search>> SearchV2Async(List<string> categories, string search, bool strict = false, string language = Language.English, string ifNoneMatch = null)
         {
             if (categories == null || categories.Count == 0 || search == null)
             {

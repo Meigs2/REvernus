@@ -1,7 +1,6 @@
-﻿using REvernus.Utilities;
-using System;
+﻿using REvernus.Settings;
+using REvernus.Utilities;
 using System.Windows;
-using REvernus.Settings;
 
 namespace REvernus
 {

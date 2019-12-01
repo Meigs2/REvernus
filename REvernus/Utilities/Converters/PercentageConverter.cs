@@ -21,7 +21,7 @@ namespace REvernus.Utilities.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {   
+        {
             try
             {
                 if (value == null) return null;

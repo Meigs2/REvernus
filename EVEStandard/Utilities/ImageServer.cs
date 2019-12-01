@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EVEStandard.Utilities
+﻿namespace EVEStandard.Utilities
 {
     /*
      * You can use this service to obtain images related to entities in New Eden. At this time, it is possible to get alliance logos, corp logos, 

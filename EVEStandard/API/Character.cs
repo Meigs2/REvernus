@@ -28,7 +28,7 @@ namespace EVEStandard.API
         /// <returns><see cref="ESIModelDTO{T}"/> containing character stats.</returns>
         public async Task<ESIModelDTO<List<AggregateStats>>> YearlyAggregateStatsV2Async(AuthDTO auth, string ifNoneMatch = null)
         {
-            CheckAuth(auth, Scopes.ESI_CHARACTERSTATS_READ_1);           
+            CheckAuth(auth, Scopes.ESI_CHARACTERSTATS_READ_1);
 
             var responseModel = await GetAsync($"/v2/characters/{auth.CharacterId}/stats/", auth, ifNoneMatch);
 

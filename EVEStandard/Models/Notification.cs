@@ -1,5 +1,5 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace EVEStandard.Models
 {
@@ -257,7 +257,7 @@ namespace EVEStandard.Models
         /// <value>timestamp string</value>
         [JsonProperty("timestamp")]
         public DateTime Timestamp { get; set; }
-        
+
         /// <summary>
         /// type string
         /// </summary>

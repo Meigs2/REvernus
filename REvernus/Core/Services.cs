@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
-using Jot;
-using Jot.Configuration;
+﻿using Jot;
 using Jot.Storage;
-using REvernus.ViewModels;
-using REvernus.Views;
+using System.Windows.Forms;
 
 namespace REvernus.Core
 {
-    public  static class Services
+    public static class Services
     {
         public static Tracker Tracker = new Tracker(new JsonFileStore(Utilities.Paths.SerializedDataFolder));
 

@@ -22,7 +22,7 @@ namespace EVEStandard.API
         /// </summary>
         /// <param name="ifNoneMatch">ETag from a previous request. A 304 will be returned if this matches the current ETag.</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing server status.</returns>
-        public async Task<ESIModelDTO<Models.Status>> GetStatusV1Async(string ifNoneMatch=null)
+        public async Task<ESIModelDTO<Models.Status>> GetStatusV1Async(string ifNoneMatch = null)
         {
             var responseModel = await GetAsync("/v1/status/", ifNoneMatch);
 

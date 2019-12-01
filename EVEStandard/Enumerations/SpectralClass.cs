@@ -1,7 +1,7 @@
 ﻿namespace EVEStandard.Enumerations
 {
     public enum SpectralClassEnum
-    { 
+    {
         K2VEnum = 1,
         K4VEnum = 2,
         G2VEnum = 3,

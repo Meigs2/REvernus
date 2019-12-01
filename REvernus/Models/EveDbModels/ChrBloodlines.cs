@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace REvernus.Models.EveDbModels
+﻿namespace REvernus.Models.EveDbModels
 {
     public partial class ChrBloodlines
     {

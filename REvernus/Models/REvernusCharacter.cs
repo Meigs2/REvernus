@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Models;
+﻿using EVEStandard.Models;
 using EVEStandard.Models.API;
 using EVEStandard.Models.SSO;
-using Prism.Mvvm;
-using REvernus.Core;
 using REvernus.Core.ESI;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace REvernus.Models
 {

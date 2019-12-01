@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.SQLite;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Enumerations;
-using EVEStandard.Models;
-using EVEStandard.Models.API;
+﻿using EVEStandard.Models.API;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Models.EveDbModels;
 using REvernus.Utilities;
 using REvernus.Views;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.SQLite;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace REvernus.Core
 {
@@ -123,7 +119,7 @@ namespace REvernus.Core
                 foreach (var structure in structures)
                 {
                     using var command = new SQLiteCommand("DELETE FROM structures WHERE structureId = @structureId", connection);
-                    command.Parameters.AddWithValue("@structureId", ((PlayerStructure) structure).StructureId);
+                    command.Parameters.AddWithValue("@structureId", ((PlayerStructure)structure).StructureId);
                     command.ExecuteNonQuery();
                 }
             }

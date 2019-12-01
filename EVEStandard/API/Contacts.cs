@@ -3,7 +3,6 @@ using EVEStandard.Models;
 using EVEStandard.Models.API;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 
 namespace EVEStandard.API
@@ -75,7 +74,7 @@ namespace EVEStandard.API
         /// <param name="standing">Standing for the contact.</param>
         /// <param name="isWatched">Whether the contact should be watched, note this is only effective on characters Default value: false.</param>
         /// <returns><see cref="ESIModelDTO{T}"/> containing a list of contact ids that successfully created.</returns>
-        public async Task<ESIModelDTO<List<int>>> AddContactsV2Async(AuthDTO auth, List<int> contactIds, List<long> labelIds, float standing, bool isWatched=false)
+        public async Task<ESIModelDTO<List<int>>> AddContactsV2Async(AuthDTO auth, List<int> contactIds, List<long> labelIds, float standing, bool isWatched = false)
         {
             CheckAuth(auth, Scopes.ESI_CHARACTERS_WRITE_CONTACTS_1);
 
@@ -103,7 +102,7 @@ namespace EVEStandard.API
         /// <param name="standing">Standing for the contact.</param>
         /// <param name="isWatched">Whether the contact should be watched, note this is only effective on characters Default value: false.</param>
         /// <returns></returns>
-        public async Task EditContactsV2Async(AuthDTO auth, List<int> contactIds, List<long> labelIds, float standing, bool isWatched=false)
+        public async Task EditContactsV2Async(AuthDTO auth, List<int> contactIds, List<long> labelIds, float standing, bool isWatched = false)
         {
             CheckAuth(auth, Scopes.ESI_CHARACTERS_WRITE_CONTACTS_1);
 

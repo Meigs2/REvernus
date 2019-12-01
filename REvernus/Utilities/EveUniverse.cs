@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
+﻿using REvernus.Models.EveDbModels;
+using System;
 using System.Linq;
-using System.Text;
-using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities
 {

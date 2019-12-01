@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Media;
-using System.Text;
-using System.Windows;
-using System.Windows.Navigation;
-using Gma.System.MouseKeyHook;
-using Jot;
+﻿using Gma.System.MouseKeyHook;
 using Prism.Commands;
 using REvernus.Core;
 using REvernus.Models;
-using REvernus.Utilities;
 using REvernus.Utilities.StaticData;
 using REvernus.Views;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace REvernus.ViewModels
 {
@@ -84,11 +79,27 @@ namespace REvernus.ViewModels
             var actions = new Dictionary<Combination, Action>()
             {
                 {Combination.FromString("Control+M"), OpenCloseMarginTool},
+                {Combination.FromString("Control+S"), OpenSettingsView}
             };
 
             _keybindEvents.OnCombination(actions);
         }
 
+        #endregion
+
+
+        #region Delegates
+        public DelegateCommand OpenCloseMarginToolCommand { get; set; }
+        public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
+        public DelegateCommand AboutBoxOpenCommand { get; set; } = new DelegateCommand(OpenAboutBox);
+        public DelegateCommand OpenStructureManagerCommand { get; set; } = new DelegateCommand(OpenStructureManagerWindow);
+        public DelegateCommand CloseMainWindowCommand { get; set; } = new DelegateCommand(CloseMainWindow);
+        public DelegateCommand OpenSettingsViewCommand { get; set; } = new DelegateCommand(OpenSettingsView);
+        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(async () =>
+        {
+            var downloader = new SdeDownloader();
+            await downloader.DownloadLatestSde();
+        });
         #endregion
 
         private Window _marginWindow;
@@ -160,27 +171,28 @@ namespace REvernus.ViewModels
             }
         }
 
-        public DelegateCommand OpenCloseMarginToolCommand { get; set; }
 
-        public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
-        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(async () =>
-        {
-            var downloader = new SdeDownloader();
-            await downloader.DownloadLatestSde();
-        });
 
-        public DelegateCommand OpenStructureManagerCommand { get; set; } = new DelegateCommand(OpenStructureManagerWindow);
 
         private static void OpenStructureManagerWindow()
         {
             StructureManager.ShowStructureManagementWindow();
         }
 
-        public DelegateCommand AboutBoxOpenCommand { get; set; } = new DelegateCommand(OpenAboutBox);
+        private static void CloseMainWindow()
+        {
+            Application.Current.MainWindow.Close();
+        }
 
         private static void OpenAboutBox()
         {
             var a = new Views.SimpleViews.AboutBox();
+            a.Show();
+        }
+
+        private static void OpenSettingsView()
+        {
+            var a = new Views.SettingsManagerView();
             a.Show();
         }
     }

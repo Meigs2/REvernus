@@ -1,13 +1,13 @@
-﻿using System;
+﻿using EVEStandard.Enumerations;
+using EVEStandard.Models.SSO;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using EVEStandard.Enumerations;
-using EVEStandard.Models.SSO;
-using Newtonsoft.Json;
 
 namespace EVEStandard
 {
@@ -50,7 +50,7 @@ namespace EVEStandard
         /// </remarks>
         internal SSO(string callbackUri, string clientId, string secretKey, DataSource dataSource)
         {
-            if(string.IsNullOrEmpty(callbackUri) || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(secretKey))
+            if (string.IsNullOrEmpty(callbackUri) || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(secretKey))
             {
                 throw new EVEStandardException("SSO should be initialized with non-null and non-empty strings. callbackUri: " + callbackUri + " clientId: " + clientId + " secretKey: " + secretKey);
             }
@@ -61,7 +61,8 @@ namespace EVEStandard
             this.dataSource = dataSource;
         }
 
-        internal static HttpClient HTTP {
+        internal static HttpClient HTTP
+        {
             set => http = value;
         }
 
@@ -127,7 +128,7 @@ namespace EVEStandard
                 model.ExpectedState = "";
             }
 
-            if(model.ExpectedState != model.ReturnedState)
+            if (model.ExpectedState != model.ReturnedState)
             {
                 throw new EVEStandardException("model parameter expected the ExpectedState to match the ReturnedState, they are actually set as: ExpectedState: " + model.ExpectedState + " ReturnedState: " + model.ReturnedState);
             }

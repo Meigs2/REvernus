@@ -1,11 +1,11 @@
 using Newtonsoft.Json;
 
 namespace EVEStandard.Models
-{ 
+{
     /// <summary>
     /// Aggregate stats for a year
     /// </summary>
-    
+
     public class AggregateStats : ModelBase<AggregateStats>
     {
         #region Properties

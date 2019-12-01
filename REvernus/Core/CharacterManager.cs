@@ -1,20 +1,17 @@
 ﻿using Prism.Mvvm;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Models.SerializableModels;
 using REvernus.Utilities;
+using REvernus.Views.SimpleViews;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SQLite;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using REvernus.Views.SimpleViews;
 
 namespace REvernus.Core
 {

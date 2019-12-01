@@ -1,16 +1,13 @@
-﻿using System;
-using System.ComponentModel;
+﻿using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.Core;
+using REvernus.Views.SimpleViews;
+using System;
 using System.IO;
 using System.Media;
-using System.Net;
 using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Shell;
-using ICSharpCode.SharpZipLib.BZip2;
-using ICSharpCode.SharpZipLib.Core;
-using REvernus.Views.SimpleViews;
 
 namespace REvernus.Utilities.StaticData
 {
@@ -44,7 +41,7 @@ namespace REvernus.Utilities.StaticData
                             Width = 500,
                             Height = 300,
                             WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                            TaskbarItemInfo = new TaskbarItemInfo() {ProgressState = TaskbarItemProgressState.Normal}
+                            TaskbarItemInfo = new TaskbarItemInfo() { ProgressState = TaskbarItemProgressState.Normal }
                         };
                         _window.Show();
                         _window.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
@@ -88,7 +85,7 @@ namespace REvernus.Utilities.StaticData
 
         private static async Task DecompressBz2(Stream inStream, Stream outStream, bool isStreamOwner)
         {
-            await using var bzipInput = new BZip2InputStream(inStream) {IsStreamOwner = isStreamOwner};
+            await using var bzipInput = new BZip2InputStream(inStream) { IsStreamOwner = isStreamOwner };
             try
             {
                 await Task.Run(() => StreamUtils.Copy(bzipInput, outStream, new byte[4096]));

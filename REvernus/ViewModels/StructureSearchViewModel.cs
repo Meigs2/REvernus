@@ -1,19 +1,17 @@
-﻿using EVEStandard.Models;
+﻿using EVEStandard.Enumerations;
+using EVEStandard.Models;
 using EVEStandard.Models.API;
 using Prism.Commands;
 using Prism.Mvvm;
+using REvernus.Core;
+using REvernus.Core.ESI;
+using REvernus.Models;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using EVEStandard.Enumerations;
-using REvernus.Core;
-using REvernus.Core.ESI;
-using REvernus.Models;
 using Universe = EVEStandard.API.Universe;
 
 namespace REvernus.ViewModels
@@ -108,7 +106,7 @@ namespace REvernus.ViewModels
                 StructureListItems.Clear();
 
                 var taskList = new List<Task>();
-                var structureList = new ConcurrentBag<PlayerStructure>(); 
+                var structureList = new ConcurrentBag<PlayerStructure>();
 
                 var structureSearchResult = await EsiData.EsiClient.Search.SearchCharacterV3Async(auth, new List<string>() { SearchCategory.STRUCTURE }, SearchBoxText);
 
@@ -183,7 +181,7 @@ namespace REvernus.ViewModels
 
         protected virtual void OnSelectPressed()
         {
-            SelectPressed?.Invoke(this, new StructureSearchEventArgs(){ SelectedStructures = SelectedStructures });
+            SelectPressed?.Invoke(this, new StructureSearchEventArgs() { SelectedStructures = SelectedStructures });
         }
 
         public class StructureSearchEventArgs : EventArgs

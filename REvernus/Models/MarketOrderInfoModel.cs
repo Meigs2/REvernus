@@ -1,14 +1,9 @@
-﻿using System;
+﻿using EVEStandard.Models;
+using Prism.Mvvm;
+using REvernus.Utilities.StaticData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Models;
-using EVEStandard.Models.API;
-using Prism.Mvvm;
-using REvernus.Core;
-using REvernus.Core.ESI;
-using REvernus.Utilities.StaticData;
 
 namespace REvernus.Models
 {
@@ -70,7 +65,7 @@ namespace REvernus.Models
                 SellOrders = MarketOrders.Where(o => !o.IsBuyOrder).OrderBy(o => o.Price).ToList();
                 IsOutbid = IsOrderOutbid(MarketOrders, Order, out var diff);
                 Difference = diff;
-                
+
                 // Outbid delta
                 OutbidDelta = IsBuyOrder ? BuyOrders.FindIndex(o => o.OrderId == Order.OrderId) : SellOrders.FindIndex(o => o.OrderId == Order.OrderId);
                 if (SellOrders.Count > 0 && BuyOrders.Count > 0)

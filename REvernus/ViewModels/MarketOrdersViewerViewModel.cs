@@ -1,29 +1,21 @@
 ﻿using EVEStandard.Models;
+using EVEStandard.Models.API;
+using Gma.System.MouseKeyHook;
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;
-using REvernus.Utilities.StaticData;
+using REvernus.Core.ESI;
+using REvernus.Models;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Globalization;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Threading;
-using EVEStandard.Models.API;
-using Gma.System.MouseKeyHook;
-using ICSharpCode.SharpZipLib.Core;
-using REvernus.Core.ESI;
-using REvernus.Models;
-using REvernus.Utilities;
 using Market = REvernus.Utilities.Esi.Market;
 using Status = REvernus.Utilities.Status;
 
@@ -74,7 +66,7 @@ namespace REvernus.ViewModels
 
                 SetProperty(ref _autoRefreshEnabled, value);
             }
-        }   
+        }
 
         public uint RefreshMinutes
         {
@@ -151,7 +143,7 @@ namespace REvernus.ViewModels
 
         public MarketOrdersViewerViewModel()
         {
-            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(60);
+            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketSettings.AutoUpdateTimer);
             AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
 
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
@@ -177,8 +169,8 @@ namespace REvernus.ViewModels
 
             var actions = new Dictionary<Combination, Action>()
             {
-                {Combination.FromString("Alt+Up"),  async () => await KeyBindMoveUp()},
-                {Combination.FromString("Alt+Down"), async () => await KeyBindMoveDown()}
+                {Combination.FromString(App.Settings.HotkeySettings.MarketUpHotkey),  async () => await KeyBindMoveUp()},
+                {Combination.FromString(App.Settings.HotkeySettings.MarketDownHotkey), async () => await KeyBindMoveDown()}
             };
 
             _keybindEvents.OnCombination(actions);
@@ -206,14 +198,14 @@ namespace REvernus.ViewModels
                 if (SellsSelectedItem != null)
                 {
                     selectedGrid = SellOrdersCollection;
-                    currentItem = (MarketOrderInfoModel) SellsSelectedItem;
+                    currentItem = (MarketOrderInfoModel)SellsSelectedItem;
                     currentRowIndex = SellsSelectedIndex;
                 }
 
                 if (BuysSelectedItem != null)
                 {
                     selectedGrid = BuyOrdersCollection;
-                    currentItem = (MarketOrderInfoModel) BuysSelectedItem;
+                    currentItem = (MarketOrderInfoModel)BuysSelectedItem;
                     currentRowIndex = BuysSelectedIndex;
                     isBuyCollection = true;
                 }
@@ -230,12 +222,12 @@ namespace REvernus.ViewModels
                 if (isBuyCollection)
                 {
                     BuysSelectedIndex = nextIndex;
-                    currentItem = (MarketOrderInfoModel) BuysSelectedItem;
+                    currentItem = (MarketOrderInfoModel)BuysSelectedItem;
                 }
                 else
                 {
                     SellsSelectedIndex = nextIndex;
-                    currentItem = (MarketOrderInfoModel) SellsSelectedItem;
+                    currentItem = (MarketOrderInfoModel)SellsSelectedItem;
                 }
 
                 var character = CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == currentItem.Owner);
@@ -278,9 +270,12 @@ namespace REvernus.ViewModels
         {
             try
             {
-                var auth = new AuthDTO(){AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails, 
-                    CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId, 
-                    Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1};
+                var auth = new AuthDTO()
+                {
+                    AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
+                    CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
+                    Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
+                };
 
                 var locations = new HashSet<long>();
                 var items = new HashSet<int>();
@@ -386,7 +381,7 @@ namespace REvernus.ViewModels
                 {
                     if (marketOrderInfoModel.Escrow == null) continue;
 
-                    var escrow = (double) marketOrderInfoModel.Escrow;
+                    var escrow = (double)marketOrderInfoModel.Escrow;
                     TotalInEscrow += escrow;
                     IskToCover += marketOrderInfoModel.OrderValue - escrow;
                 }

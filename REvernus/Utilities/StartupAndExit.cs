@@ -2,7 +2,6 @@
 using REvernus.Utilities.StaticData;
 using System;
 using System.Threading.Tasks;
-using REvernus.Views;
 
 namespace REvernus.Utilities
 {

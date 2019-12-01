@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows;
-using EVEStandard;
+﻿using EVEStandard;
 using EVEStandard.Models.SSO;
 using REvernus.Core.ESI;
 using REvernus.Models;
+using System;
+using System.Windows;
 
 namespace REvernus.Views.SimpleViews
 {

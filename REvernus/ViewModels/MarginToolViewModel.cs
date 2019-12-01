@@ -1,8 +1,8 @@
-﻿using Prism.Mvvm;
-using Prism.Commands;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using REvernus.Core;
-using REvernus.Utilities;
 using REvernus.Models;
+using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,8 +10,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Input;
 
 namespace REvernus.ViewModels
 {
@@ -273,9 +271,9 @@ namespace REvernus.ViewModels
             // There appears to be some sort of timing error resulting in NaN in the window under Margin and Markup
             // various other fields do not get populated with the correct data.
             // Sleeping the thread seems to fix the problem
-            
+
             System.Threading.Thread.Sleep(50);
-            
+
             try
             {
                 var currentChar = CharacterManager.SelectedCharacter;
@@ -289,26 +287,26 @@ namespace REvernus.ViewModels
                             reader.ReadLine(); // read first line and disregard
                             while (!reader.EndOfStream)
                             {
-                            
-                                    var values = reader.ReadLine().Split(',');
-                                    var order = new ExportedOrderModel();
-                                    order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
-                                    order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
-                                    order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
-                                    order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
-                                    order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
-                                    order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
-                                    order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
-                                    order.IsBuyOrder = bool.Parse(values[7]);
-                                    order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
-                                    order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
-                                    order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
-                                    order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
-                                    order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
-                                    order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
 
-                                    Orders.Add(order);
-                           
+                                var values = reader.ReadLine().Split(',');
+                                var order = new ExportedOrderModel();
+                                order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
+                                order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
+                                order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
+                                order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
+                                order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
+                                order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
+                                order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
+                                order.IsBuyOrder = bool.Parse(values[7]);
+                                order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
+                                order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
+                                order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
+                                order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
+                                order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
+                                order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
+
+                                Orders.Add(order);
+
                             }
                         }
                         catch (Exception)
@@ -344,7 +342,7 @@ namespace REvernus.ViewModels
                 ItemName = string.Join("-", tempList.ToArray());
 
 
-                
+
 
 
 
@@ -403,12 +401,12 @@ namespace REvernus.ViewModels
                 var multiplier = Math.Pow(10, i);
 
                 newTensRow["Volume"] = multiplier.ToString("N");
-                newTensRow["Cost"] = ((costs * multiplier)/1000000).ToString("N") + "M";
-                newTensRow["Profit"] = ((profit * multiplier)/1000000).ToString("N") + "M";
+                newTensRow["Cost"] = ((costs * multiplier) / 1000000).ToString("N") + "M";
+                newTensRow["Profit"] = ((profit * multiplier) / 1000000).ToString("N") + "M";
 
                 newFivesRow["Volume"] = (multiplier * 5).ToString("N");
-                newFivesRow["Cost"] = ((costs * multiplier * 5)/1000000).ToString("N") + "M";
-                newFivesRow["Profit"] = ((profit * multiplier * 5)/1000000).ToString("N") + "M";
+                newFivesRow["Cost"] = ((costs * multiplier * 5) / 1000000).ToString("N") + "M";
+                newFivesRow["Profit"] = ((profit * multiplier * 5) / 1000000).ToString("N") + "M";
 
                 tempTensDataTable.Rows.Add(newTensRow);
                 tempFivesDataTable.Rows.Add(newFivesRow);
@@ -462,7 +460,7 @@ namespace REvernus.ViewModels
             try
             {
                 if (Application.Current.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(BuyCopyPrice));   
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(BuyCopyPrice));
             }
             catch (Exception e)
             {
