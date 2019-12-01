@@ -14,11 +14,11 @@ namespace REvernus.Views
         {
             InitializeComponent();
             Tracker
-    .Configure<SettingsManagerView>()
-    .Id(w => w.Name, GetType().Name)
-    .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
-    .PersistOn(nameof(Closing))
-    .StopTrackingOn(nameof(Closing));
+                .Configure<SettingsManagerView>()
+                .Id(w => w.Name, GetType().Name)
+                .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
+                .PersistOn(nameof(Closing))
+                .StopTrackingOn(nameof(Closing));
 
             Tracker.Track(this);
         }
