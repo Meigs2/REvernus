@@ -197,13 +197,10 @@ namespace REvernus.ViewModels
 
         private static void OpenSettingsView()
         {
-            if(App.Current.Windows.Cast<Window>().Where(a=>a.Title == "Settings Manager").Count() == 0)
-            {
-                var a = new Views.SettingsManagerView();
-                a.Show();
-            }
+            if (!App.MainWindow.IsActive) return;
 
-
+            var a = new Views.SettingsManagerView();
+            a.ShowDialog();
         }
     }
 }
