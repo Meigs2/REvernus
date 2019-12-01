@@ -151,7 +151,7 @@ namespace REvernus.ViewModels
 
         public MarketOrdersViewerViewModel()
         {
-            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(60);
+            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketSettings.AutoUpdateTimer);
             AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
 
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
@@ -177,8 +177,8 @@ namespace REvernus.ViewModels
 
             var actions = new Dictionary<Combination, Action>()
             {
-                {Combination.FromString("Alt+Up"),  async () => await KeyBindMoveUp()},
-                {Combination.FromString("Alt+Down"), async () => await KeyBindMoveDown()}
+                {Combination.FromString(App.Settings.HotkeySettings.MarketUpHotkey),  async () => await KeyBindMoveUp()},
+                {Combination.FromString(App.Settings.HotkeySettings.MarketDownHotkey), async () => await KeyBindMoveDown()}
             };
 
             _keybindEvents.OnCombination(actions);

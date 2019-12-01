@@ -23,10 +23,14 @@
                     <MenuItem x:Name="FileMenuItem" Header="File">
                         <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}"/>
                         <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Close" Command="{Binding CloseMainWindowCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Tools">
                         <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}" InputGestureText="Ctrl+M"/>
                         <MenuItem Header="Open Structure Manager" Command="{Binding OpenStructureManagerCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Open Settings Manager" Command="{Binding OpenSettingsViewCommand}" InputGestureText="Ctrl+S"/>
                     </MenuItem>
                     <MenuItem Header="Characters">
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
