@@ -125,7 +125,7 @@ namespace REvernus.ViewModels
 
                 SetProperty(ref _autoRefreshEnabled, value);
             }
-        }   
+        }
 
         public uint RefreshMinutes
         {
@@ -150,6 +150,10 @@ namespace REvernus.ViewModels
         private double _buyTotalValue;
         private double _totalInEscrow;
         private double _iskToCover;
+        private double _undercutBy
+        {
+            get => App.Settings.MarketSettings.UndercutBy;
+        }
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -263,7 +267,7 @@ namespace REvernus.ViewModels
                     }
                 }
 
-                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + .1) : (currentItem.SellOrders[0].Price - .1), 2, MidpointRounding.ToEven).ToString("N"));
+                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + _undercutBy) : (currentItem.SellOrders[0].Price - _undercutBy), 2, MidpointRounding.ToEven).ToString("N"));
 
                 SystemSounds.Beep.Play();
             }
