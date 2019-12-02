@@ -279,7 +279,11 @@ namespace REvernus.ViewModels
                             Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1,
                             AccessToken = character.AccessTokenDetails
                         };
-                        await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
+                        if (App.Settings.MarketSettings.ShowInEveClient == true)
+                        {
+                            await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
+                        }
+
                     }
                     catch (Exception)
                     {

@@ -55,6 +55,16 @@ namespace REvernus.ViewModels
             }
         }
 
+        public bool ShowInEveClient
+        {
+            get => App.Settings.MarketSettings.ShowInEveClient;
+            set
+            {
+                App.Settings.MarketSettings.ShowInEveClient = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public SettingsManagerViewModel()
         {
             Services.Tracker.Track(this);
