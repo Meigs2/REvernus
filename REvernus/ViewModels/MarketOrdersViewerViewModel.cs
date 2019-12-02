@@ -13,8 +13,8 @@ using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows;
 using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -24,6 +24,7 @@ using ICSharpCode.SharpZipLib.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Utilities;
+using Clipboard = System.Windows.Clipboard;
 using Market = REvernus.Utilities.Esi.Market;
 using Status = REvernus.Utilities.Status;
 
@@ -278,12 +279,9 @@ namespace REvernus.ViewModels
         {
             try
             {
-                var auth = new AuthDTO(){AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails, 
-                    CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId, 
-                    Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1};
-
                 var locations = new HashSet<long>();
-                var items = new HashSet<int>();
+                var items = new HashSet<long>();
+                var taskList = new List<Task>();
 
                 foreach (var characterMarketOrder in characterOrders)
                 {
@@ -291,28 +289,9 @@ namespace REvernus.ViewModels
                     items.Add(characterMarketOrder.TypeId);
                 }
 
-                var taskList = new List<Task>();
-
                 // Dictionary contains the key of a location, and a dictionary of item ids to a list of orders
-                var ordersDict = new Dictionary<long, Dictionary<int, List<MarketOrder>>>();
 
-                foreach (var location in locations)
-                {
-                    ordersDict.Add(location, new Dictionary<int, List<MarketOrder>>());
-                }
-
-                foreach (var location in locations)
-                {
-                    taskList.Add(Task.Run(async () =>
-                    {
-                        using var a = Status.GetNewStatusHandle();
-                        ordersDict[location] = await Market.GetOrdersInStructure(auth, location, items.ToList());
-                    }));
-                }
-
-                await Task.WhenAll(taskList);
-
-                taskList.Clear();
+                var result = await Market.GetOrdersFromStructures(locations.ToList(), items.ToList());
 
                 // Enable asynchronous access to a bindable collection for faster population of the datagrids.
                 var buysLock = new object();
@@ -326,7 +305,7 @@ namespace REvernus.ViewModels
                     {
                         using var a = Status.GetNewStatusHandle();
                         // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
-                        if (ordersDict.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
+                        if (result.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
                         {
                             var location = await StructureManager.GetStructureName(characterOrder.LocationId);
 
