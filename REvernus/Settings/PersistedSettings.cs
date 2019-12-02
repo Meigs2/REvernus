@@ -8,5 +8,6 @@ namespace REvernus.Settings
     public class PersistedSettings
     {
         public string SelectedCharacterName { get; set; }
+
     }
 }

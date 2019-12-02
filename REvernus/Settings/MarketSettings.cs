@@ -9,5 +9,6 @@ namespace REvernus.Settings
 
         public double UndercutBy { get; set; } = 0.1;
         public bool AutoUpdateTimerEnabled { get; set; } = true;
+        public bool ShowInEveClient { get; set; } = true;
     }
 }
