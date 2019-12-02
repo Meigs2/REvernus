@@ -39,7 +39,6 @@ namespace REvernus.Views
         private void HotkeyTextbox(object sender, KeyEventArgs args)
         {
             ((TextBox)sender).Text = KeysHelper.ToWinforms(Keyboard.Modifiers).ToString() + "+" + args.Key;
-           /* ((TextBox)sender).Text = KeysHelper.HotkeyProcess(Keyboard.Modifiers, args)*/;
 
         }
     }
