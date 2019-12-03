@@ -1,6 +1,11 @@
 ﻿using Jot;
 using Jot.Storage;
+using REvernus.Utilities;
+using System;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace REvernus.Views
 {
@@ -21,6 +26,20 @@ namespace REvernus.Views
                 .StopTrackingOn(nameof(Closing));
 
             Tracker.Track(this);
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+
+
+        private void HotkeyTextbox(object sender, KeyEventArgs args)
+        {
+            ((TextBox)sender).Text = KeysHelper.ToWinforms(Keyboard.Modifiers).ToString() + "+" + args.Key;
+
         }
     }
 }

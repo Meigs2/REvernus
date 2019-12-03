@@ -32,9 +32,11 @@ namespace REvernus.ViewModels
 {
     public class MarketOrdersViewerViewModel : BindableBase
     {
+
+
+        #region Bindings
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
         public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
-
         public object SellsSelectedItem
         {
             get => _sellsSelectedItem;
@@ -55,34 +57,6 @@ namespace REvernus.ViewModels
             get => _buysSelectedIndex;
             set => SetProperty(ref _buysSelectedIndex, value);
         }
-        public DelegateCommand GetOrdersEsiCommand { get; set; }
-
-        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
-
-        public bool AutoRefreshEnabled
-        {
-            get => _autoRefreshEnabled;
-            set
-            {
-                if (value)
-                {
-                    AutoRefreshTimer.Start();
-                }
-                else
-                {
-                    AutoRefreshTimer.Stop();
-                }
-
-                SetProperty(ref _autoRefreshEnabled, value);
-            }
-        }   
-
-        public uint RefreshMinutes
-        {
-            get => _refreshMinutes;
-            set => SetProperty(ref _refreshMinutes, value);
-        }
-
         public int SellOrdersActiveOrders
         {
             get => _sellOrdersActiveOrders;
@@ -131,6 +105,82 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _iskToCover, value);
         }
 
+        #endregion
+        #region Delegates
+        public DelegateCommand GetOrdersEsiCommand { get; set; }
+        #endregion
+        #region Hotkeys
+        private void UnsubscribeHotKeys(object sender, EventArgs e)
+        {
+            _keybindEvents.Dispose();
+        }
+        private void UnsubscribeHotKeys()
+        {
+            _keybindEvents.Dispose();
+        }
+        private void SubscribeHotKeys()
+        {
+            UnsubscribeHotKeys();
+
+            _keybindEvents = Hook.GlobalEvents();
+
+            var actions = new Dictionary<Combination, Action>()
+            {
+                {Combination.FromString(App.Settings.HotkeySettings.MarketUpHotkey),  async () => await KeyBindMoveUp()},
+                {Combination.FromString(App.Settings.HotkeySettings.MarketDownHotkey), async () => await KeyBindMoveDown()}
+            };
+
+            _keybindEvents.OnCombination(actions);
+        }
+        #endregion
+
+        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
+
+        public bool AutoRefreshEnabled
+        {
+            get => _autoRefreshEnabled;
+            set
+            {
+                if (value)
+                {
+                    AutoRefreshTimer.Start();
+                }
+                else
+                {
+                    AutoRefreshTimer.Stop();
+                }
+
+                SetProperty(ref _autoRefreshEnabled, value);
+            }
+        }
+
+        public int AutoUpdateRefresh
+        {
+            get => App.Settings.MarketSettings.AutoUpdateTimer;
+            set
+            {
+                if(App.Settings.MarketSettings.AutoUpdateTimerEnabled == true)
+                {
+                    AutoRefreshTimer.Stop();
+                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
+                    AutoRefreshTimer.Start();
+                }
+                else
+                {
+                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
+                }
+
+            }
+        }
+
+        public uint RefreshMinutes
+        {
+            get => _refreshMinutes;
+            set => SetProperty(ref _refreshMinutes, value);
+        }
+
+
+
         private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
         private int _sellsSelectedIndex;
         private object _sellsSelectedItem;
@@ -146,6 +196,10 @@ namespace REvernus.ViewModels
         private double _buyTotalValue;
         private double _totalInEscrow;
         private double _iskToCover;
+        private double _undercutBy
+        {
+            get => App.Settings.MarketSettings.UndercutBy;
+        }
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -160,41 +214,16 @@ namespace REvernus.ViewModels
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
         }
 
-        private void UnsubscribeHotKeys(object sender, EventArgs e)
-        {
-            _keybindEvents.Dispose();
-        }
 
-        private void UnsubscribeHotKeys()
-        {
-            _keybindEvents.Dispose();
-        }
-
-        private void SubscribeHotKeys()
-        {
-            UnsubscribeHotKeys();
-
-            _keybindEvents = Hook.GlobalEvents();
-
-            var actions = new Dictionary<Combination, Action>()
-            {
-                {Combination.FromString(App.Settings.HotkeySettings.MarketUpHotkey),  async () => await KeyBindMoveUp()},
-                {Combination.FromString(App.Settings.HotkeySettings.MarketDownHotkey), async () => await KeyBindMoveDown()}
-            };
-
-            _keybindEvents.OnCombination(actions);
-        }
 
         private async Task KeyBindMoveUp()
         {
             await MoveSelectedRow(Key.Up);
         }
-
         private async Task KeyBindMoveDown()
         {
             await MoveSelectedRow(Key.Down);
         }
-
         private async Task MoveSelectedRow(Key direction)
         {
             try
@@ -251,7 +280,11 @@ namespace REvernus.ViewModels
                             Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1,
                             AccessToken = character.AccessTokenDetails
                         };
-                        await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
+                        if (App.Settings.MarketSettings.ShowInEveClient == true)
+                        {
+                            await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
+                        }
+
                     }
                     catch (Exception)
                     {
@@ -259,7 +292,7 @@ namespace REvernus.ViewModels
                     }
                 }
 
-                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + .1) : (currentItem.SellOrders[0].Price - .1), 2, MidpointRounding.ToEven).ToString("N"));
+                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + _undercutBy) : (currentItem.SellOrders[0].Price - _undercutBy), 2, MidpointRounding.ToEven).ToString("N"));
 
                 SystemSounds.Beep.Play();
             }
@@ -268,13 +301,11 @@ namespace REvernus.ViewModels
                 Console.WriteLine(e);
             }
         }
-
         private async Task LoadOrdersFromEsi()
         {
             var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
             await ImportOrders(characterOrders);
         }
-
         private async Task ImportOrders(List<CharacterMarketOrder> characterOrders)
         {
             try

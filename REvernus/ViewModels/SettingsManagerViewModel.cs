@@ -35,6 +35,36 @@ namespace REvernus.ViewModels
             }
         }
 
+        public bool AutoUpdateTimerEnabled
+        {
+            get => App.Settings.MarketSettings.AutoUpdateTimerEnabled;
+            set
+            {
+                App.Settings.MarketSettings.AutoUpdateTimerEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public double UndercutBy
+        {
+            get => App.Settings.MarketSettings.UndercutBy;
+            set
+            {
+                App.Settings.MarketSettings.UndercutBy = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool ShowInEveClient
+        {
+            get => App.Settings.MarketSettings.ShowInEveClient;
+            set
+            {
+                App.Settings.MarketSettings.ShowInEveClient = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public SettingsManagerViewModel()
         {
             Services.Tracker.Track(this);
