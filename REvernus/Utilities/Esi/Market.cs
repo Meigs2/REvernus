@@ -292,74 +292,103 @@ namespace REvernus.Utilities.Esi
 
         public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(PlayerStructure structure, List<long> typeIds = null)
         {
-            var ordersHashSet = new HashSet<MarketOrder>();
-            var taskList = new List<Task>();
-
-            var addedBy = CharacterManager.CharacterList.FirstOrDefault(c =>
-                    c.CharacterDetails.CharacterId == structure.AddedBy);
-
-            if (addedBy == null)
-            {
-                return null;
-            }
-
-            var auth = new AuthDTO()
-            {
-                AccessToken = addedBy.AccessTokenDetails,
-                CharacterId = addedBy.CharacterDetails.CharacterId,
-                Scopes = Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
-            };
-
-            var firstResult = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId);
-            var maxPages = firstResult.MaxPages;
-
-            ordersHashSet.UnionWith(firstResult.Model);
-
-            if (maxPages > 1)
-            {
-                for (var i = 2; i <= maxPages; i++)
-                {
-                    var i1 = i;
-                    taskList.Add(Task.Run(async () =>
-                    {
-                        var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId, i1);
-                        ordersHashSet.UnionWith(result.Model);
-                    }));
-                }
-            }
-
-            await Task.WhenAll(taskList);
-
-            if (typeIds == null) return ordersHashSet.ToList();
-
-            var hashTypeIds = new HashSet<long>(typeIds);
-            var returnOrders = new List<MarketOrder>();
-            
-
             try
             {
-                ordersHashSet.RemoveWhere(o => o == null);
+                var ordersHashSet = new ConcurrentBag<MarketOrder>();
+                var taskList = new List<Task>();
 
-                foreach (var marketOrder in ordersHashSet.ToList())
+                var addedBy = CharacterManager.CharacterList.FirstOrDefault(c =>
+                    c.CharacterDetails.CharacterId == structure.AddedBy);
+
+                if (addedBy == null)
                 {
-                    try
-                    {
-                        if (hashTypeIds.Contains(marketOrder.TypeId))
-                        {
-                            returnOrders.Add(marketOrder);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    return null;
                 }
 
-                return returnOrders;
+                var auth = new AuthDTO()
+                {
+                    AccessToken = addedBy.AccessTokenDetails,
+                    CharacterId = addedBy.CharacterDetails.CharacterId,
+                    Scopes = Scopes.ESI_MARKETS_STRUCTURE_MARKETS_1
+                };
+
+                try
+                {
+                    var firstResult = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId);
+                    var maxPages = firstResult.MaxPages;
+
+                    foreach (var marketOrder in firstResult.Model)
+                    {
+                        ordersHashSet.Add(marketOrder);
+                    }
+
+                    if (maxPages > 1)
+                    {
+                        for (var i = 2; i <= maxPages; i++)
+                        {
+                            var i1 = i;
+                            taskList.Add(Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId, i1);
+                                    foreach (var marketOrder in firstResult.Model)
+                                    {
+                                        ordersHashSet.Add(marketOrder);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e);
+                                }
+                            }));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                await Task.WhenAll(taskList);
+
+                if (typeIds == null) return ordersHashSet.ToList();
+
+                var hashTypeIds = new HashSet<long>(typeIds);
+                var returnOrders = new List<MarketOrder>();
+            
+
+                try
+                {
+                    var orders = ordersHashSet.ToList();
+                    orders.RemoveAll(o => o == null);
+
+                    foreach (var marketOrder in orders)
+                    {
+                        try
+                        {
+                            if (hashTypeIds.Contains(marketOrder.TypeId))
+                            {
+                                returnOrders.Add(marketOrder);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+
+                    return returnOrders;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                Console.WriteLine(e);
+                throw;
             }
         }
     }
