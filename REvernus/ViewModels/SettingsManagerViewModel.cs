@@ -7,60 +7,40 @@ namespace REvernus.ViewModels
     {
         public int AutoUpdateTimer
         {
-            get => App.Settings.MarketSettings.AutoUpdateTimer;
+            get => App.Settings.MarketOrdersTabSettings.AutoUpdateTimer;
             set
             {
-                App.Settings.MarketSettings.AutoUpdateTimer = value;
+                App.Settings.MarketOrdersTabSettings.AutoUpdateTimer = value;
                 RaisePropertyChanged();
             }
         }
 
         public string MarketHotkeyUp
         {
-            get => App.Settings.HotkeySettings.MarketUpHotkey;
+            get => App.Settings.MarketOrdersTabSettings.MarketUpHotkey;
             set
             {
-                App.Settings.HotkeySettings.MarketUpHotkey = value;
+                App.Settings.MarketOrdersTabSettings.MarketUpHotkey = value;
                 RaisePropertyChanged();
             }
         }
 
         public string MarketHotkeyDown
         {
-            get => App.Settings.HotkeySettings.MarketDownHotkey;
+            get => App.Settings.MarketOrdersTabSettings.MarketDownHotkey;
             set
             {
-                App.Settings.HotkeySettings.MarketDownHotkey = value;
+                App.Settings.MarketOrdersTabSettings.MarketDownHotkey = value;
                 RaisePropertyChanged();
             }
         }
 
         public bool AutoUpdateTimerEnabled
         {
-            get => App.Settings.MarketSettings.AutoUpdateTimerEnabled;
+            get => App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled;
             set
             {
-                App.Settings.MarketSettings.AutoUpdateTimerEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public double UndercutBy
-        {
-            get => App.Settings.MarketSettings.UndercutBy;
-            set
-            {
-                App.Settings.MarketSettings.UndercutBy = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool ShowInEveClient
-        {
-            get => App.Settings.MarketSettings.ShowInEveClient;
-            set
-            {
-                App.Settings.MarketSettings.ShowInEveClient = value;
+                App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled = value;
                 RaisePropertyChanged();
             }
         }

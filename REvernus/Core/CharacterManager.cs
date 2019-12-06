@@ -53,7 +53,7 @@ namespace REvernus.Core
                 if (value != CurrentInstance._selectedCharacter)
                 {
                     CurrentInstance.SetProperty(ref _currentInstance._selectedCharacter, value);
-                    App.Settings.PersistedSettings.SelectedCharacterName = value.CharacterName;
+                    App.Settings.CharacterManagerSettings.SelectedCharacterName = value.CharacterName;
                     CurrentInstance.OnSelectedCharacterChanged();
                 }
             }
@@ -151,14 +151,14 @@ namespace REvernus.Core
 
             CharacterList = await GenerateCharacterList(list);
 
-            if (App.Settings.PersistedSettings.SelectedCharacterName == "")
+            if (App.Settings.CharacterManagerSettings.SelectedCharacterName == "")
             {
                 SelectedCharacter = CharacterList[0];
             }
             else
             {
                 var selectedCharacter = CharacterList.SingleOrDefault(c =>
-                    c.CharacterName == App.Settings.PersistedSettings.SelectedCharacterName);
+                    c.CharacterName == App.Settings.CharacterManagerSettings.SelectedCharacterName);
 
                 SelectedCharacter = selectedCharacter ?? CharacterList[0];
             }

@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace REvernus.Settings
 {
-    [Serializable]
     public class MarketSettings
     {
-        public int AutoUpdateTimer { get; set; } = 1200;
-
-        public double UndercutBy { get; set; } = 0.1;
-        public bool AutoUpdateTimerEnabled { get; set; } = true;
-        public bool ShowInEveClient { get; set; } = true;
+        public double PriceDelta { get; set; } = 0.01;
+        public double MaxRandom { get; set; } = 0.00;
+        public double GetUndercut => new Random().NextDouble() * (MaxRandom - 0.01) + PriceDelta;
     }
 }
