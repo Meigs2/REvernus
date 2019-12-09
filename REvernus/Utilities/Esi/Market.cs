@@ -332,7 +332,7 @@ namespace REvernus.Utilities.Esi
                                 try
                                 {
                                     var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId, i1);
-                                    foreach (var marketOrder in firstResult.Model)
+                                    foreach (var marketOrder in result.Model)
                                     {
                                         ordersHashSet.Add(marketOrder);
                                     }
@@ -388,8 +388,9 @@ namespace REvernus.Utilities.Esi
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
+
+            return null;
         }
     }
 }

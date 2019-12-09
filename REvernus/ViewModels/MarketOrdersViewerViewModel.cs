@@ -32,31 +32,35 @@ namespace REvernus.ViewModels
 {
     public class MarketOrdersViewerViewModel : BindableBase
     {
-
-
-        #region Bindings
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
         public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
+        public Dictionary<long, Dictionary<long, List<MarketOrder>>> OrdersList { get; set; }
+
+        #region Bindings
         public object SellsSelectedItem
         {
             get => _sellsSelectedItem;
             set => SetProperty(ref _sellsSelectedItem, value);
         }
+
         public int SellsSelectedIndex
         {
             get => _sellsSelectedIndex;
             set => SetProperty(ref _sellsSelectedIndex, value);
         }
+
         public object BuysSelectedItem
         {
             get => _buysSelectedItem;
             set => SetProperty(ref _buysSelectedItem, value);
         }
+
         public int BuysSelectedIndex
         {
             get => _buysSelectedIndex;
             set => SetProperty(ref _buysSelectedIndex, value);
         }
+
         public int SellOrdersActiveOrders
         {
             get => _sellOrdersActiveOrders;
@@ -104,11 +108,12 @@ namespace REvernus.ViewModels
             get => _iskToCover;
             set => SetProperty(ref _iskToCover, value);
         }
-
         #endregion
+
         #region Delegates
         public DelegateCommand GetOrdersEsiCommand { get; set; }
         #endregion
+
         #region Hotkeys
         private void UnsubscribeHotKeys(object sender, EventArgs e)
         {
@@ -131,95 +136,20 @@ namespace REvernus.ViewModels
             };
 
             _keybindEvents.OnCombination(actions);
+
         }
-        #endregion
-
-        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
-
-        public bool AutoRefreshEnabled
-        {
-            get => _autoRefreshEnabled;
-            set
-            {
-                if (value)
-                {
-                    AutoRefreshTimer.Start();
-                }
-                else
-                {
-                    AutoRefreshTimer.Stop();
-                }
-
-                SetProperty(ref _autoRefreshEnabled, value);
-            }
-        }
-
-        public int AutoUpdateRefresh
-        {
-            get => App.Settings.MarketOrdersTabSettings.AutoUpdateTimer;
-            set
-            {
-                if(App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled == true)
-                {
-                    AutoRefreshTimer.Stop();
-                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
-                    AutoRefreshTimer.Start();
-                }
-                else
-                {
-                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
-                }
-
-            }
-        }
-
-        public uint RefreshMinutes
-        {
-            get => _refreshMinutes;
-            set => SetProperty(ref _refreshMinutes, value);
-        }
-
-
-
-        private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
-        private int _sellsSelectedIndex;
-        private object _sellsSelectedItem;
-        private int _buysSelectedIndex;
-        private object _buysSelectedItem;
-        private uint _refreshMinutes = 5;
-        private bool _autoRefreshEnabled = false;
-        private int _sellOrdersActiveOrders;
-        private int _buyOrdersActiveOrders;
-        private string _sellVolumeRemaining = "0/0";
-        private string _buyVolumeRemaining = "0/0";
-        private double _sellTotalValue;
-        private double _buyTotalValue;
-        private double _totalInEscrow;
-        private double _iskToCover;
-
-        private static readonly log4net.ILog Log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public MarketOrdersViewerViewModel()
-        {
-            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketOrdersTabSettings.AutoUpdateTimer);
-            AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
-
-            GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
-            SubscribeHotKeys();
-            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
-        }
-
 
 
         private async Task KeyBindMoveUp()
         {
             await MoveSelectedRow(Key.Up);
         }
+
         private async Task KeyBindMoveDown()
         {
             await MoveSelectedRow(Key.Down);
         }
+
         private async Task MoveSelectedRow(Key direction)
         {
             try
@@ -232,14 +162,14 @@ namespace REvernus.ViewModels
                 if (SellsSelectedItem != null)
                 {
                     selectedGrid = SellOrdersCollection;
-                    currentItem = (MarketOrderInfoModel) SellsSelectedItem;
+                    currentItem = (MarketOrderInfoModel)SellsSelectedItem;
                     currentRowIndex = SellsSelectedIndex;
                 }
 
                 if (BuysSelectedItem != null)
                 {
                     selectedGrid = BuyOrdersCollection;
-                    currentItem = (MarketOrderInfoModel) BuysSelectedItem;
+                    currentItem = (MarketOrderInfoModel)BuysSelectedItem;
                     currentRowIndex = BuysSelectedIndex;
                     isBuyCollection = true;
                 }
@@ -256,12 +186,12 @@ namespace REvernus.ViewModels
                 if (isBuyCollection)
                 {
                     BuysSelectedIndex = nextIndex;
-                    currentItem = (MarketOrderInfoModel) BuysSelectedItem;
+                    currentItem = (MarketOrderInfoModel)BuysSelectedItem;
                 }
                 else
                 {
                     SellsSelectedIndex = nextIndex;
-                    currentItem = (MarketOrderInfoModel) SellsSelectedItem;
+                    currentItem = (MarketOrderInfoModel)SellsSelectedItem;
                 }
 
                 var character = CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == currentItem.Owner);
@@ -288,7 +218,7 @@ namespace REvernus.ViewModels
                     }
                 }
 
-                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + App.Settings.MarketSettings.GetUndercut) : 
+                Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + App.Settings.MarketSettings.GetUndercut) :
                     (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString("N"));
 
                 SystemSounds.Beep.Play();
@@ -298,15 +228,115 @@ namespace REvernus.ViewModels
                 Console.WriteLine(e);
             }
         }
+        #endregion
+
+        #region Refresh Timer Things
+        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
+
+        public bool AutoRefreshEnabled
+        {
+            get => _autoRefreshEnabled;
+            set
+            {
+                if (value)
+                {
+                    AutoRefreshTimer.Start();
+                }
+                else
+                {
+                    AutoRefreshTimer.Stop();
+                }
+
+                SetProperty(ref _autoRefreshEnabled, value);
+            }
+        }
+
+        public int AutoUpdateRefresh
+        {
+            get => App.Settings.MarketOrdersTabSettings.AutoUpdateTimer;
+            set
+            {
+                if (App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled == true)
+                {
+                    AutoRefreshTimer.Stop();
+                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
+                    AutoRefreshTimer.Start();
+                }
+                else
+                {
+                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
+                }
+
+            }
+        }
+
+        public uint RefreshMinutes
+        {
+            get => _refreshMinutes;
+            set => SetProperty(ref _refreshMinutes, value);
+        }
+
+        #endregion
+
+        private IKeyboardMouseEvents _keybindEvents = Hook.GlobalEvents();
+        private int _sellsSelectedIndex;
+        private object _sellsSelectedItem;
+        private int _buysSelectedIndex;
+        private object _buysSelectedItem;
+        private uint _refreshMinutes = 5;
+        private bool _autoRefreshEnabled;
+        private int _sellOrdersActiveOrders;
+        private int _buyOrdersActiveOrders;
+        private string _sellVolumeRemaining = "0/0";
+        private string _buyVolumeRemaining = "0/0";
+        private double _sellTotalValue;
+        private double _buyTotalValue;
+        private double _totalInEscrow;
+        private double _iskToCover;
+
+        private static readonly log4net.ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public MarketOrdersViewerViewModel()
+        {
+            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketOrdersTabSettings.AutoUpdateTimer);
+            AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
+
+            GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
+            SubscribeHotKeys();
+            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+        }
+
         private async Task LoadOrdersFromEsi()
         {
-            var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
-            await ImportOrders(characterOrders);
+            await ImportOrders();
         }
-        private async Task ImportOrders(List<CharacterMarketOrder> characterOrders)
+
+        private async Task ImportOrders()
         {
             try
             {
+                var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
+                var currentCharacterName = CharacterManager.SelectedCharacter.CharacterName;
+
+                foreach (var order in BuyOrdersCollection.ToArray())
+                {
+                    if (order.Owner != currentCharacterName)
+                    {
+                        BuyOrdersCollection.Remove(order);
+                    }
+                }
+                foreach (var order in SellOrdersCollection.ToArray())
+                {
+                    if (order.Owner != currentCharacterName)
+                    {
+                        SellOrdersCollection.Remove(order);
+                    }
+                }
+
+
+                // Clear orders if character is different
+
                 var locations = new HashSet<long>();
                 var items = new HashSet<long>();
                 var taskList = new List<Task>();
@@ -319,7 +349,7 @@ namespace REvernus.ViewModels
 
                 // Dictionary contains the key of a location, and a dictionary of item ids to a list of orders
 
-                var result = await Market.GetOrdersFromStructures(locations.ToList(), items.ToList());
+                OrdersList = await Market.GetOrdersFromStructures(locations.ToList(), items.ToList());
 
                 // Enable asynchronous access to a bindable collection for faster population of the datagrids.
                 var buysLock = new object();
@@ -333,43 +363,34 @@ namespace REvernus.ViewModels
                     {
                         using var a = Status.GetNewStatusHandle();
                         // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
-                        if (result.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
+                        if (OrdersList.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
                         {
                             var location = await StructureManager.GetStructureName(characterOrder.LocationId);
 
-                            var existingOrder = BuyOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
-                            if (existingOrder != null && characterOrder.IsBuyOrder == true)
+                            var existingOrder = BuyOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId) ??
+                                                SellOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
+
+                            if (existingOrder != null)
                             {
                                 existingOrder.Order = characterOrder;
-                                existingOrder.Owner = CharacterManager.SelectedCharacter.CharacterName;
                                 existingOrder.MarketOrders = marketOrders;
                                 existingOrder.LocationName = location;
                                 return;
                             }
 
-                            existingOrder = SellOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
-                            if (existingOrder != null && characterOrder.IsBuyOrder != true)
-                            {
-                                existingOrder.Order = characterOrder;
-                                existingOrder.Owner = CharacterManager.SelectedCharacter.CharacterName;
-                                existingOrder.MarketOrders = marketOrders;
-                                existingOrder.LocationName = location;
-                                return;
-                            }
-
-                            var newRow = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
+                            var newOrder = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
                             if (characterOrder.IsBuyOrder == true)
                             {
                                 lock (buysLock)
                                 {
-                                    BuyOrdersCollection.Add(newRow);
+                                    BuyOrdersCollection.Add(newOrder);
                                 }
                             }
                             else
                             {
                                 lock (sellsLock)
                                 {
-                                    SellOrdersCollection.Add(newRow);
+                                    SellOrdersCollection.Add(newOrder);
                                 }
                             }
                         }
