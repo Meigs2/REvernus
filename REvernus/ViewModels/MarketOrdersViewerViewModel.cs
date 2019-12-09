@@ -24,9 +24,13 @@ using ICSharpCode.SharpZipLib.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Utilities;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
 using Clipboard = System.Windows.Clipboard;
 using Market = REvernus.Utilities.Esi.Market;
 using Status = REvernus.Utilities.Status;
+using ToastNotifications.Messages;
 
 namespace REvernus.ViewModels
 {
@@ -293,6 +297,8 @@ namespace REvernus.ViewModels
         private double _buyTotalValue;
         private double _totalInEscrow;
         private double _iskToCover;
+        private Notifier _notifier;
+
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -305,6 +311,20 @@ namespace REvernus.ViewModels
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+            _notifier = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: App.Current.MainWindow,
+                    corner: Corner.TopRight,
+                    offsetX: 0,
+                    offsetY: 0);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: TimeSpan.FromSeconds(3),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+                cfg.Dispatcher = App.Current.Dispatcher;
+            });
         }
 
         private async Task LoadOrdersFromEsi()
@@ -398,7 +418,7 @@ namespace REvernus.ViewModels
                 }
 
                 await Task.WhenAll(taskList);
-
+                GenerateOverbidNotifications(BuyOrdersCollection, SellOrdersCollection);
                 SellOrdersActiveOrders = SellOrdersCollection.Count;
                 BuyOrdersActiveOrders = BuyOrdersCollection.Count;
 
@@ -423,6 +443,20 @@ namespace REvernus.ViewModels
             {
                 Log.Error(e);
             }
+        }
+
+        private void GenerateOverbidNotifications(ObservableCollection<MarketOrderInfoModel> buys, ObservableCollection<MarketOrderInfoModel> sells)
+        {
+
+
+            var overbidBuys = buys.Where(o => o.IsOutbid == true).ToList();
+            var overbidSells = sells.Where(o => o.IsOutbid == true).ToList();
+
+            if((overbidBuys.Count >= 1 || overbidSells.Count >= 1) & App.Settings.NotificationSettings.ToastNoteIsEnabled == true)
+            {
+                _notifier.ShowWarning("Items have been overbid");
+            }
+
         }
     }
 }
