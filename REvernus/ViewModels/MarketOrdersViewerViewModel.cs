@@ -206,7 +206,7 @@ namespace REvernus.ViewModels
                             Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1,
                             AccessToken = character.AccessTokenDetails
                         };
-                        if (App.Settings.MarketOrdersTabSettings.ShowInEveClient == true)
+                        if (App.Settings.MarketOrdersTabSettings.ShowInEveClient)
                         {
                             await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
                         }
