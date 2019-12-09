@@ -45,6 +45,16 @@ namespace REvernus.ViewModels
             }
         }
 
+        public bool ToastNoteIsEnabled
+        {
+            get => App.Settings.NotificationSettings.ToastNoteIsEnabled;
+            set
+            {
+                App.Settings.NotificationSettings.ToastNoteIsEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public SettingsManagerViewModel()
         {
             Services.Tracker.Track(this);
