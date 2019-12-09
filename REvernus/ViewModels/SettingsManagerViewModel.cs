@@ -15,6 +15,16 @@ namespace REvernus.ViewModels
             }
         }
 
+        public bool IsSoundEnabled
+        {
+            get => App.Settings.MarketOrdersTabSettings.IsSoundEnabled;
+            set
+            {
+                App.Settings.MarketOrdersTabSettings.IsSoundEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public string MarketHotkeyUp
         {
             get => App.Settings.MarketOrdersTabSettings.MarketUpHotkey;
