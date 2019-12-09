@@ -55,6 +55,16 @@ namespace REvernus.ViewModels
             }
         }
 
+        public double UndercutBy
+        {
+            get => App.Settings.MarketSettings.PriceDelta;
+            set
+            {
+                App.Settings.MarketSettings.PriceDelta = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public SettingsManagerViewModel()
         {
             Services.Tracker.Track(this);
