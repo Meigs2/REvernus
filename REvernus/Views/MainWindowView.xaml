@@ -49,17 +49,8 @@
             <Grid>
                 <TabControl x:Name="MainTabControl">
                     <TabItem Header="Market Orders">
-                        <TabControl>
-                            <TabItem Header="Buy/Sell">
                                 <views:MarketOrdersViewerView/>
-                            </TabItem>
-                            <TabItem Header="Buy">
-                                
-                            </TabItem>
-                            <TabItem Header="Sell">
-                                
-                            </TabItem>
-                        </TabControl>
+
 
                     </TabItem>
                 </TabControl>
