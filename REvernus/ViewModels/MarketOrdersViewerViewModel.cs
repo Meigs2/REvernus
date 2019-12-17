@@ -34,7 +34,7 @@ namespace REvernus.ViewModels
     {
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
         public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
-        public Dictionary<long, Dictionary<long, List<MarketOrder>>> OrdersList { get; set; }
+        public Dictionary<long, Dictionary<int, List<MarketOrder>>> OrdersList { get; set; }
 
         #region Bindings
         public object SellsSelectedItem
@@ -338,7 +338,7 @@ namespace REvernus.ViewModels
                 // Clear orders if character is different
 
                 var locations = new HashSet<long>();
-                var items = new HashSet<long>();
+                var items = new HashSet<int>();
                 var taskList = new List<Task>();
 
                 foreach (var characterMarketOrder in characterOrders)
@@ -349,7 +349,14 @@ namespace REvernus.ViewModels
 
                 // Dictionary contains the key of a location, and a dictionary of item ids to a list of orders
 
-                OrdersList = await Market.GetOrdersFromStructures(locations.ToList(), items.ToList());
+
+                var a = new List<(long structureId, List<int> types, int range)>();
+                foreach (var location in locations)
+                {
+                    a.Add((location, items.ToList(), 0));
+                }
+
+                OrdersList = await Market.GetOrdersFromStructures(a);
 
                 // Enable asynchronous access to a bindable collection for faster population of the datagrids.
                 var buysLock = new object();

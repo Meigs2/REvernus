@@ -14,6 +14,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using EVEStandard.Enumerations;
+using EVEStandard.Models.API;
 using REvernus.Views.SimpleViews;
 
 namespace REvernus.Core
@@ -58,6 +60,13 @@ namespace REvernus.Core
                 }
             }
         }
+
+        public static AuthDTO PublicAuthDto => new AuthDTO()
+        {
+            AccessToken = SelectedCharacter.AccessTokenDetails,
+            CharacterId = SelectedCharacter.CharacterDetails.CharacterId,
+            Scopes = Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
+        };
 
         private CharacterManager()
         {

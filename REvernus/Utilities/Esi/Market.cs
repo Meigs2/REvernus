@@ -100,163 +100,192 @@ namespace REvernus.Utilities.Esi
             }
         }
 
-        public static async Task<Dictionary<long, Dictionary<long, List<MarketOrder>>>> GetOrdersFromStructures(List<long> structureIds, List<long> typeIds = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="structuresToQuery"></param>
+        /// <returns></returns>
+        public static async Task<Dictionary<long, Dictionary<int, List<MarketOrder>>>> GetOrdersFromStructures(List<(long structureId, List<int> types, int range)> structuresToQuery)
         {
-            using var handle = Status.GetNewStatusHandle();
-            try
+            var taskList = new List<Task>();
+
+            var privatePlayerStructures = new List<PlayerStructure>();
+            var regionToStructuresToSearch = new Dictionary<int, List<long>>();
+            var primaryStructureToRegionDictionary = new Dictionary<long, int>();
+            var structuresToStructuresInRange = new Dictionary<long, List<long>>();
+
+            // Generate dict for final output.
+            var structureToRelevantOrders = new ConcurrentDictionary<long, Dictionary<int, List<MarketOrder>>>();
+            foreach (var structure in structuresToQuery)
             {
-                var publicAuth = new AuthDTO()
+                structureToRelevantOrders.TryAdd(structure.structureId, new Dictionary<int, List<MarketOrder>>());
+            }
+
+            // build dictionaries
+            foreach (var structure in structuresToQuery)
+            {
+                if (StructureManager.TryGetNpcStation(structure.structureId, out var station) && station != null)
                 {
-                    AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
-                    CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
-                    Scopes = Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
-                };
-                var taskList = new List<Task>();
-
-                var finalDict = new ConcurrentDictionary<long, ConcurrentDictionary<long, List<MarketOrder>>>();
-                foreach (var structureId in structureIds)
-                {
-                    finalDict.TryAdd(structureId, new ConcurrentDictionary<long, List<MarketOrder>>());
-                }
-
-                // Contains the list of regions to search and the structureIds relevant to the market search.
-                var regionsDict = new Dictionary<int, List<long>>();
-
-                var npcStations = new List<StaStations>();
-                var privatePlayerStructures = new List<PlayerStructure>();
-                var publicStructuresIds = new List<(long, Structure)>();
-
-                // Generate list of regions
-                foreach (var structureId in structureIds)
-                {
-                    if (StructureManager.TryGetNpcStation(structureId, out var station))
+                    if (EveUniverse.TryGetRegionFromSystem(station.SolarSystemId, out var regionId))
                     {
-                        npcStations.Add(station);
-                        if (EveUniverse.TryGetRegionFromSystem(station.SolarSystemId, out var regionId))
+                        primaryStructureToRegionDictionary.TryAdd(structure.structureId, regionId);
+                        AddToRegionsDict(regionId, structure.structureId);
+                        if (structure.range >= 0 && station.SolarSystemId != null)
                         {
-                            AddToRegionsDict(regionId, structureId);
-                        }
-                    }
-                    else if (StructureManager.TryGetPlayerStructure(structureId, out var structure))
-                    {
-                        privatePlayerStructures.Add(structure);
-                        if (EveUniverse.TryGetRegionFromSystem(structure.SolarSystemId, out var regionId))
-                        {
-                            AddToRegionsDict(regionId, structureId);
-                        }
-                    }
-                    else
-                    {
-                        var result = await EsiData.EsiClient.Universe.GetStructureInfoV2Async(publicAuth, structureId);
-                        if (result.RemainingErrors != 0) continue;
-                        publicStructuresIds.Add((structureId, result.Model));
-                        if (EveUniverse.TryGetRegionFromSystem(result.Model.SolarSystemId, out var regionId))
-                        {
-                            AddToRegionsDict(regionId, structureId);
-                        }
-                    }
-                }
-
-                // we now have a list of regions and structures to include. Get all types in region. 
-                foreach (var region in regionsDict.Keys)
-                {
-                    taskList.Add(Task.Run(async () =>
-                    {
-                        using var innerHandle = Status.GetNewStatusHandle();
-                        var localTaskList = new List<Task>();
-
-                        var relevantTypes = typeIds;
-
-                        var typeToOrderDictionary = new ConcurrentDictionary<long, List<MarketOrder>>();
-
-                        // union types
-                        if (typeIds != null)
-                        {
-                            relevantTypes = relevantTypes.Union(typeIds).ToList();
-                        }
-
-                        // Generate list of orders
-                        if (relevantTypes != null)
-                        {
-                            foreach (var typeId in relevantTypes)
+                            var systemId = (int) station.SolarSystemId; 
+                            var structures = EveUniverse.GetStructuresInRange(systemId, structure.range);
+                            foreach (var structureId in structures)
                             {
-                                localTaskList.Add(Task.Run(async () =>
-                                {
-                                    using var handle = Status.GetNewStatusHandle();
-                                    var orders = await GetOrdersInRegion(region, typeId);
-                                    typeToOrderDictionary.TryAdd(typeId, orders);
-                                }));
+                                AddToRegionsDict(regionId, structureId);
                             }
-
-                            var privateStructuresInRegion =
-                                privatePlayerStructures.Where(s => regionsDict[region].Contains(s.StructureId))
-                                    .ToList();
-
-                            // check if any of the listed structures are in our region, if so query those too
-                            foreach (var playerStructure in privateStructuresInRegion)
+                        }
+                    }
+                }
+                else if (StructureManager.TryGetPlayerStructure(structure.structureId, out var playerStructure) && playerStructure != null)
+                {
+                    if (EveUniverse.TryGetRegionFromSystem(playerStructure.SolarSystemId, out var regionId))
+                    {
+                        privatePlayerStructures.Add(playerStructure);
+                        primaryStructureToRegionDictionary.TryAdd(structure.structureId, regionId);
+                        AddToRegionsDict(regionId, playerStructure.StructureId);
+                        if (structure.range >= 0)
+                        {
+                            var systemId = playerStructure.SolarSystemId;
+                            var structures = EveUniverse.GetStructuresInRange(systemId, structure.range);
+                            foreach (var structureId in structures)
                             {
-                                localTaskList.Add(Task.Run(async () =>
+                                AddToRegionsDict(regionId, structureId);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var result = await EsiData.EsiClient.Universe.GetStructureInfoV2Async(CharacterManager.PublicAuthDto, structure.structureId);
+                    if (result.RemainingErrors != 0) continue;
+                    if (EveUniverse.TryGetRegionFromSystem(result.Model.SolarSystemId, out var regionId))
+                    {
+                        primaryStructureToRegionDictionary.TryAdd(structure.structureId, regionId);
+                        AddToRegionsDict(regionId, structure.structureId);
+                        if (structure.range >= 0)
+                        {
+                            var systemId = result.Model.SolarSystemId;
+                            var structures = EveUniverse.GetStructuresInRange(systemId, structure.range);
+                            foreach (var structureId in structures)
+                            {
+                                AddToRegionsDict(regionId, structureId);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var structureTuple in structuresToQuery)
+            {
+                var a = await EveUniverse.GetStructuresInRange(structureTuple.structureId, structureTuple.range);
+                structuresToStructuresInRange.TryAdd(structureTuple.structureId, a);
+            }
+
+            var uniqueDict = new Dictionary<int, List<long>>(regionToStructuresToSearch);
+            foreach (var regionKeyValue in regionToStructuresToSearch)
+            {
+                uniqueDict[regionKeyValue.Key] = regionToStructuresToSearch[regionKeyValue.Key].Distinct().ToList();
+            }
+            regionToStructuresToSearch = uniqueDict;
+
+            foreach (var regionKeyValue in regionToStructuresToSearch)
+            {
+                taskList.Add(Task.Run(async () =>
+                {
+                    var localTaskList = new List<Task>();
+
+                    var primaryStructuresInCurrentRegion =
+                        primaryStructureToRegionDictionary.Where(s => s.Value == regionKeyValue.Key).Select(s => s.Key).ToList();
+
+                    var privateStructuresInRegion =
+                        privatePlayerStructures.Where(s => primaryStructuresInCurrentRegion.Contains(s.StructureId)).ToList();
+
+                    var typesInRegion =
+                        structuresToQuery.Where(s => primaryStructuresInCurrentRegion.Contains(s.structureId)).ToList().SelectMany(s => s.types).ToHashSet();
+
+                    var orders = new ConcurrentDictionary<int, ConcurrentBag<MarketOrder>>();
+                    foreach (var type in typesInRegion)
+                    {
+                        orders.TryAdd(type, new ConcurrentBag<MarketOrder>());
+                    }
+
+                    // Get and add types for region
+                    foreach (var typeId in typesInRegion)
+                    {
+                        localTaskList.Add(Task.Run(async () =>
+                        {
+                            var result = await GetOrdersInRegion(regionKeyValue.Key, typeId);
+                            foreach (var marketOrder in result)
+                            {
+                                if (orders[typeId].Where(o => o.OrderId == marketOrder.OrderId).ToList().Count == 0)
                                 {
-                                    using var handle = Status.GetNewStatusHandle();
-                                    var orders = await GetOrdersInPrivateStructure(playerStructure, relevantTypes);
-                                    foreach (var typeId in relevantTypes)
+                                    orders[typeId].Add(marketOrder);
+                                }
+                            }
+                        }));
+                    }
+
+                    // Get and add types from private structure
+                    foreach (var privateStructure in privateStructuresInRegion)
+                    {
+                        localTaskList.Add(Task.Run(async () =>
+                        {
+                            var result = await Market.GetOrdersInPrivateStructure(privateStructure, typesInRegion.ToList());
+                            var groupsOfOrders = result.OrderBy(o => o.TypeId).GroupBy(o => o.TypeId).ToDictionary(s => s.Key, s => s.ToList());
+                            foreach (var groupsOfOrder in groupsOfOrders)
+                            {
+                                foreach (var marketOrder in groupsOfOrder.Value)
+                                {
+                                    if (orders[groupsOfOrder.Key].Where(o => o.OrderId == marketOrder.OrderId).ToList().Count == 0)
                                     {
-                                        var relevantOrders = orders.Where(o => o.TypeId == typeId).ToList();
-                                        typeToOrderDictionary[typeId].AddRange(relevantOrders);
+                                        orders[groupsOfOrder.Key].Add(marketOrder);
                                     }
-                                }));
+                                }
                             }
-                        }
+                        }));
+                    }
 
-                        await Task.WhenAll(localTaskList);
-                        localTaskList.Clear();
+                    await Task.WhenAll(localTaskList);
 
-                        // Now we have all orders relevant to the structures in this region.
-                        // Add to final dict by location.
+                    foreach (var primaryStructureId in primaryStructuresInCurrentRegion)
+                    {
+                        var relevantStructures = structuresToStructuresInRange[primaryStructureId];
+                        var types = structuresToQuery.First(s => s.structureId == primaryStructureId).types;
 
-                        foreach (var structureId in regionsDict[region])
+                        foreach (var relevantStructure in relevantStructures)
                         {
-                            foreach (var orderId in typeToOrderDictionary.Keys)
+                            foreach (var type in types)
                             {
-                                localTaskList.Add(Task.Run(() =>
-                                {
-                                    using var handle = Status.GetNewStatusHandle();
-                                    var a = typeToOrderDictionary[orderId].Where(o => o.LocationId == structureId)
-                                        .ToList();
-                                    finalDict[structureId].TryAdd(orderId, a);
-                                }));
+                                var ordersInRangedStructures = orders[type].Where(o =>
+                                    structuresToStructuresInRange[relevantStructure].Any(s => o.LocationId == s)).ToList();
+                                structureToRelevantOrders[relevantStructure].Add(type, ordersInRangedStructures);
                             }
                         }
+                    }
 
-                        await Task.WhenAll(localTaskList);
-                        localTaskList.Clear();
-                    }));
-                }
+                    Console.WriteLine();
+                }));
+            }
 
-                await Task.WhenAll(taskList);
+            await Task.WhenAll(taskList);
 
-                return finalDict.ToDictionary(x => x.Key, x => x.Value.ToDictionary(y => y.Key, y => y.Value));
+            return structureToRelevantOrders.ToDictionary(s => s.Key, s => s.Value);
 
-                void AddToRegionsDict(int regionId, long structureId)
+            void AddToRegionsDict(int regionId, long structureId)
+            {
+                if (regionToStructuresToSearch.TryGetValue(regionId, out var structsList))
                 {
-                    if (regionsDict.TryGetValue(regionId, out var structsList))
-                    {
-                        structsList.Add(structureId);
-                    }
-                    else
-                    {
-                        regionsDict.Add(regionId, new List<long> {structureId});
-                    }
+                    structsList.Add(structureId);
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-            finally
-            {
-                handle.Dispose();
+                else
+                {
+                    regionToStructuresToSearch.Add(regionId, new List<long> { structureId });
+                }
             }
         }
 
@@ -288,6 +317,11 @@ namespace REvernus.Utilities.Esi
             ordersHashSet.RemoveWhere(o => o == null);
 
             return ordersHashSet.ToList();
+        }
+
+        public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(PlayerStructure structure, List<int> typeIds)
+        {
+            return await GetOrdersInPrivateStructure(structure, typeIds.ConvertAll(i => (long) i));
         }
 
         public static async Task<List<MarketOrder>> GetOrdersInPrivateStructure(PlayerStructure structure, List<long> typeIds = null)
