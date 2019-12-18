@@ -28,7 +28,7 @@
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>    
+                    <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0" Margin="5">

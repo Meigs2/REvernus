@@ -15,6 +15,16 @@ namespace REvernus.ViewModels
             }
         }
 
+        public bool IsSoundEnabled
+        {
+            get => App.Settings.MarketOrdersTabSettings.IsSoundEnabled;
+            set
+            {
+                App.Settings.MarketOrdersTabSettings.IsSoundEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public string MarketHotkeyUp
         {
             get => App.Settings.MarketOrdersTabSettings.MarketUpHotkey;
@@ -41,6 +51,18 @@ namespace REvernus.ViewModels
             set
             {
                 App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+        public double UndercutBy
+        {
+            get => App.Settings.MarketSettings.PriceDelta;
+            set
+            {
+                App.Settings.MarketSettings.PriceDelta = value;
                 RaisePropertyChanged();
             }
         }

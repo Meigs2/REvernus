@@ -11,5 +11,7 @@ namespace REvernus.Settings
         public string MarketUpHotkey { get; set; } = "Control+X";
 
         public string MarketDownHotkey { get; set; } = "Control+Z";
+
+        public bool IsSoundEnabled { get; set; } = true;
     }
 }

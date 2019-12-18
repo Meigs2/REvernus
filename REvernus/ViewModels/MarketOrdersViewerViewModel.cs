@@ -206,7 +206,7 @@ namespace REvernus.ViewModels
                             Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1,
                             AccessToken = character.AccessTokenDetails
                         };
-                        if (App.Settings.MarketOrdersTabSettings.ShowInEveClient == true)
+                        if (App.Settings.MarketOrdersTabSettings.ShowInEveClient)
                         {
                             await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
                         }
@@ -220,8 +220,11 @@ namespace REvernus.ViewModels
 
                 Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + App.Settings.MarketSettings.GetUndercut) :
                     (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString("N"));
+                if (App.Settings.MarketOrdersTabSettings.IsSoundEnabled)
+                {
+                    SystemSounds.Beep.Play();
+                }
 
-                SystemSounds.Beep.Play();
             }
             catch (Exception e)
             {
@@ -294,6 +297,7 @@ namespace REvernus.ViewModels
         private double _totalInEscrow;
         private double _iskToCover;
 
+
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -301,10 +305,15 @@ namespace REvernus.ViewModels
         {
             AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketOrdersTabSettings.AutoUpdateTimer);
             AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
+            if(App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled == true)
+            {
+                AutoRefreshTimer.Start();
+            }
 
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+
         }
 
         private async Task LoadOrdersFromEsi()
@@ -405,7 +414,7 @@ namespace REvernus.ViewModels
                 }
 
                 await Task.WhenAll(taskList);
-
+                GenerateOverbidNotifications(BuyOrdersCollection, SellOrdersCollection);
                 SellOrdersActiveOrders = SellOrdersCollection.Count;
                 BuyOrdersActiveOrders = BuyOrdersCollection.Count;
 
@@ -430,6 +439,20 @@ namespace REvernus.ViewModels
             {
                 Log.Error(e);
             }
+        }
+
+        private void GenerateOverbidNotifications(ObservableCollection<MarketOrderInfoModel> buys, ObservableCollection<MarketOrderInfoModel> sells)
+        {
+
+
+            var overbidBuys = buys.Where(o => o.IsOutbid == true).ToList();
+            var overbidSells = sells.Where(o => o.IsOutbid == true).ToList();
+
+            if((overbidBuys.Count >= 1 || overbidSells.Count >= 1) & App.Settings.NotificationSettings.ToastNoteIsEnabled == true)
+            {
+                
+            }
+
         }
     }
 }
