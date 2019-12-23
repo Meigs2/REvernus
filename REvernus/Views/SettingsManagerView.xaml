@@ -4,90 +4,95 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:REvernus.ViewModels"
+        xmlns:settings="clr-namespace:REvernus.Settings"
+        MouseDown="Window_MouseDown"
         mc:Ignorable="d"
-        Title="Settings Manager" Height="391" Width="508" ResizeMode="NoResize">
+        Title="Settings" Height="420" Width="650"
+        x:Name="Window">
     <Window.DataContext>
         <local:SettingsManagerViewModel/>
     </Window.DataContext>
-    <Grid>
-
-
-        <TabControl TabStripPlacement="Left" Grid.ColumnSpan="3">
-            <TabItem Header="General Settings">
+    <DockPanel x:Name="DockPanel" Focusable="True" Margin="5">
+        <Grid DockPanel.Dock="Bottom" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Save Settings" Margin="5" Command="{Binding SaveSettingsCommand}" CommandParameter="{Binding ElementName=Window}"/>
+            <Button Content="Cancel" Margin="5" Grid.Column="1"/>
+        </Grid>
+        <TabControl TabStripPlacement="Left">
+            <TabItem Header="Market Orders Tab Settings">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="123*"/>
-                        <RowDefinition Height="128*"/>
-                        <RowDefinition Height="118*"/>
+                        <RowDefinition Height=".5*"/>
+                        <RowDefinition Height=".5*"/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <GroupBox Header="General Settings" Grid.Row="0">
-
-                    </GroupBox>
-                    <GroupBox Header="Market Order Settings" Margin="0,123,0,0" Grid.RowSpan="2">
+                    <GroupBox Header="Settings">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="189*"/>
-                                <ColumnDefinition Width="44*"/>
-                                <ColumnDefinition Width="156*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition Height="25"/>
                                 <RowDefinition/>
-
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Label Content="Enable Auto Update Timer" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0"/>
-                            <Label Content="Auto Update Timer" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0"/>
-                            <Label Content="Undercut By" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0"/>
-                            <Label Content="Open Market in Eve Client" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0"/>
-
-                            <CheckBox IsChecked="{Binding AutoUpdateTimerEnabled, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="2"/>
-                            <TextBox Text="{Binding AutoUpdateTimer, Mode=TwoWay}" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2" Width="85" PreviewTextInput="NumberValidationTextBox" />
-                            <TextBox Text="{Binding UndercutBy, Mode=TwoWay}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="85" Grid.Column="2" Grid.Row="2"/>
-                            <CheckBox IsChecked="{Binding ShowInEveClient, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Grid.Column="2"/>
+                            <Label Content="Auto update interval:" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0"/>
+                            <Label Content="Minutes" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="2"/>
+                            <TextBox Text="{Binding MarketOrdersTabSettings.AutoUpdateMintues, Mode=TwoWay, NotifyOnValidationError=True}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Stretch" />
+                            <Label Content="Open Item in Eve Client" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0"/>
+                            <CheckBox IsChecked="{Binding MarketOrdersTabSettings.ShowInEveClient, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="Hotkeys">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Market Up" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding MarketOrdersTabSettings.MarketUpHotkey, Mode=TwoWay}" Grid.Column="1" Grid.Row="0" PreviewKeyDown="HotkeyTextbox" IsReadOnly="True" HorizontalContentAlignment="Center" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                            <Label Content="Market Down" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding MarketOrdersTabSettings.MarketDownHotkey, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" PreviewKeyDown="HotkeyTextbox" IsReadOnly="True" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
-
             </TabItem>
-            <TabItem Header="Hotkey Settings">
-                <GroupBox Header="Market Hotkeys" Grid.ColumnSpan="3" Grid.RowSpan="1">
-
-                    <Grid >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="189*"/>
-                            <ColumnDefinition Width="44*"/>
-                            <ColumnDefinition Width="156*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition/>
-
-                        </Grid.RowDefinitions>
-
-                        <Label Content="Market Up" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Right"/>
-                        <TextBox Text="{Binding MarketHotkeyUp, Mode=TwoWay}" Grid.Column="2" Grid.Row="0" PreviewKeyDown="HotkeyTextbox" IsReadOnly="True" HorizontalContentAlignment="Center" >
-                            <TextBox.ToolTip>
-                                <ToolTip Content="Please use format MODIFIER+KEY (Control+X, Alt+Y)"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
-
-                        <Label Content="Market Down" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Right"/>
-                        <TextBox Text="{Binding MarketHotkeyDown, Mode=TwoWay}" Grid.Column="2" Grid.Row="1" PreviewKeyDown="HotkeyTextbox" IsReadOnly="True" HorizontalContentAlignment="Center">
-                            <TextBox.ToolTip>
-                                <ToolTip Content="Please use format MODIFIER+KEY (Control+X, Alt+Y)"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
-
-                    </Grid>
-                </GroupBox>
+            <TabItem Header="Market Settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Undercut/Overbid">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Undercut By" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0"/>
+                            <TextBox Text="{Binding MarketSettings.PriceDelta, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" TextAlignment="Center"/>
+                            <Label Content="Add Random" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0"/>
+                            <TextBox Text="{Binding MarketSettings.MaxRandom, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" TextAlignment="Center"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
             </TabItem>
         </TabControl>
-    </Grid>
+    </DockPanel>
 </Window>
 

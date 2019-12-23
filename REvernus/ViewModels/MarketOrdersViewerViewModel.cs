@@ -108,6 +108,7 @@ namespace REvernus.ViewModels
             get => _iskToCover;
             set => SetProperty(ref _iskToCover, value);
         }
+
         #endregion
 
         #region Delegates
@@ -136,7 +137,6 @@ namespace REvernus.ViewModels
             };
 
             _keybindEvents.OnCombination(actions);
-
         }
 
 
@@ -235,7 +235,7 @@ namespace REvernus.ViewModels
 
         public bool AutoRefreshEnabled
         {
-            get => _autoRefreshEnabled;
+            get => App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled;
             set
             {
                 if (value)
@@ -246,34 +246,9 @@ namespace REvernus.ViewModels
                 {
                     AutoRefreshTimer.Stop();
                 }
-
+                App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled = value;
                 SetProperty(ref _autoRefreshEnabled, value);
             }
-        }
-
-        public int AutoUpdateRefresh
-        {
-            get => App.Settings.MarketOrdersTabSettings.AutoUpdateTimer;
-            set
-            {
-                if (App.Settings.MarketOrdersTabSettings.AutoUpdateTimerEnabled == true)
-                {
-                    AutoRefreshTimer.Stop();
-                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
-                    AutoRefreshTimer.Start();
-                }
-                else
-                {
-                    AutoRefreshTimer.Interval = TimeSpan.FromSeconds(value);
-                }
-
-            }
-        }
-
-        public uint RefreshMinutes
-        {
-            get => _refreshMinutes;
-            set => SetProperty(ref _refreshMinutes, value);
         }
 
         #endregion
@@ -299,12 +274,20 @@ namespace REvernus.ViewModels
 
         public MarketOrdersViewerViewModel()
         {
-            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketOrdersTabSettings.AutoUpdateTimer);
+            AutoRefreshTimer.Interval = TimeSpan.FromSeconds(App.Settings.MarketOrdersTabSettings.AutoUpdateMintues);
             AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
 
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+            SettingsManagerViewModel.SettingsSaved += (sender, args) => SubscribeHotKeys();
+            SettingsManagerViewModel.SettingsSaved += (sender, args) => InitializeRefreshTimer();
+        }
+
+        private void InitializeRefreshTimer()
+        {
+            AutoRefreshTimer.Interval = TimeSpan.FromMinutes(App.Settings.MarketOrdersTabSettings.AutoUpdateMintues);
+            AutoRefreshTimer.IsEnabled = AutoRefreshEnabled;
         }
 
         private async Task LoadOrdersFromEsi()

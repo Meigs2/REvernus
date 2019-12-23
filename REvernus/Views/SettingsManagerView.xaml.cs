@@ -2,6 +2,7 @@
 using Jot.Storage;
 using REvernus.Utilities;
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,8 +39,46 @@ namespace REvernus.Views
 
         private void HotkeyTextbox(object sender, KeyEventArgs args)
         {
-            ((TextBox)sender).Text = KeysHelper.ToWinforms(Keyboard.Modifiers).ToString() + "+" + args.Key;
+            // The text box grabs all input.
+            args.Handled = true;
 
+            // Fetch the actual shortcut key.
+            var key = (args.Key == Key.System ? args.SystemKey : args.Key);
+
+            // Ignore modifier keys.
+            if (key == Key.LeftShift || key == Key.RightShift
+                                     || key == Key.LeftCtrl || key == Key.RightCtrl
+                                     || key == Key.LeftAlt || key == Key.RightAlt
+                                     || key == Key.LWin || key == Key.RWin)
+            {
+                return;
+            }
+
+            var mods = KeysHelper.ToWinforms(Keyboard.Modifiers);
+
+            // Build the shortcut key name.
+            StringBuilder shortcutText = new StringBuilder();
+            if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                shortcutText.Append("Control+");
+            }
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0)
+            {
+                shortcutText.Append("Shift+");
+            }
+            if ((Keyboard.Modifiers & ModifierKeys.Alt) != 0)
+            {
+                shortcutText.Append("Alt+");
+            }
+            shortcutText.Append(key.ToString());
+
+            // Update the text box.
+            ((TextBox)sender).Text = shortcutText.ToString();
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DockPanel.Focus();
         }
     }
 }

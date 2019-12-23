@@ -11,11 +11,15 @@
     </UserControl.DataContext>
     <Grid>
         <DockPanel>
-            <Grid x:Name="TopGrid"  DockPanel.Dock="Top" MaxHeight="100" >
+            <Grid x:Name="TopGrid"  DockPanel.Dock="Top" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -24,7 +28,16 @@
                     <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From ESI" Margin="5" />
                     <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From Exported Orders" Margin="5" Grid.Column="1"/>
                 </Grid>
-
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Auto Update Timer Enabled:" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" ToolTip="Automatically updates market prices and orders (if updated). Set interval in settings."/>
+                        <CheckBox IsChecked="{Binding AutoRefreshEnabled, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>
