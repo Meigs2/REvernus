@@ -18,14 +18,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Save Settings" Margin="5" Command="{Binding SaveSettingsCommand}" CommandParameter="{Binding ElementName=Window}"/>
-            <Button Content="Cancel" Margin="5" Grid.Column="1"/>
+            <Button Content="Save and close Settings" Margin="5" Command="{Binding SaveSettingsCommand}" CommandParameter="{Binding ElementName=Window}"/>
+            <Button Content="Close Without Saving" Margin="5" Grid.Column="1" Command="{Binding CloseWithoutSavingCommand}" CommandParameter="{Binding ElementName=Window}"/>
         </Grid>
         <TabControl TabStripPlacement="Left">
             <TabItem Header="Market Orders Tab Settings">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height=".5*"/>
+                        <RowDefinition Height=".6*"/>
                         <RowDefinition Height=".5*"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
@@ -39,12 +39,15 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Label Content="Auto update interval:" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0"/>
                             <Label Content="Minutes" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="2"/>
                             <TextBox Text="{Binding MarketOrdersTabSettings.AutoUpdateMintues, Mode=TwoWay, NotifyOnValidationError=True}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Stretch" />
                             <Label Content="Open Item in Eve Client" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0"/>
                             <CheckBox IsChecked="{Binding MarketOrdersTabSettings.ShowInEveClient, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+                            <Label Content="Play sound on switching Order" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0"/>
+                            <CheckBox IsChecked="{Binding MarketOrdersTabSettings.PlayOrderChangedSound, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="Hotkeys">

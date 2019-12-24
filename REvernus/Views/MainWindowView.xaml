@@ -49,7 +49,7 @@
             <Grid>
                 <TabControl x:Name="MainTabControl">
                     <TabItem Header="Market Orders">
-                        <views:MarketOrdersViewerView/>
+                                <views:MarketOrdersViewerView/>
                     </TabItem>
                 </TabControl>
             </Grid>

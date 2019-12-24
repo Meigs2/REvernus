@@ -11,6 +11,7 @@ namespace REvernus.Settings
         private bool _showInEveClient = true;
         private string _marketUpHotkey = "Control+X";
         private string _marketDownHotkey = "Control+Z";
+        private bool _playOrderChangedSound;
 
         public uint AutoUpdateMintues
         {
@@ -35,6 +36,12 @@ namespace REvernus.Settings
         {
             get => _showInEveClient;
             set => SetProperty(ref _showInEveClient, value);
+        }
+
+        public bool PlayOrderChangedSound
+        {
+            get => _playOrderChangedSound;
+            set => SetProperty(ref _playOrderChangedSound, value);
         }
 
         public string MarketUpHotkey
