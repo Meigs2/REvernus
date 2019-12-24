@@ -14,9 +14,13 @@
 
   <ItemGroup>
     <Compile Remove="Models\SdeModels\**" />
+    <Compile Remove="Views\SettingsTabViews\**" />
     <EmbeddedResource Remove="Models\SdeModels\**" />
+    <EmbeddedResource Remove="Views\SettingsTabViews\**" />
     <None Remove="Models\SdeModels\**" />
+    <None Remove="Views\SettingsTabViews\**" />
     <Page Remove="Models\SdeModels\**" />
+    <Page Remove="Views\SettingsTabViews\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -89,10 +93,6 @@
     <Page Update="Views\SimpleViews\SdeDownloadProgressView.xaml">
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\SettingsTabViews\" />
   </ItemGroup>
 
 </Project>
