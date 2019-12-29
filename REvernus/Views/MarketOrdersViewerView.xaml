@@ -26,7 +26,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From ESI" Margin="5" />
-                    <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From Exported Orders" Margin="5" Grid.Column="1"/>
+                    <Button Command="{Binding GetOrdersFilesCommand}" Content="Fetch From Exported Orders" Margin="5" Grid.Column="1"/>
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.ColumnDefinitions>

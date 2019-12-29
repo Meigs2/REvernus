@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ using ICSharpCode.SharpZipLib.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Utilities;
+using REvernus.Utilities.Extensions;
 using Clipboard = System.Windows.Clipboard;
 using Market = REvernus.Utilities.Esi.Market;
 using Status = REvernus.Utilities.Status;
@@ -113,6 +115,8 @@ namespace REvernus.ViewModels
 
         #region Delegates
         public DelegateCommand GetOrdersEsiCommand { get; set; }
+
+        public DelegateCommand GetOrdersFilesCommand { get; set; }
         #endregion
 
         #region Hotkeys
@@ -258,7 +262,6 @@ namespace REvernus.ViewModels
         private object _sellsSelectedItem;
         private int _buysSelectedIndex;
         private object _buysSelectedItem;
-        private uint _refreshMinutes = 5;
         private bool _autoRefreshEnabled;
         private int _sellOrdersActiveOrders;
         private int _buyOrdersActiveOrders;
@@ -268,6 +271,8 @@ namespace REvernus.ViewModels
         private double _buyTotalValue;
         private double _totalInEscrow;
         private double _iskToCover;
+        private readonly object _buysLock = new object();
+        private readonly object _sellsLock = new object();
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -278,10 +283,15 @@ namespace REvernus.ViewModels
             AutoRefreshTimer.Tick += async (sender, e) => await LoadOrdersFromEsi();
 
             GetOrdersEsiCommand = new DelegateCommand(async () => await LoadOrdersFromEsi());
+            GetOrdersFilesCommand = new DelegateCommand(async () => await LoadOrdersFromFiles());
+
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
             SettingsManagerViewModel.SettingsSaved += (sender, args) => SubscribeHotKeys();
             SettingsManagerViewModel.SettingsSaved += (sender, args) => InitializeRefreshTimer();
+
+            BindingOperations.EnableCollectionSynchronization(BuyOrdersCollection, _buysLock);
+            BindingOperations.EnableCollectionSynchronization(SellOrdersCollection, _sellsLock);
         }
 
         private void InitializeRefreshTimer()
@@ -289,63 +299,81 @@ namespace REvernus.ViewModels
             AutoRefreshTimer.Interval = TimeSpan.FromMinutes(App.Settings.MarketOrdersTabSettings.AutoUpdateMintues);
             AutoRefreshTimer.IsEnabled = AutoRefreshEnabled;
         }
+        
+        private async Task LoadOrdersFromFiles()
+        {
+            await Task.Run(async () =>
+            {
+                var directory = new DirectoryInfo(Paths.EveMarketLogsFolderPath);
+                var mostRecentOrderFile = directory.GetFiles()
+                    .OrderByDescending(f => f.LastWriteTime).FirstOrDefault(f => f.Name.Contains("My Orders-"));
+
+                if (mostRecentOrderFile != null)
+                {
+                    var values = File.ReadAllLines(mostRecentOrderFile.FullName).Skip(1).Select(v => new CharacterMarketOrder().FromCsv(v)).ToList();
+                    var name = File.ReadAllLines(mostRecentOrderFile.FullName).Skip(1).FirstOrDefault()?.Split(',')[3];
+                    await UpdateOrders(values, name);
+                }
+            });
+        }
 
         private async Task LoadOrdersFromEsi()
         {
-            await ImportOrders();
+            var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
+            var characterName = CharacterManager.SelectedCharacter.CharacterName;
+            await UpdateOrders(characterOrders, characterName);
         }
 
-        private async Task ImportOrders()
+        private async Task UpdateOrders(List<CharacterMarketOrder> characterOrders, string characterName)
         {
             try
             {
-                var characterOrders = await CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
-                var currentCharacterName = CharacterManager.SelectedCharacter.CharacterName;
-
                 foreach (var order in BuyOrdersCollection.ToArray())
                 {
-                    if (order.Owner != currentCharacterName)
+                    if (order.Owner != characterName)
                     {
-                        BuyOrdersCollection.Remove(order);
+                        lock (_buysLock)
+                        {
+                            BuyOrdersCollection.Remove(order);
+                        }
                     }
                 }
-                foreach (var order in SellOrdersCollection.ToArray())
-                {
-                    if (order.Owner != currentCharacterName)
-                    {
-                        SellOrdersCollection.Remove(order);
-                    }
-                }
-
 
                 // Clear orders if character is different
+                foreach (var order in SellOrdersCollection.ToArray())
+                {
+                    if (order.Owner != characterName)
+                    {
+                        lock (_sellsLock)
+                        {
+                            SellOrdersCollection.Remove(order);
+                        }
+                    }
+                }
 
                 var locations = new HashSet<long>();
-                var items = new HashSet<int>();
+                var typeIds = new HashSet<int>();
                 var taskList = new List<Task>();
 
                 foreach (var characterMarketOrder in characterOrders)
                 {
                     locations.Add(characterMarketOrder.LocationId);
-                    items.Add(characterMarketOrder.TypeId);
+                    typeIds.Add(characterMarketOrder.TypeId);
                 }
 
-                // Dictionary contains the key of a location, and a dictionary of item ids to a list of orders
-
-
-                var a = new List<(long structureId, List<int> types, int range)>();
+                var structuresToQuery = new List<(long structureId, List<int> types, int range)>();
                 foreach (var location in locations)
                 {
-                    a.Add((location, items.ToList(), 0));
+                    structuresToQuery.Add((location, typeIds.ToList(), 0));
                 }
 
-                OrdersList = await Market.GetOrdersFromStructures(a);
+                OrdersList = new Dictionary<long, Dictionary<int, List<MarketOrder>>>();
 
-                // Enable asynchronous access to a bindable collection for faster population of the datagrids.
-                var buysLock = new object();
-                var sellsLock = new object();
-                BindingOperations.EnableCollectionSynchronization(BuyOrdersCollection, buysLock);
-                BindingOperations.EnableCollectionSynchronization(SellOrdersCollection, sellsLock);
+                foreach (var location in locations)
+                {
+                    var orders = await Market.GetOrdersInStructure(location, typeIds.ToList());
+                    OrdersList.TryAdd(location, orders);
+                }
 
                 foreach (var characterOrder in characterOrders)
                 {
@@ -368,17 +396,18 @@ namespace REvernus.ViewModels
                                 return;
                             }
 
-                            var newOrder = new MarketOrderInfoModel(characterOrder, CharacterManager.SelectedCharacter, location, marketOrders);
+                            var newOrder = new MarketOrderInfoModel(characterOrder, CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == characterName), 
+                                location, marketOrders);
                             if (characterOrder.IsBuyOrder == true)
                             {
-                                lock (buysLock)
+                                lock (_buysLock)
                                 {
                                     BuyOrdersCollection.Add(newOrder);
                                 }
                             }
                             else
                             {
-                                lock (sellsLock)
+                                lock (_sellsLock)
                                 {
                                     SellOrdersCollection.Add(newOrder);
                                 }

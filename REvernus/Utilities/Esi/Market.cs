@@ -18,7 +18,7 @@ namespace REvernus.Utilities.Esi
 {
     public static class Market
     {
-        public static async Task<Dictionary<long, List<MarketOrder>>> GetOrdersInStructure(long structureId, List<long> typeIds = null)
+        public static async Task<Dictionary<int, List<MarketOrder>>> GetOrdersInStructure(long structureId, List<int> typeIds = null)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace REvernus.Utilities.Esi
 
                 var taskList = new List<Task>();
 
-                var ordersList = new Dictionary<long, List<MarketOrder>>();
+                var ordersList = new Dictionary<int, List<MarketOrder>>();
 
                 if (typeIds != null)
                 {
@@ -116,9 +116,9 @@ namespace REvernus.Utilities.Esi
 
             // Generate dict for final output.
             var structureToRelevantOrders = new ConcurrentDictionary<long, Dictionary<int, List<MarketOrder>>>();
-            foreach (var structure in structuresToQuery)
+            foreach (var (structureId, _, _) in structuresToQuery)
             {
-                structureToRelevantOrders.TryAdd(structure.structureId, new Dictionary<int, List<MarketOrder>>());
+                structureToRelevantOrders.TryAdd(structureId, new Dictionary<int, List<MarketOrder>>());
             }
 
             // build dictionaries
@@ -180,10 +180,10 @@ namespace REvernus.Utilities.Esi
                 }
             }
 
-            foreach (var structureTuple in structuresToQuery)
+            foreach (var (structureId, _, range) in structuresToQuery)
             {
-                var a = await EveUniverse.GetStructuresInRange(structureTuple.structureId, structureTuple.range);
-                structuresToStructuresInRange.TryAdd(structureTuple.structureId, a);
+                var a = await EveUniverse.GetStructuresInRange(structureId, range);
+                structuresToStructuresInRange.TryAdd(structureId, a);
             }
 
             var uniqueDict = new Dictionary<int, List<long>>(regionToStructuresToSearch);
@@ -261,9 +261,12 @@ namespace REvernus.Utilities.Esi
                         {
                             foreach (var type in types)
                             {
-                                var ordersInRangedStructures = orders[type].Where(o =>
-                                    structuresToStructuresInRange[relevantStructure].Any(s => o.LocationId == s)).ToList();
-                                structureToRelevantOrders[relevantStructure].Add(type, ordersInRangedStructures);
+                                if (structuresToStructuresInRange.ContainsKey(relevantStructure))
+                                {
+                                    var ordersInRangedStructures = orders[type].Where(o =>
+                                        structuresToStructuresInRange[relevantStructure].Any(s => o.LocationId == s)).ToList();
+                                    structureToRelevantOrders[relevantStructure].Add(type, ordersInRangedStructures);
+                                }
                             }
                         }
                     }
