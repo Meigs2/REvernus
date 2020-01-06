@@ -160,7 +160,7 @@ namespace REvernus.Core
             }
         }
 
-        public static async Task<string> GetStructureName(long structureId)
+        public static string GetStructureName(long structureId)
         {
             // check for NPC station
             if (StructureManager.TryGetNpcStation(structureId, out var station))
@@ -171,14 +171,10 @@ namespace REvernus.Core
             {
                 return structure.Name;
             }
-
-            var result = await EsiData.EsiClient.Universe.GetStructureInfoV2Async(new AuthDTO()
+            else
             {
-                AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
-                CharacterId = CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
-                Scopes = EVEStandard.Enumerations.Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
-            }, structureId);
-            return result.Model.Name;
+                return "Unknown Structure";
+            }
         }
     }
 }

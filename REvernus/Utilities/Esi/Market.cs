@@ -22,6 +22,7 @@ namespace REvernus.Utilities.Esi
         {
             try
             {
+                using var a = Status.GetNewStatusHandle();
                 var publicAuth = new AuthDTO()
                 {
                     AccessToken = CharacterManager.SelectedCharacter.AccessTokenDetails,
@@ -294,6 +295,7 @@ namespace REvernus.Utilities.Esi
 
         public static async Task<List<MarketOrder>> GetOrdersInRegion(int region, long? typeId = null)
         {
+            using var a = Status.GetNewStatusHandle();
             var ordersHashSet = new HashSet<MarketOrder>();
             var taskList = new List<Task>();
 
@@ -309,6 +311,7 @@ namespace REvernus.Utilities.Esi
                     var i1 = i;
                     taskList.Add(Task.Run(async () =>
                     {
+                        using var a1 = Status.GetNewStatusHandle();
                         var result = await EsiData.EsiClient.Market.ListOrdersInRegionV1Async(region, typeId, i1);
                         ordersHashSet.UnionWith(result.Model);
                     }));
@@ -331,6 +334,7 @@ namespace REvernus.Utilities.Esi
         {
             try
             {
+                using var a = Status.GetNewStatusHandle();
                 var ordersHashSet = new ConcurrentBag<MarketOrder>();
                 var taskList = new List<Task>();
 
@@ -366,6 +370,7 @@ namespace REvernus.Utilities.Esi
                             var i1 = i;
                             taskList.Add(Task.Run(async () =>
                             {
+                                using var a1 = Status.GetNewStatusHandle();
                                 try
                                 {
                                     var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId, i1);
@@ -393,8 +398,7 @@ namespace REvernus.Utilities.Esi
 
                 var hashTypeIds = new HashSet<long>(typeIds);
                 var returnOrders = new List<MarketOrder>();
-            
-
+                
                 try
                 {
                     var orders = ordersHashSet.ToList();

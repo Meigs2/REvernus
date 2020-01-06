@@ -36,6 +36,7 @@ namespace REvernus.ViewModels
     {
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
         public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
+        public Dictionary<string, List<CharacterMarketOrder>> CharacterToOrders { get; set; } = new Dictionary<string, List<CharacterMarketOrder>>();
         public Dictionary<long, Dictionary<int, List<MarketOrder>>> OrdersList { get; set; }
 
         #region Bindings
@@ -302,19 +303,29 @@ namespace REvernus.ViewModels
         
         private async Task LoadOrdersFromFiles()
         {
-            await Task.Run(async () =>
-            {
-                var directory = new DirectoryInfo(Paths.EveMarketLogsFolderPath);
-                var mostRecentOrderFile = directory.GetFiles()
-                    .OrderByDescending(f => f.LastWriteTime).FirstOrDefault(f => f.Name.Contains("My Orders-"));
+            var directory = new DirectoryInfo(Paths.EveMarketLogsFolderPath);
+            var mostRecentOrderFile = directory.GetFiles()
+                .OrderByDescending(f => f.LastWriteTime).FirstOrDefault(f => f.Name.Contains("My Orders-"));
 
-                if (mostRecentOrderFile != null)
+            if (mostRecentOrderFile != null)
+            {
+                var orders = File.ReadAllLines(mostRecentOrderFile.FullName).Skip(1).Select(v => new CharacterMarketOrder().FromCsv(v)).ToList();
+                var name = "";
+                try
                 {
-                    var values = File.ReadAllLines(mostRecentOrderFile.FullName).Skip(1).Select(v => new CharacterMarketOrder().FromCsv(v)).ToList();
-                    var name = File.ReadAllLines(mostRecentOrderFile.FullName).Skip(1).FirstOrDefault()?.Split(',')[3];
-                    await UpdateOrders(values, name);
+                    using var reader = new StreamReader(mostRecentOrderFile.FullName);
+                    reader.ReadLine();
+                    var line = reader.ReadLine();
+                    if (line != null) name = line.Split(',')[3];
+                    reader.Close();
                 }
-            });
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                await UpdateOrders(orders, name);
+            }
         }
 
         private async Task LoadOrdersFromEsi()
@@ -326,121 +337,187 @@ namespace REvernus.ViewModels
 
         private async Task UpdateOrders(List<CharacterMarketOrder> characterOrders, string characterName)
         {
-            try
+            if (!CharacterToOrders.ContainsKey(characterName))
             {
-                foreach (var order in BuyOrdersCollection.ToArray())
+                CharacterToOrders.TryAdd(characterName, new List<CharacterMarketOrder>());
+            }
+
+            // All character orders are unique unless updated. Every time we provide
+            // UpdateOrders with a non-empty list, we are telling REvernus to update,
+            // add, or remove existing orders. We then work with this list of orders
+            // that we keep internally. In future releases we will keep track of these
+            // in the user database for loading of orders later.
+
+            var toBeRemoved = CharacterToOrders[characterName].Where(o => !characterOrders.Select(n => n.OrderId).Contains(o.OrderId)).ToList();
+            var toBeAdded = characterOrders.Where(n => !CharacterToOrders[characterName].Select(o => o.OrderId).Contains(n.OrderId)).ToList();
+            var toBeUpdated = CharacterToOrders[characterName].Where(o => characterOrders.Select(n => n.OrderId).Contains(o.OrderId)).ToList();
+
+            foreach (var characterMarketOrder in toBeRemoved)
+            {
+                CharacterToOrders[characterName].Remove(characterMarketOrder);
+            }
+
+            foreach (var characterMarketOrder in toBeAdded)
+            {
+                CharacterToOrders[characterName].Add(characterMarketOrder);
+            }
+
+            foreach (var oldOrder in toBeUpdated)
+            {
+                var newOrder = characterOrders.First(o => o.OrderId == oldOrder.OrderId);
+                if (newOrder.Issued >= oldOrder.Issued) continue;
+
+                var index = CharacterToOrders[characterName].IndexOf(oldOrder);
+                CharacterToOrders[characterName][index] = characterOrders.First(o => o.OrderId == oldOrder.OrderId);
+            }
+
+            var locations = new HashSet<long>();
+            var typeIds = new HashSet<int>();
+
+            foreach (var characterMarketOrder in characterOrders)
+            {
+                locations.Add(characterMarketOrder.LocationId);
+                typeIds.Add(characterMarketOrder.TypeId);
+            }
+
+            OrdersList = new Dictionary<long, Dictionary<int, List<MarketOrder>>>();
+
+            foreach (var location in locations)
+            {
+                var orders = await Market.GetOrdersInStructure(location, typeIds.ToList());
+                OrdersList.TryAdd(location, orders);
+            }
+
+            await UpdateData(characterName);
+        }
+
+        private async Task UpdateData(string characterName = "")
+        {
+            var taskList = new List<Task>();
+
+            if (characterName == "")
+            {
+                foreach (var charName in CharacterToOrders.Keys)
                 {
-                    if (order.Owner != characterName)
-                    {
-                        lock (_buysLock)
-                        {
-                            BuyOrdersCollection.Remove(order);
-                        }
-                    }
-                }
-
-                // Clear orders if character is different
-                foreach (var order in SellOrdersCollection.ToArray())
-                {
-                    if (order.Owner != characterName)
-                    {
-                        lock (_sellsLock)
-                        {
-                            SellOrdersCollection.Remove(order);
-                        }
-                    }
-                }
-
-                var locations = new HashSet<long>();
-                var typeIds = new HashSet<int>();
-                var taskList = new List<Task>();
-
-                foreach (var characterMarketOrder in characterOrders)
-                {
-                    locations.Add(characterMarketOrder.LocationId);
-                    typeIds.Add(characterMarketOrder.TypeId);
-                }
-
-                var structuresToQuery = new List<(long structureId, List<int> types, int range)>();
-                foreach (var location in locations)
-                {
-                    structuresToQuery.Add((location, typeIds.ToList(), 0));
-                }
-
-                OrdersList = new Dictionary<long, Dictionary<int, List<MarketOrder>>>();
-
-                foreach (var location in locations)
-                {
-                    var orders = await Market.GetOrdersInStructure(location, typeIds.ToList());
-                    OrdersList.TryAdd(location, orders);
-                }
-
-                foreach (var characterOrder in characterOrders)
-                {
-                    taskList.Add(Task.Run(async () =>
+                    foreach (var characterOrder in CharacterToOrders[charName])
                     {
                         using var a = Status.GetNewStatusHandle();
                         // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
-                        if (OrdersList.TryGetValue(characterOrder.LocationId, out var idsToOrders) && idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders))
+                        if (!OrdersList.TryGetValue(characterOrder.LocationId, out var idsToOrders)) continue;
+                        if (!idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders)) continue;
+
+                        var location = StructureManager.GetStructureName(characterOrder.LocationId);
+                        var existingOrder =
+                            BuyOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId) ??
+                            SellOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
+
+                        if (existingOrder != null)
                         {
-                            var location = await StructureManager.GetStructureName(characterOrder.LocationId);
+                            existingOrder.Order = characterOrder;
+                            existingOrder.MarketOrders = marketOrders;
+                            existingOrder.LocationName = location;
+                            return;
+                        }
 
-                            var existingOrder = BuyOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId) ??
-                                                SellOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
-
-                            if (existingOrder != null)
+                        var newOrder = new MarketOrderInfoModel(characterOrder,
+                            CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == characterName),
+                            location, marketOrders);
+                        if (characterOrder.IsBuyOrder == true)
+                        {
+                            lock (_buysLock)
                             {
-                                existingOrder.Order = characterOrder;
-                                existingOrder.MarketOrders = marketOrders;
-                                existingOrder.LocationName = location;
-                                return;
-                            }
-
-                            var newOrder = new MarketOrderInfoModel(characterOrder, CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == characterName), 
-                                location, marketOrders);
-                            if (characterOrder.IsBuyOrder == true)
-                            {
-                                lock (_buysLock)
-                                {
-                                    BuyOrdersCollection.Add(newOrder);
-                                }
-                            }
-                            else
-                            {
-                                lock (_sellsLock)
-                                {
-                                    SellOrdersCollection.Add(newOrder);
-                                }
+                                BuyOrdersCollection.Add(newOrder);
                             }
                         }
-                    }));
-                }
-
-                await Task.WhenAll(taskList);
-
-                SellOrdersActiveOrders = SellOrdersCollection.Count;
-                BuyOrdersActiveOrders = BuyOrdersCollection.Count;
-
-                SellTotalValue = SellOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
-                BuyTotalValue = BuyOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
-
-                SellVolumeRemaining = SellOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + SellOrdersCollection.Sum(o => o.VolumeTotal);
-                BuyVolumeRemaining = BuyOrdersCollection.Sum(o => o.VolumeRemaining) + "/" + BuyOrdersCollection.Sum(o => o.VolumeTotal);
-
-                TotalInEscrow = 0.0;
-                IskToCover = 0.0;
-                foreach (var marketOrderInfoModel in BuyOrdersCollection)
-                {
-                    if (marketOrderInfoModel.Escrow == null) continue;
-
-                    var escrow = (double) marketOrderInfoModel.Escrow;
-                    TotalInEscrow += escrow;
-                    IskToCover += marketOrderInfoModel.OrderValue - escrow;
+                        else
+                        {
+                            lock (_sellsLock)
+                            {
+                                SellOrdersCollection.Add(newOrder);
+                            }
+                        }
+                    }
                 }
             }
-            catch (Exception e)
+            else
             {
-                Log.Error(e);
+                var sellRemove = SellOrdersCollection.Where(o => o.Owner != characterName).ToList();
+                foreach (var item in sellRemove)
+                {
+                    SellOrdersCollection.Remove(item);
+                }
+
+                var buyRemove = BuyOrdersCollection.Where(o => o.Owner != characterName).ToList();
+                foreach (var item in buyRemove)
+                {
+                    BuyOrdersCollection.Remove(item);
+                }
+
+                foreach (var characterOrder in CharacterToOrders[characterName])
+                {
+                    using var a = Status.GetNewStatusHandle();
+                    // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
+                    if (!OrdersList.TryGetValue(characterOrder.LocationId, out var idsToOrders)) continue;
+                    if (!idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders)) continue;
+
+                    var location = StructureManager.GetStructureName(characterOrder.LocationId);
+                    var existingOrder =
+                        BuyOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId) ??
+                        SellOrdersCollection.FirstOrDefault(o => o.Order.OrderId == characterOrder.OrderId);
+
+                    if (existingOrder != null)
+                    {
+                        existingOrder.Order = characterOrder;
+                        existingOrder.MarketOrders = marketOrders;
+                        existingOrder.LocationName = location;
+                        return;
+                    }
+
+                    var newOrder = new MarketOrderInfoModel(characterOrder,
+                        CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == characterName),
+                        location, marketOrders);
+                    if (characterOrder.IsBuyOrder == true)
+                    {
+                        lock (_buysLock)
+                        {
+                            BuyOrdersCollection.Add(newOrder);
+                        }
+                    }
+                    else
+                    {
+                        lock (_sellsLock)
+                        {
+                            SellOrdersCollection.Add(newOrder);
+                        }
+                    }
+                }
+            }
+
+
+            await Task.WhenAll(taskList);
+
+            // Fill out info in tab.
+
+            SellOrdersActiveOrders = SellOrdersCollection.Count;
+            BuyOrdersActiveOrders = BuyOrdersCollection.Count;
+
+            SellTotalValue = SellOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
+            BuyTotalValue = BuyOrdersCollection.Sum(o => (o.Price * o.VolumeRemaining));
+
+            SellVolumeRemaining = SellOrdersCollection.Sum(o => o.VolumeRemaining) + "/" +
+                                  SellOrdersCollection.Sum(o => o.VolumeTotal);
+            BuyVolumeRemaining = BuyOrdersCollection.Sum(o => o.VolumeRemaining) + "/" +
+                                 BuyOrdersCollection.Sum(o => o.VolumeTotal);
+
+            TotalInEscrow = 0.0;
+            IskToCover = 0.0;
+            foreach (var marketOrderInfoModel in BuyOrdersCollection)
+            {
+                if (marketOrderInfoModel.Escrow == null) continue;
+
+                var escrow = (double) marketOrderInfoModel.Escrow;
+                TotalInEscrow += escrow;
+                IskToCover += marketOrderInfoModel.OrderValue - escrow;
             }
         }
     }
