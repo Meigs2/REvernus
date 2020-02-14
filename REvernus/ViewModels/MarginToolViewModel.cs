@@ -462,7 +462,7 @@ namespace REvernus.ViewModels
             try
             {
                 if (Application.Current.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(BuyCopyPrice));   
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(_buyPrice.ToString()));   
             }
             catch (Exception e)
             {
@@ -476,7 +476,7 @@ namespace REvernus.ViewModels
             try
             {
                 if (Application.Current.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(SellCopyPrice));
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(_sellPrice.ToString()));
             }
             catch (Exception e)
             {
@@ -491,7 +491,7 @@ namespace REvernus.ViewModels
             try
             {
                 if (Application.Current.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetDataObject(ItemName));
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(ItemName));
             }
             catch (Exception e)
             {

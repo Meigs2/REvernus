@@ -230,7 +230,7 @@ namespace REvernus.ViewModels
                 }
 
                 Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + App.Settings.MarketSettings.GetUndercut) :
-                    (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString("N"));
+                    (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString());
 
                 if (App.Settings.MarketOrdersTabSettings.PlayOrderChangedSound) SystemSounds.Beep.Play();
             }
