@@ -462,7 +462,7 @@ namespace REvernus.ViewModels
             try
             {
                 if (Application.Current.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(_buyPrice.ToString()));   
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(_buyPrice.ToString("F")));   
             }
             catch (Exception e)
             {
@@ -476,7 +476,7 @@ namespace REvernus.ViewModels
             try
             {
                 if (Application.Current.Dispatcher != null)
-                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(_sellPrice.ToString()));
+                    Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(_sellPrice.ToString("F")));
             }
             catch (Exception e)
             {
