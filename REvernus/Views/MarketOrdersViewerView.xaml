@@ -9,6 +9,9 @@
     <UserControl.DataContext>
         <local:MarketOrdersViewerViewModel/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v"/>
+    </UserControl.Resources>
     <Grid>
         <DockPanel>
             <Grid x:Name="TopGrid"  DockPanel.Dock="Top" >
@@ -37,6 +40,10 @@
                         <Label Content="Auto Update Timer Enabled:" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" ToolTip="Automatically updates market prices and orders (if updated). Set interval in settings."/>
                         <CheckBox IsChecked="{Binding AutoRefreshEnabled, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
                     </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <CheckBox x:Name="SellCheckBox" Margin="3" IsChecked="True">Sell Orders</CheckBox>
+                        <CheckBox x:Name="BuyCheckBox" Margin="3" IsChecked="True">Buy Orders</CheckBox>
+                    </StackPanel>
                 </Grid>
             </Grid>
             <Grid>
@@ -44,7 +51,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <DockPanel Grid.Row="0" Margin="5">
+                <DockPanel Grid.Row="0" Margin="5" Visibility="{Binding IsChecked,ElementName=SellCheckBox,Converter={StaticResource b2v}}">
                     <Grid DockPanel.Dock="Bottom" Height="25">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -76,7 +83,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
-                <DockPanel Grid.Row="1" Margin="5">
+                <DockPanel Grid.Row="1" Margin="5" Visibility="{Binding IsChecked,ElementName=BuyCheckBox,Converter={StaticResource b2v}}">
                     <Grid DockPanel.Dock="Bottom" Height="25">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
