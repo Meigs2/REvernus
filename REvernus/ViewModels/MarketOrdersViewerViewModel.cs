@@ -112,6 +112,12 @@ namespace REvernus.ViewModels
             set => SetProperty(ref _iskToCover, value);
         }
 
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
+
         #endregion
 
         #region Delegates
@@ -224,7 +230,7 @@ namespace REvernus.ViewModels
                 }
 
                 Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + App.Settings.MarketSettings.GetUndercut) :
-                    (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString("N"));
+                    (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString("F"));
 
                 if (App.Settings.MarketOrdersTabSettings.PlayOrderChangedSound) SystemSounds.Beep.Play();
             }
@@ -274,6 +280,7 @@ namespace REvernus.ViewModels
         private double _iskToCover;
         private readonly object _buysLock = new object();
         private readonly object _sellsLock = new object();
+        private bool _isEnabled = true;
 
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -337,6 +344,7 @@ namespace REvernus.ViewModels
 
         private async Task UpdateOrders(List<CharacterMarketOrder> characterOrders, string characterName)
         {
+            IsEnabled = false;
             if (!CharacterToOrders.ContainsKey(characterName))
             {
                 CharacterToOrders.TryAdd(characterName, new List<CharacterMarketOrder>());
@@ -389,6 +397,8 @@ namespace REvernus.ViewModels
             }
 
             await UpdateData(characterName);
+
+            IsEnabled = true;
         }
 
         private async Task UpdateData(string characterName = "")
