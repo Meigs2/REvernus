@@ -46,80 +46,160 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <DockPanel Grid.Row="0" Margin="5" Visibility="{Binding IsChecked,ElementName=SellCheckBox,Converter={StaticResource b2v}}">
-                    <Grid DockPanel.Dock="Bottom" Height="25">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding SellOrdersActiveOrders}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding SellVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding SellTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
-                        </StackPanel>
-                    </Grid>
-                    <DataGrid x:Name="SellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+            <TabControl>
+                <TabItem Header="Buy and Sell Orders">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="149*"/>
+                            <ColumnDefinition Width="645*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" Margin="5,5,5,5" Grid.ColumnSpan="2">
+                            <Grid DockPanel.Dock="Bottom" Height="25">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding SellOrdersActiveOrders}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding SellVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding SellTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                                </StackPanel>
+                            </Grid>
+                            <DataGrid x:Name="SellDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" PreviewMouseDown="DataGridMouseDown"
                           SelectedIndex="{Binding SellsSelectedIndex}" SelectedItem="{Binding SellsSelectedItem}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
-                            <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
-                            <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
-                            <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
-                            <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
-                            <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
-                            <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
-                            <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
-                            <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
-                            <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
-                            <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
-                            <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
-                            <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
-                            <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DockPanel>
-                <DockPanel Grid.Row="1" Margin="5" Visibility="{Binding IsChecked,ElementName=BuyCheckBox,Converter={StaticResource b2v}}">
-                    <Grid DockPanel.Dock="Bottom" Height="25">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding BuyOrdersActiveOrders}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding BuyVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding BuyTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
-                            <Label Content="Value In Escrow:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding TotalInEscrow}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
-                            <Label Content="Remaining Isk to cover:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Content="{Binding IskToCover}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
-                        </StackPanel>
-                    </Grid>
-                    <DataGrid x:Name="BuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
+                                    <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
+                                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                    <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                    <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                    <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                    <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
+                                    <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
+                                    <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                    <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
+                                    <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                    <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                    <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                    <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                        <DockPanel Grid.Row="1" Margin="5,5,5,5" Grid.ColumnSpan="2">
+                            <Grid DockPanel.Dock="Bottom" Height="25">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding BuyOrdersActiveOrders}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding BuyVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding BuyTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                                    <Label Content="Value In Escrow:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding TotalInEscrow}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                                    <Label Content="Remaining Isk to cover:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Label Content="{Binding IskToCover}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                                </StackPanel>
+                            </Grid>
+                            <DataGrid x:Name="BuyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" PreviewMouseDown="DataGridMouseDown"
                           SelectedIndex="{Binding BuysSelectedIndex}" SelectedItem="{Binding BuysSelectedItem}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
-                            <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
-                            <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
-                            <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
-                            <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
-                            <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
-                            <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
-                            <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
-                            <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
-                            <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
-                            <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
-                            <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
-                            <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
-                            <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DockPanel>
-            </Grid>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
+                                    <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
+                                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                    <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                    <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                    <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                    <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
+                                    <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
+                                    <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                    <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
+                                    <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                    <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                    <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                    <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Sell Orders">
+                    <DockPanel Grid.Row="0" Margin="5">
+                        <Grid DockPanel.Dock="Bottom" Height="25">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding SellOrdersActiveOrders}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding SellVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding SellTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                            </StackPanel>
+                        </Grid>
+                        <DataGrid x:Name="SellOnlyDataGrid" ItemsSource="{Binding SellOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                      CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" PreviewMouseDown="DataGridMouseDown"
+                      SelectedIndex="{Binding SellsSelectedIndex}" SelectedItem="{Binding SellsSelectedItem}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
+                                <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
+                                <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
+                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Buy Orders">
+                    <DockPanel Grid.Row="1" Margin="5">
+                        <Grid DockPanel.Dock="Bottom" Height="25">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Label Content="Active Orders:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding BuyOrdersActiveOrders}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="Volume Remaining:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding BuyVolumeRemaining}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="Total Value:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding BuyTotalValue}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                                <Label Content="Value In Escrow:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding TotalInEscrow}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                                <Label Content="Remaining Isk to cover:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Content="{Binding IskToCover}" VerticalAlignment="Center" HorizontalAlignment="Center" ContentStringFormat="N2"/>
+                            </StackPanel>
+                        </Grid>
+                        <DataGrid x:Name="BuyOnlyDataGrid" ItemsSource="{Binding BuyOrdersCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                          CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" PreviewMouseDown="DataGridMouseDown"
+                          SelectedIndex="{Binding BuysSelectedIndex}" SelectedItem="{Binding BuysSelectedItem}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding ItemName}" />
+                                <DataGridTextColumn Header="Location" Binding="{Binding LocationName}"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Outbid" Binding="{Binding IsOutbid}"/>
+                                <DataGridTextColumn Header="Price Difference" Binding="{Binding Difference, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="Delta" Binding="{Binding OutbidDelta}"/>
+                                <DataGridTextColumn Header="Type Margin" Binding="{Binding TypeMargin, StringFormat=P}"/>
+                                <DataGridTextColumn Header="Order Margin" Binding="{Binding OrderMargin, StringFormat=P}"/>
+                                <DataGridTextColumn Header="Volume" Binding="{Binding VolumeRatio}"/>
+                                <DataGridTextColumn Header="Order Value" Binding="{Binding OrderValue, StringFormat=N2}"/>
+                                <DataGridTextColumn Header="ETA" Binding="{Binding CompletionEta}"/>
+                                <DataGridTextColumn Header="Order Age" Binding="{Binding OrderAge, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                <DataGridTextColumn Header="Time Left" Binding="{Binding TimeLeft, StringFormat={}{0:dd}:{0:hh}:{0:mm}}"/>
+                                <DataGridTextColumn Header="Owner" Binding="{Binding Owner}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
         </DockPanel>
     </Grid>
 </UserControl>
