@@ -40,10 +40,6 @@
                         <Label Content="Auto Update Timer Enabled:" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" ToolTip="Automatically updates market prices and orders (if updated). Set interval in settings."/>
                         <CheckBox IsChecked="{Binding AutoRefreshEnabled, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <CheckBox x:Name="SellCheckBox" Margin="3" IsChecked="True">Sell Orders</CheckBox>
-                        <CheckBox x:Name="BuyCheckBox" Margin="3" IsChecked="True">Buy Orders</CheckBox>
-                    </StackPanel>
                 </Grid>
             </Grid>
             <TabControl>
