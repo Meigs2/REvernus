@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Controls;
 using Prism.Mvvm;
 
 namespace REvernus.Settings
@@ -12,6 +13,7 @@ namespace REvernus.Settings
         private string _marketUpHotkey = "Control+X";
         private string _marketDownHotkey = "Control+Z";
         private bool _playOrderChangedSound;
+        private bool _resetRefreshTimerOnPriceCopy;
 
         public uint AutoUpdateMintues
         {
@@ -54,6 +56,12 @@ namespace REvernus.Settings
         {
             get => _marketDownHotkey;
             set => SetProperty(ref _marketDownHotkey, value);
+        }
+
+        public bool ResetRefreshTimerOnPriceCopy
+        {
+            get => _resetRefreshTimerOnPriceCopy;
+            set => SetProperty(ref _resetRefreshTimerOnPriceCopy, value);
         }
 
         public object Clone()

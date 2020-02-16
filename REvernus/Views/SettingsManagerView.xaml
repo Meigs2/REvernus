@@ -25,9 +25,9 @@
             <TabItem Header="Market Orders Tab Settings">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height=".6*"/>
-                        <RowDefinition Height=".5*"/>
-                        <RowDefinition/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Header="Settings">
                         <Grid>
@@ -58,6 +58,7 @@
                                 <ColumnDefinition Width="1.5*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
@@ -65,6 +66,8 @@
                             <TextBox Text="{Binding MarketOrdersTabSettings.MarketUpHotkey, Mode=TwoWay}" Grid.Column="1" Grid.Row="0" PreviewKeyDown="HotkeyTextbox" IsReadOnly="True" HorizontalContentAlignment="Center" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
                             <Label Content="Market Down" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
                             <TextBox Text="{Binding MarketOrdersTabSettings.MarketDownHotkey, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" PreviewKeyDown="HotkeyTextbox" IsReadOnly="True" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock TextWrapping="Wrap" Margin="5" TextAlignment="Center" Text="Reset Refresh Timer on Market Up/Down" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0"/>
+                            <CheckBox IsChecked="{Binding MarketOrdersTabSettings.ResetRefreshTimerOnPriceCopy, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
