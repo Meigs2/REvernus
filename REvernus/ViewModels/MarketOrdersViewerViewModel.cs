@@ -165,6 +165,12 @@ namespace REvernus.ViewModels
         {
             try
             {
+                if (App.Settings.MarketOrdersTabSettings.ResetRefreshTimerOnPriceCopy && AutoRefreshEnabled)
+                {
+                    AutoRefreshTimer.Stop();
+                    AutoRefreshTimer.Start();
+                }
+
                 ObservableCollection<MarketOrderInfoModel> selectedGrid = null;
                 MarketOrderInfoModel currentItem = null;
                 var isBuyCollection = false;
