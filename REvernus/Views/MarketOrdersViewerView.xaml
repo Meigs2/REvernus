@@ -28,8 +28,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From ESI" Margin="5" />
-                    <Button Command="{Binding GetOrdersFilesCommand}" Content="Fetch From Exported Orders" Margin="5" Grid.Column="1"/>
+                    <Button Command="{Binding GetOrdersEsiCommand}" Content="Fetch From ESI" Margin="5" ToolTip="Fetches orders from the Eve servers via the currently selected character."/>
+                    <Button Command="{Binding GetOrdersFilesCommand}" Content="Fetch From Exported Orders" Margin="5" Grid.Column="1" ToolTip="Fetches orders from the exported local files. Old orders may appear if this method is used when new orders are not used."/>
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.ColumnDefinitions>
@@ -37,8 +37,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Auto Update Timer Enabled:" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" ToolTip="Automatically updates market prices and orders (if updated). Set interval in settings."/>
-                        <CheckBox IsChecked="{Binding AutoRefreshEnabled, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                        <Label Content="Auto Update Timer Enabled:" VerticalAlignment="Center" HorizontalAlignment="Left" ToolTip="Automatically updates market prices and orders (if updated). Set interval in settings."/>
+                        <CheckBox IsChecked="{Binding AutoRefreshEnabled, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Automatically updates market prices and orders (if updated). Set interval in settings."/>
                     </StackPanel>
                 </Grid>
             </Grid>
