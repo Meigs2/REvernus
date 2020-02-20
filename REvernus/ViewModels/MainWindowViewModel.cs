@@ -82,8 +82,7 @@ namespace REvernus.ViewModels
 
             var actions = new Dictionary<Combination, Action>()
             {
-                {Combination.FromString("Control+M"), OpenCloseMarginTool},
-                {Combination.FromString("Control+S"), OpenSettingsView}
+                { Combination.FromString("Control+M"), OpenCloseMarginTool }
             };
 
             _keybindEvents.OnCombination(actions);

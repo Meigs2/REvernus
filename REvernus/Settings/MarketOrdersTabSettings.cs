@@ -10,8 +10,8 @@ namespace REvernus.Settings
         private uint _autoUpdateMintues = 5;
         private bool _autoUpdateTimerEnabled = true;
         private bool _showInEveClient = true;
-        private string _marketUpHotkey = "Control+X";
-        private string _marketDownHotkey = "Control+Z";
+        private string _marketUpHotkey = "Shift+S";
+        private string _marketDownHotkey = "Shift+D";
         private bool _playOrderChangedSound;
         private bool _resetRefreshTimerOnPriceCopy;
 
