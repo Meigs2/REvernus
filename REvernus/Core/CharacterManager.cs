@@ -14,6 +14,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using EVEStandard.Enumerations;
+using EVEStandard.Models.API;
 using REvernus.Views.SimpleViews;
 
 namespace REvernus.Core
@@ -53,11 +55,18 @@ namespace REvernus.Core
                 if (value != CurrentInstance._selectedCharacter)
                 {
                     CurrentInstance.SetProperty(ref _currentInstance._selectedCharacter, value);
-                    App.Settings.PersistedSettings.SelectedCharacterName = value.CharacterName;
+                    App.Settings.CharacterManagerSettings.SelectedCharacterName = value.CharacterName;
                     CurrentInstance.OnSelectedCharacterChanged();
                 }
             }
         }
+
+        public static AuthDTO PublicAuthDto => new AuthDTO()
+        {
+            AccessToken = SelectedCharacter.AccessTokenDetails,
+            CharacterId = SelectedCharacter.CharacterDetails.CharacterId,
+            Scopes = Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
+        };
 
         private CharacterManager()
         {
@@ -134,7 +143,7 @@ namespace REvernus.Core
 
         public static async Task Initialize()
         {
-            var results = DatabaseManager.QueryEveDb($"SELECT * FROM '{DatabaseManager.RefreshTokenTableName}'",
+            var results = DatabaseManager.QueryDb($"SELECT * FROM '{DatabaseManager.RefreshTokenTableName}'",
                 new SQLiteConnection(DatabaseManager.UserDataDbConnection));
 
             var list = new List<string>();
@@ -151,14 +160,14 @@ namespace REvernus.Core
 
             CharacterList = await GenerateCharacterList(list);
 
-            if (App.Settings.PersistedSettings.SelectedCharacterName == "")
+            if (App.Settings.CharacterManagerSettings.SelectedCharacterName == "")
             {
                 SelectedCharacter = CharacterList[0];
             }
             else
             {
                 var selectedCharacter = CharacterList.SingleOrDefault(c =>
-                    c.CharacterName == App.Settings.PersistedSettings.SelectedCharacterName);
+                    c.CharacterName == App.Settings.CharacterManagerSettings.SelectedCharacterName);
 
                 SelectedCharacter = selectedCharacter ?? CharacterList[0];
             }

@@ -2,7 +2,9 @@
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.SQLite;
+using System.Linq;
 using System.Threading.Tasks;
+using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities.StaticData
 {
@@ -15,32 +17,26 @@ namespace REvernus.Utilities.StaticData
             return TypeIdToTypeNameDictionary[typeId];
         }
 
-        /// <summary>
-        /// Returns a DataTable containing the typeID and typeNames of all items currently on the market.
-        /// </summary>
-        /// <returns></returns>
-        public static DataTable GetAllInventoryTypes()
-        {
-            return DatabaseManager.QueryEveDb("SELECT * FROM 'invTypes' WHERE marketGroupID IS NOT null AND published IS true", 
-                new SQLiteConnection(DatabaseManager.ReadOnlyEveDbConnection));
-        }
-
         public static void Initialize()
         {
+            using var db = new eveContext();
             try
             {
-                TypeIdToTypeNameDictionary.Clear();
+                var items = db.InvTypes
+                    .Where(t => t.MarketGroupId != null && t.Published).ToList();
 
-                var types = GetAllInventoryTypes();
-                foreach (DataRow typesRow in types.Rows)
+                foreach (var item in items)
                 {
-                    TypeIdToTypeNameDictionary.TryAdd((long)typesRow["typeID"], typesRow["typeName"].ToString());
+                    TypeIdToTypeNameDictionary.TryAdd(item.TypeId, item.TypeName);
                 }
-                types.Dispose();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+            finally
+            {
+                db.Dispose();
             }
         }
     }

@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:REvernus"
              Startup="Application_Startup">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

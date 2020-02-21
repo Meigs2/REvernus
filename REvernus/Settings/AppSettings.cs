@@ -7,15 +7,19 @@ namespace REvernus.Settings
 {
     public class AppSettings : ITrackingAware<AppSettings>
     {
-        public PersistedSettings PersistedSettings { get; set; } = new PersistedSettings();
+        public CharacterManagerSettings CharacterManagerSettings { get; set; } = new CharacterManagerSettings();
         public MarginToolSettings MarginToolSettings { get; set; } = new MarginToolSettings();
+        public MarketOrdersTabSettings MarketOrdersTabSettings { get; set; } = new MarketOrdersTabSettings();
+        public MarketSettings MarketSettings { get; set; } = new MarketSettings();
 
         public void ConfigureTracking(TrackingConfiguration<AppSettings> configuration)
         {
             configuration.Properties(s => new
             {
-                s.PersistedSettings,
-                s.MarginToolSettings
+                s.CharacterManagerSettings,
+                s.MarginToolSettings,
+                s.MarketOrdersTabSettings,
+                s.MarketSettings
             });
             AppDomain.CurrentDomain.ProcessExit += (sender, args) => { configuration.Tracker.Persist(this); };
         }

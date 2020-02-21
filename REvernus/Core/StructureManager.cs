@@ -3,8 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
+using System.Linq;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using EVEStandard.Enumerations;
+using EVEStandard.Models;
+using EVEStandard.Models.API;
+using REvernus.Core.ESI;
 using REvernus.Models;
+using REvernus.Models.EveDbModels;
 using REvernus.Utilities;
 using REvernus.Views;
 
@@ -48,7 +56,8 @@ namespace REvernus.Core
                             TypeId = Convert.ToInt32((long?)reader[4]),
                             AddedBy = (long?)reader[5],
                             AddedAt = (DateTime?)reader[6],
-                            Enabled = Convert.ToBoolean((long?)reader[7])
+                            Enabled = Convert.ToBoolean((long?)reader[7]),
+                            isPublic = Convert.ToBoolean((long?)reader[8])
                         };
                         Structures.Add(structure);
                     }
@@ -73,8 +82,8 @@ namespace REvernus.Core
                 try
                 {
                     using var sqLiteCommand = new SQLiteCommand($"INSERT OR REPLACE INTO structures " +
-                                                                $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled) " +
-                                                                $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled)",
+                                                                $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled, isPublic) " +
+                                                                $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled, @isPublic)",
                         connection);
 
                     sqLiteCommand.Parameters.AddWithValue("@structureId", structure.StructureId);
@@ -85,6 +94,7 @@ namespace REvernus.Core
                     sqLiteCommand.Parameters.AddWithValue("@addedBy", structure.AddedBy);
                     sqLiteCommand.Parameters.AddWithValue("@addedAt", DateTime.UtcNow);
                     sqLiteCommand.Parameters.AddWithValue("@enabled", true);
+                    sqLiteCommand.Parameters.AddWithValue("@isPublic", structure.isPublic);
 
                     sqLiteCommand.CommandTimeout = 1;
                     sqLiteCommand.ExecuteNonQuery();
@@ -127,6 +137,44 @@ namespace REvernus.Core
             }
 
             LoadStructuresFromDatabase();
+        }
+
+        public static bool TryGetPlayerStructure(long structureId, out PlayerStructure playerStructure)
+        {
+            playerStructure = Structures.FirstOrDefault(s => s.StructureId == structureId);
+            return playerStructure != null;
+        }
+
+        public static bool TryGetNpcStation(long stationId, out StaStations station)
+        {
+            station = null;
+            using var db = new eveContext();
+            try
+            {
+                station = db.StaStations.FirstOrDefault(o => o.StationId == stationId);
+                return station != null;
+            }
+            finally
+            {
+                db.Dispose();
+            }
+        }
+
+        public static string GetStructureName(long structureId)
+        {
+            // check for NPC station
+            if (StructureManager.TryGetNpcStation(structureId, out var station))
+            {
+                return station.StationName;
+            }
+            if (StructureManager.TryGetPlayerStructure(structureId, out var structure))
+            {
+                return structure.Name;
+            }
+            else
+            {
+                return "Unknown Structure";
+            }
         }
     }
 }

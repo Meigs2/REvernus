@@ -10,10 +10,9 @@ namespace REvernus.Utilities
 {
     public static class DatabaseManager
     {
-        public static readonly SQLiteConnection ReadOnlyEveDbConnection = new SQLiteConnection($"Data Source={Paths.SdeDataBasePath};Version=3;New=True;Compress=true;Read Only=True");
         public static readonly SQLiteConnection UserDataDbConnection = new SQLiteConnection($"Data Source={Paths.UserDataBasePath};Version=3;");
 
-        public static DataTable QueryEveDb(string commandText, SQLiteConnection connection)
+        public static DataTable QueryDb(string commandText, SQLiteConnection connection)
         {
             using (connection)
             {
@@ -77,7 +76,6 @@ namespace REvernus.Utilities
         }
 
         public static readonly string RefreshTokenTableName = "refreshTokens";
-        public static readonly string StructuresTableName = "structures";
 
         private static void InitializeUserDataTable()
         {
@@ -98,7 +96,8 @@ namespace REvernus.Utilities
                                             "typeId INTEGER," +
                                             "addedBy INTEGER," +
                                             "addedAt DATETIME," +
-                                            "enabled INTEGER)";
+                                            "enabled INTEGER," +
+                                            "isPublic INTEGER)";
                 sqLiteCommand.ExecuteNonQuery();
                 sqLiteCommand.Parameters.Clear();
 
