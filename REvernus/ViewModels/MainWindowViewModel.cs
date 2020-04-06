@@ -174,9 +174,6 @@ namespace REvernus.ViewModels
             }
         }
 
-
-
-
         private static void OpenStructureManagerWindow()
         {
             StructureManager.ShowStructureManagementWindow();

@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 using EVEStandard.Enumerations;
 using EVEStandard.Models;
 using EVEStandard.Models.API;
+using Microsoft.EntityFrameworkCore.Internal;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using REvernus.Models.EveDbModels;
+using REvernus.Models.UserDbModels;
 using REvernus.Utilities;
 using REvernus.Views;
 
@@ -36,107 +38,64 @@ namespace REvernus.Core
         public static void LoadStructuresFromDatabase()
         {
             Structures.Clear();
-            using var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
-            connection.Open();
-            try
+            var context = new UserContext();
+            var structures = context.AddedStructures.ToList();
+            foreach (var dbStructure in structures)
             {
-                using var sqLiteCommand = new SQLiteCommand("SELECT * from structures", connection);
-
-                using var reader = sqLiteCommand.ExecuteReader();
-                while (reader.Read())
+                var structure = new PlayerStructure
                 {
-                    try
-                    {
-                        var structure = new PlayerStructure
-                        {
-                            StructureId = (long)reader[0],
-                            Name = (string)reader[1],
-                            OwnerId = Convert.ToInt32((long)reader[2]),
-                            SolarSystemId = Convert.ToInt32((long)reader[3]),
-                            TypeId = Convert.ToInt32((long?)reader[4]),
-                            AddedBy = (long?)reader[5],
-                            AddedAt = (DateTime?)reader[6],
-                            Enabled = Convert.ToBoolean((long?)reader[7]),
-                            isPublic = Convert.ToBoolean((long?)reader[8])
-                        };
-                        Structures.Add(structure);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-                }
+                    StructureId = dbStructure.StructureId,
+                    Name = dbStructure.Name,
+                    OwnerId = dbStructure.OwnerId,
+                    SolarSystemId = dbStructure.SolarSystemId,
+                    TypeId = dbStructure.TypeId,
+                    AddedBy = dbStructure.AddedBy,
+                    AddedAt = dbStructure.AddedAt,
+                    Enabled = dbStructure.Enabled,
+                    IsPublic = dbStructure.IsPublic
+                };
+                Structures.Add(structure);
             }
-            finally
-            {
-                connection.Close();
-            }
+            context.Dispose();
         }
 
         public static void InsertStructuresIntoDatabase(List<PlayerStructure> structures)
         {
-            foreach (var structure in structures)
+            foreach (var playerStructure in structures)
             {
-                var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
-                connection.Open();
-                try
+                var context = new UserContext();
+                if (!context.AddedStructures.Any(o => o.StructureId == playerStructure.StructureId))
                 {
-                    using var sqLiteCommand = new SQLiteCommand($"INSERT OR REPLACE INTO structures " +
-                                                                $"(structureId, name, ownerId, solarSystemId, typeId, addedBy, addedAt, enabled, isPublic) " +
-                                                                $"VALUES (@structureId, @name, @ownerId, @solarSystemId, @typeId, @addedBy, @addedAt, @enabled, @isPublic)",
-                        connection);
+                    context.AddedStructures.Add(new AddedStructure()
+                    {
+                        StructureId = playerStructure.StructureId,
+                        Name = playerStructure.Name,
+                        OwnerId = playerStructure.OwnerId,
+                        SolarSystemId = playerStructure.SolarSystemId,
+                        TypeId = playerStructure.TypeId.GetValueOrDefault(),
+                        AddedBy = playerStructure.AddedBy.GetValueOrDefault(),
+                        AddedAt = playerStructure.AddedAt.GetValueOrDefault(),
+                        Enabled = playerStructure.Enabled.GetValueOrDefault(),
+                        IsPublic = playerStructure.IsPublic
+                    });
+                }
 
-                    sqLiteCommand.Parameters.AddWithValue("@structureId", structure.StructureId);
-                    sqLiteCommand.Parameters.AddWithValue("@name", structure.Name);
-                    sqLiteCommand.Parameters.AddWithValue("@ownerId", structure.OwnerId);
-                    sqLiteCommand.Parameters.AddWithValue("@solarSystemId", structure.SolarSystemId);
-                    sqLiteCommand.Parameters.AddWithValue("@typeId", structure.TypeId);
-                    sqLiteCommand.Parameters.AddWithValue("@addedBy", structure.AddedBy);
-                    sqLiteCommand.Parameters.AddWithValue("@addedAt", DateTime.UtcNow);
-                    sqLiteCommand.Parameters.AddWithValue("@enabled", true);
-                    sqLiteCommand.Parameters.AddWithValue("@isPublic", structure.isPublic);
-
-                    sqLiteCommand.CommandTimeout = 1;
-                    sqLiteCommand.ExecuteNonQuery();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-                finally
-                {
-                    connection.Close();
-                }
+                context.SaveChanges();
+                context.Dispose();
             }
-
-            LoadStructuresFromDatabase();
         }
 
         public static void RemoveStructuresFromDatabase(IList structures)
         {
-            var connection = new SQLiteConnection(DatabaseManager.UserDataDbConnection);
-            connection.Open();
-
-            try
+            var context = new UserContext();
+            foreach (PlayerStructure structure in structures)
             {
-                // ReSharper disable once IdentifierTypo
-                foreach (var structure in structures)
-                {
-                    using var command = new SQLiteCommand("DELETE FROM structures WHERE structureId = @structureId", connection);
-                    command.Parameters.AddWithValue("@structureId", ((PlayerStructure) structure).StructureId);
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (Exception)
-            {
-                // Ignored
-            }
-            finally
-            {
-                connection.Close();
+                var a = context.AddedStructures.FirstOrDefault(s => s.StructureId == structure.StructureId);
+                if (a != null) context.Remove(a);
             }
 
-            LoadStructuresFromDatabase();
+            context.SaveChanges();
+            context.Dispose();
         }
 
         public static bool TryGetPlayerStructure(long structureId, out PlayerStructure playerStructure)

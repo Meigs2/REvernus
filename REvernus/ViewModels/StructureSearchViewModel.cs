@@ -175,7 +175,7 @@ namespace REvernus.ViewModels
                 AddedBy = selectedCharacter.CharacterDetails.CharacterId,
                 AddedAt = null,
                 Enabled = null,
-                isPublic = isPublic
+                IsPublic = isPublic
             };
         }
 

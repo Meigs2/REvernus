@@ -1,7 +1,12 @@
 ﻿using REvernus.Utilities;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
+using REvernus.Core;
+using REvernus.Models.UserDbModels;
 using REvernus.Settings;
+using REvernus.Utilities.StaticData;
 
 namespace REvernus
 {
@@ -16,14 +21,40 @@ namespace REvernus
         public static AppSettings Settings = new AppSettings();
         public new static MainWindowView MainWindow { get; private set; }
 
-        private async void Application_Startup(object sender, StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            await StartupAndExit.PerformStartupActions();
+            StartupActions();
 
             MainWindow = new MainWindowView();
             MainWindow.Show();
+        }
+
+        private void StartupActions()
+        {
+            Logging.SetupLogging();
+
+            Services.Tracker.Track(App.Settings);
+
+            DbChecks();
+
+            EveItems.Initialize();
+
+            AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
+        }
+
+        private void DbChecks()
+        {
+            // Ensure the DB is created and up-to-date.
+            var a = new UserContext();
+            a.Database.Migrate();
+            a.Dispose();
+        }
+
+        private static void OnApplicationExit(object sender, EventArgs e)
+        {
+
         }
     }
 }

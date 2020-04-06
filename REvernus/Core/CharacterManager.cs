@@ -123,56 +123,6 @@ namespace REvernus.Core
             await Task.WhenAll(taskList);
         }
 
-        public static void SaveCharactersToDb()
-        {
-            var command = new SQLiteCommand($"DELETE from {DatabaseManager.RefreshTokenTableName}", new SQLiteConnection(DatabaseManager.UserDataDbConnection));
-            command.Connection.Open();
-            command.ExecuteNonQuery();
-            command.Connection.Close();
-
-            foreach (var character in CharacterList)
-            {
-                command = new SQLiteCommand($"INSERT into {DatabaseManager.RefreshTokenTableName} (refreshToken) VALUES (@refreshToken)", new SQLiteConnection(DatabaseManager.UserDataDbConnection));
-                command.Parameters.AddWithValue("@refreshToken", character.AccessTokenDetails.RefreshToken);
-
-                command.Connection.Open();
-                command.ExecuteNonQuery();
-                command.Connection.Close();
-            }
-        }
-
-        public static async Task Initialize()
-        {
-            var results = DatabaseManager.QueryDb($"SELECT * FROM '{DatabaseManager.RefreshTokenTableName}'",
-                new SQLiteConnection(DatabaseManager.UserDataDbConnection));
-
-            var list = new List<string>();
-
-            foreach (DataRow resultsRow in results.Rows)
-            {
-                list.Add(resultsRow[0].ToString());
-            }
-
-            if (list.Count == 0)
-            {
-                return;
-            }
-
-            CharacterList = await GenerateCharacterList(list);
-
-            if (App.Settings.CharacterManagerSettings.SelectedCharacterName == "")
-            {
-                SelectedCharacter = CharacterList[0];
-            }
-            else
-            {
-                var selectedCharacter = CharacterList.SingleOrDefault(c =>
-                    c.CharacterName == App.Settings.CharacterManagerSettings.SelectedCharacterName);
-
-                SelectedCharacter = selectedCharacter ?? CharacterList[0];
-            }
-        }
-
         private static async Task<ObservableCollection<REvernusCharacter>> GenerateCharacterList(List<string> refreshTokenList)
         {
             try

@@ -17,6 +17,6 @@ namespace REvernus.Models
         public long? AddedBy { get; set; }
         public DateTime? AddedAt { get; set; }
         public bool? Enabled { get; set; }
-        public bool isPublic { get; set; }
+        public bool IsPublic { get; set; }
     }
 }
