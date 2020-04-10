@@ -28,8 +28,7 @@ namespace REvernus.Core.ESI
                 var developerApplication = userContext.DeveloperApplications.Select(o => o).FirstOrDefault();
                 if (developerApplication != null)
                     return new EVEStandardAPI(Strings.EsiData_EsiClient_UserAgent, DataSource.Tranquility,
-                        TimeSpan.FromSeconds(30), developerApplication.CallbackUrl, developerApplication.ClientId, developerApplication.SecretKey, 
-                        SSOVersion.v1, SSOMode.Native);
+                        TimeSpan.FromSeconds(30), developerApplication.CallbackUrl, developerApplication.ClientId, developerApplication.SecretKey);
                 return null;
             }
         }

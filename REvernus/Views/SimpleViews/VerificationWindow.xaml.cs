@@ -12,7 +12,7 @@ namespace REvernus.Views.SimpleViews
     /// </summary>
     public partial class VerificationWindow : Window
     {
-        private EVEStandardAPI _client;
+        private readonly EVEStandardAPI _client;
         public REvernusCharacter Character { get; set; } = new REvernusCharacter();
         private Authorization Authorization { get; set; } = new Authorization();
 
