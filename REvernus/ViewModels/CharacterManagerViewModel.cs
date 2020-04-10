@@ -34,7 +34,7 @@ namespace REvernus.ViewModels
         {
             try
             {
-                CharacterManager.AuthorizeNewCharacter();
+                App.CharacterManager.AuthorizeNewCharacter();
             }
             catch (Exception e)
             {

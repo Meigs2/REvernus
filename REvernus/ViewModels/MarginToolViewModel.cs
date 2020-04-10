@@ -278,7 +278,7 @@ namespace REvernus.ViewModels
             
             try
             {
-                var currentChar = CharacterManager.SelectedCharacter;
+                var currentChar = App.CharacterManager.SelectedCharacter;
                 Orders.Clear();
                 using (var file = File.Open(e.FullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
