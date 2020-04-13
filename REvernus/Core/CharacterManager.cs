@@ -1,7 +1,6 @@
 ﻿using Prism.Mvvm;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Models.SerializableModels;
 using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
