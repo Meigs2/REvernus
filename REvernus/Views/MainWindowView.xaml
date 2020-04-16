@@ -24,6 +24,7 @@
                         <MenuItem Header="Settings" Command="{Binding OpenSettingsViewCommand}"/>
                         <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}"/>
                         <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
+                        <MenuItem Header="Developer Application" Command="{Binding OpenDeveloperApplicationWindowCommand}"/>
                         <Separator/>
                         <MenuItem Header="Close" Command="{Binding CloseMainWindowCommand}"/>
                     </MenuItem>

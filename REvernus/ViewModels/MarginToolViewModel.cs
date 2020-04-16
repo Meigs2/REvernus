@@ -234,9 +234,9 @@ namespace REvernus.ViewModels
 
         #endregion
 
-        private List<ExportedOrderModel> Orders = new List<ExportedOrderModel>();
+        private readonly List<ExportedOrderModel> Orders = new List<ExportedOrderModel>();
 
-        private FileSystemWatcher _watcher;
+        private readonly FileSystemWatcher _watcher;
 
         public MarginToolViewModel()
         {
@@ -254,7 +254,7 @@ namespace REvernus.ViewModels
             ItemNameCopyCommand = new DelegateCommand(ItemNameClipboardCopy);
 
             // Define SampleDataTables
-            var tempTable = new DataTable();
+            using var tempTable = new DataTable();
             tempTable.Columns.AddRange(new List<DataColumn>()
             {
                 new DataColumn("Volume", typeof(string)),
@@ -278,43 +278,41 @@ namespace REvernus.ViewModels
             
             try
             {
-                var currentChar = CharacterManager.SelectedCharacter;
+                var currentChar = App.CharacterManager.SelectedCharacter;
                 Orders.Clear();
                 using (var file = File.Open(e.FullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
-                    using (var reader = new StreamReader(file))
+                    using var reader = new StreamReader(file);
+                    try
                     {
-                        try
+                        reader.ReadLine(); // read first line and disregard
+                        while (!reader.EndOfStream)
                         {
-                            reader.ReadLine(); // read first line and disregard
-                            while (!reader.EndOfStream)
-                            {
                             
-                                    var values = reader.ReadLine().Split(',');
-                                    var order = new ExportedOrderModel();
-                                    order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
-                                    order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
-                                    order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
-                                    order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
-                                    order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
-                                    order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
-                                    order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
-                                    order.IsBuyOrder = bool.Parse(values[7]);
-                                    order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
-                                    order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
-                                    order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
-                                    order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
-                                    order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
-                                    order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
+                            var values = reader.ReadLine().Split(',');
+                            var order = new ExportedOrderModel();
+                            order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
+                            order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
+                            order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
+                            order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
+                            order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
+                            order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
+                            order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
+                            order.IsBuyOrder = bool.Parse(values[7]);
+                            order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
+                            order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
+                            order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
+                            order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
+                            order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
+                            order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
 
-                                    Orders.Add(order);
+                            Orders.Add(order);
                            
-                            }
                         }
-                        catch (Exception)
-                        {
-                            // ignored
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
                     }
                 }
 

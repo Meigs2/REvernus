@@ -12,7 +12,7 @@ namespace REvernus.Views.SimpleViews
     /// </summary>
     public partial class VerificationWindow : Window
     {
-        private EVEStandardAPI _client;
+        private readonly EVEStandardAPI _client;
         public REvernusCharacter Character { get; set; } = new REvernusCharacter();
         private Authorization Authorization { get; set; } = new Authorization();
 
@@ -27,7 +27,7 @@ namespace REvernus.Views.SimpleViews
 
         private void LoginButton_Click(object sender, RoutedEventArgs routedEventArgs)
         {
-            Authorization = _client.SSOv2.AuthorizeToEVEUri(EsiScopes.Scopes);
+            Authorization = _client.SSO.AuthorizeToEVEUri(EsiScopes.Scopes);
             Utilities.Browser.OpenBrowser(Authorization.SignInURI);
         }
 
@@ -40,8 +40,8 @@ namespace REvernus.Views.SimpleViews
                 Authorization.AuthorizationCode = AuthCodeTextBox.Text;
                 Authorization.ExpectedState = string.Empty; // Expected state is set to empty, as we don't require the user to provide it from the returned URL
 
-                Character.AccessTokenDetails = await _client.SSOv2.VerifyAuthorizationAsync(Authorization);
-                Character.CharacterDetails = _client.SSOv2.GetCharacterDetailsAsync(Character.AccessTokenDetails.AccessToken);
+                Character.AccessTokenDetails = await _client.SSO.VerifyAuthorizationAsync(Authorization);
+                Character.CharacterDetails = await _client.SSO.GetCharacterDetailsAsync(Character.AccessTokenDetails.AccessToken);
 
                 Close();
             }

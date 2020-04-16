@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using REvernus.Models.UserDbModels;
+using REvernus.Views.SimpleViews;
 
 namespace REvernus.ViewModels
 {
@@ -16,10 +18,10 @@ namespace REvernus.ViewModels
 
         public REvernusCharacter SelectedCharacter
         {
-            get => CharacterManager.SelectedCharacter;
+            get => App.CharacterManager.SelectedCharacter;
             set
             {
-                CharacterManager.SelectedCharacter = value;
+                App.CharacterManager.SelectedCharacter = value;
                 OnPropertyChanged();
             }
         }
@@ -55,6 +57,7 @@ namespace REvernus.ViewModels
         public MainWindowViewModel()
         {
             OpenCloseMarginToolCommand = new DelegateCommand(OpenCloseMarginTool);
+
 
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
@@ -103,6 +106,9 @@ namespace REvernus.ViewModels
             var downloader = new SdeDownloader();
             await downloader.DownloadLatestSde();
         });
+
+        public DelegateCommand OpenDeveloperApplicationWindowCommand { get; set; } = new DelegateCommand(OpenDeveloperApplicationWindow);
+
         #endregion
 
         private Window _marginWindow;
@@ -153,6 +159,12 @@ namespace REvernus.ViewModels
             }
         }
 
+        private static void OpenDeveloperApplicationWindow()
+        {
+            var window = new DeveloperApplicationDetailsWindow(new UserContext());
+            window.Show();
+        }
+
         private static void OpenCharacterManagerWindow()
         {
             try
@@ -174,9 +186,6 @@ namespace REvernus.ViewModels
             }
         }
 
-
-
-
         private static void OpenStructureManagerWindow()
         {
             StructureManager.ShowStructureManagementWindow();
@@ -185,12 +194,11 @@ namespace REvernus.ViewModels
         private static void CloseMainWindow()
         {
             Environment.Exit(0);
-
         }
 
         private static void OpenAboutBox()
         {
-            var a = new Views.SimpleViews.AboutBox();
+            var a = new AboutBox();
             a.Show();
         }
 
@@ -198,7 +206,7 @@ namespace REvernus.ViewModels
         {
             if (!App.MainWindow.IsActive) return;
 
-            var a = new Views.SettingsManagerView();
+            var a = new SettingsManagerView();
             a.ShowDialog();
         }
     }

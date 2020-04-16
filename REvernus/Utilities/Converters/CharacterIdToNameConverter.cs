@@ -12,7 +12,7 @@ namespace REvernus.Utilities.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var character = CharacterManager.CharacterList.FirstOrDefault(c =>
+            var character = App.CharacterManager.CharacterList.FirstOrDefault(c =>
                 c.CharacterDetails.CharacterId == System.Convert.ToInt32(value));
 
             return character?.CharacterName;
@@ -20,7 +20,7 @@ namespace REvernus.Utilities.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var character = CharacterManager.CharacterList.FirstOrDefault(c =>
+            var character = App.CharacterManager.CharacterList.FirstOrDefault(c =>
                 c.CharacterName == System.Convert.ToString(value));
 
             return character?.CharacterName;

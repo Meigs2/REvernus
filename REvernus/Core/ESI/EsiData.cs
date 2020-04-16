@@ -1,27 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using EVEStandard;
 using EVEStandard.Enumerations;
 using EVEStandard.Models.SSO;
+using REvernus.Models.UserDbModels;
+using REvernus.Properties;
 
 namespace REvernus.Core.ESI
 {
-    internal class EsiData
+    internal static class EsiData
     {
-        public static string LocalUri = "https://meigs2.github.io/ESICallback/";
-        
-        public static EVEStandardAPI EsiClient = new EVEStandardAPI(
-            "REvernus",
-            DataSource.Tranquility,
-            TimeSpan.FromSeconds(30),
-            LocalUri,
-            "ac5372b96ee24e158ff0915eb0c8c67e",
-            null,
-            SSOVersion.v2,
-            SSOMode.Native
-            );
+        public static EVEStandardAPI EsiClient
+        {
+            get
+            {
+                using var userContext = new UserContext();
+
+                if (!userContext.DeveloperApplications.Any())
+                {
+                    return null;
+                }
+
+                var developerApplication = userContext.DeveloperApplications.Select(o => o).FirstOrDefault();
+                if (developerApplication != null)
+                    return new EVEStandardAPI(Strings.EsiData_EsiClient_UserAgent, DataSource.Tranquility,
+                        TimeSpan.FromSeconds(30), developerApplication.CallbackUrl, developerApplication.ClientId, developerApplication.SecretKey);
+                return null;
+            }
+        }
     }
 }

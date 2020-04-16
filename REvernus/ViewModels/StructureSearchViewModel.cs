@@ -70,8 +70,8 @@ namespace REvernus.ViewModels
             SearchCommand = new DelegateCommand(async () => await SearchEsiForStructures());
             SelectCommand = new DelegateCommand<IList>(SelectStructures);
 
-            Characters = new ObservableCollection<REvernusCharacter>(CharacterManager.CharacterList);
-            SelectedCharacter = CharacterManager.SelectedCharacter;
+            Characters = new ObservableCollection<REvernusCharacter>(App.CharacterManager.CharacterList);
+            SelectedCharacter = App.CharacterManager.SelectedCharacter;
         }
 
         public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
@@ -175,7 +175,7 @@ namespace REvernus.ViewModels
                 AddedBy = selectedCharacter.CharacterDetails.CharacterId,
                 AddedAt = null,
                 Enabled = null,
-                isPublic = isPublic
+                IsPublic = isPublic
             };
         }
 
