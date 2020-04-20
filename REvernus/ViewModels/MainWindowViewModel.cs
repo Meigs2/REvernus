@@ -15,7 +15,6 @@ namespace REvernus.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-
         public REvernusCharacter SelectedCharacter
         {
             get => App.CharacterManager.SelectedCharacter;
@@ -108,6 +107,8 @@ namespace REvernus.ViewModels
         });
 
         public DelegateCommand OpenDeveloperApplicationWindowCommand { get; set; } = new DelegateCommand(OpenDeveloperApplicationWindow);
+
+        public DelegateCommand OpenItemExplorerCommand { get; set; } = new DelegateCommand(OpenItemExplorer);
 
         #endregion
 
@@ -208,6 +209,12 @@ namespace REvernus.ViewModels
 
             var a = new SettingsManagerView();
             a.ShowDialog();
+        }
+
+        private static void OpenItemExplorer()
+        {
+            var window = new ItemExplorerView();
+            window.ShowDialog();
         }
     }
 }

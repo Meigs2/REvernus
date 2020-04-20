@@ -23,7 +23,7 @@ namespace REvernus.Utilities.StaticData
             try
             {
                 var items = db.InvTypes
-                    .Where(t => t.MarketGroupId != null && t.Published).ToList();
+                    .Where(t => t.MarketGroup != null && t.Published).ToList();
 
                 foreach (var item in items)
                 {
