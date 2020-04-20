@@ -32,6 +32,7 @@
                         <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}" InputGestureText="Ctrl+M"/>
                         <MenuItem Header="Open Structure Manager" Command="{Binding OpenStructureManagerCommand}"/>
                         <Separator/>
+                        <MenuItem Header ="Open Item Explorer" Command="{Binding OpenItemExplorerCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Characters">
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>

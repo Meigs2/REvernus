@@ -8,5 +8,9 @@
         public string Description { get; set; }
         public long? IconId { get; set; }
         public byte[] HasTypes { get; set; }
+
+        public virtual InvMarketGroups Parent { get; set; }
+        public virtual ICollection<InvMarketGroups> Children { get; set; }
+        public virtual ICollection<InvTypes> InventoryChildren { get; set; }
     }
 }
