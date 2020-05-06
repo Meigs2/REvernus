@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SQLite;
-using System.Text;
+﻿using System.Collections;
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;
-using REvernus.Models;
-using REvernus.Utilities;
 using REvernus.Views;
 
 namespace REvernus.ViewModels

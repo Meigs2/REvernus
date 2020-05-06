@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Media;
 using System.Windows;
-using System.Windows.Automation;
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;

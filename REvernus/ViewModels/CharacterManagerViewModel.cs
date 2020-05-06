@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Prism.Commands;
-using REvernus.Core;
 using REvernus.Models;
 
 namespace REvernus.ViewModels

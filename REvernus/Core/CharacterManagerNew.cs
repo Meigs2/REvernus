@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEStandard;
+﻿using System.Collections.Generic;
 using EVEStandard.Models.SSO;
 using REvernus.Models;
 

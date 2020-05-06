@@ -1,5 +1,4 @@
-﻿using System;
-using REvernus.ViewModels;
+﻿using REvernus.ViewModels;
 using System.Collections.Concurrent;
 using System.Windows;
 using System.Windows.Threading;

@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Jot;
-using Jot.Configuration;
 using Jot.Storage;
-using REvernus.ViewModels;
-using REvernus.Views;
 
 namespace REvernus.Core
 {

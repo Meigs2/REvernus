@@ -1,6 +1,5 @@
 ﻿using Prism.Mvvm;
 using Prism.Commands;
-using REvernus.Core;
 using REvernus.Utilities;
 using REvernus.Models;
 using System;
@@ -10,8 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Input;
 
 namespace REvernus.ViewModels
 {

@@ -1,20 +1,13 @@
 ﻿using Prism.Mvvm;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Data.SQLite;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using EVEStandard.Enumerations;
-using EVEStandard.Models.API;
 using REvernus.Models.UserDbModels;
 using REvernus.Views.SimpleViews;
 

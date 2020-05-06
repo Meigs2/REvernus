@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-
-namespace REvernus.Utilities
+﻿namespace REvernus.Utilities
 {
     public  class AssemblyInfo
     {

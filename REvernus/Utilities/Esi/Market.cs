@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using EVEStandard.Enumerations;
 using EVEStandard.Models;
@@ -11,9 +9,6 @@ using EVEStandard.Models.API;
 using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Models.EveDbModels;
-using Type = System.Type;
-
 namespace REvernus.Utilities.Esi
 {
     public static class Market

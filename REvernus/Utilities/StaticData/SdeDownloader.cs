@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Media;
-using System.Net;
 using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Shell;
