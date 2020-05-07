@@ -114,59 +114,11 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CertCerts>(entity =>
-            {
-                entity.HasKey(e => e.CertId);
+           
 
-                entity.ToTable("certCerts");
 
-                entity.Property(e => e.CertId)
-                    .HasColumnName("certID")
-                    .ValueGeneratedNever();
 
-                entity.Property(e => e.Description).HasColumnName("description");
-
-                entity.Property(e => e.GroupId).HasColumnName("groupID");
-
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
-                    .HasColumnType("VARCHAR(255)");
-            });
-
-            modelBuilder.Entity<CertMasteries>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("certMasteries");
-
-                entity.Property(e => e.CertId).HasColumnName("certID");
-
-                entity.Property(e => e.MasteryLevel).HasColumnName("masteryLevel");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<CertSkills>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("certSkills");
-
-                entity.HasIndex(e => e.SkillId)
-                    .HasName("ix_certSkills_skillID");
-
-                entity.Property(e => e.CertId).HasColumnName("certID");
-
-                entity.Property(e => e.CertLevelInt).HasColumnName("certLevelInt");
-
-                entity.Property(e => e.CertLevelText)
-                    .HasColumnName("certLevelText")
-                    .HasColumnType("VARCHAR(8)");
-
-                entity.Property(e => e.SkillId).HasColumnName("skillID");
-
-                entity.Property(e => e.SkillLevel).HasColumnName("skillLevel");
-            });
+           
 
             modelBuilder.Entity<ChrAncestries>(entity =>
             {
