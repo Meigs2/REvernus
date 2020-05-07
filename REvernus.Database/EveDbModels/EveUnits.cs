@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class EveUnits
+    public class EveUnits
     {
         public long UnitId { get; set; }
         public string UnitName { get; set; }

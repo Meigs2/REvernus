@@ -123,144 +123,19 @@
 
             
 
-            modelBuilder.Entity<IndustryActivity>(entity =>
-            {
-                entity.HasKey(e => new { e.TypeId, e.ActivityId });
+            
 
-                entity.ToTable("industryActivity");
+            
 
-                entity.HasIndex(e => e.ActivityId)
-                    .HasName("ix_industryActivity_activityID");
+            
 
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
+            
 
-                entity.Property(e => e.ActivityId).HasColumnName("activityID");
+            
 
-                entity.Property(e => e.Time).HasColumnName("time");
-            });
+            
 
-            modelBuilder.Entity<IndustryActivityMaterials>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("industryActivityMaterials");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_industryActivityMaterials_typeID");
-
-                entity.HasIndex(e => new { e.TypeId, e.ActivityId })
-                    .HasName("industryActivityMaterials_idx1");
-
-                entity.Property(e => e.ActivityId).HasColumnName("activityID");
-
-                entity.Property(e => e.MaterialTypeId).HasColumnName("materialTypeID");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<IndustryActivityProbabilities>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("industryActivityProbabilities");
-
-                entity.HasIndex(e => e.ProductTypeId)
-                    .HasName("ix_industryActivityProbabilities_productTypeID");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_industryActivityProbabilities_typeID");
-
-                entity.Property(e => e.ActivityId).HasColumnName("activityID");
-
-                entity.Property(e => e.Probability)
-                    .HasColumnName("probability")
-                    .HasColumnType("DECIMAL(3, 2)");
-
-                entity.Property(e => e.ProductTypeId).HasColumnName("productTypeID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<IndustryActivityProducts>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("industryActivityProducts");
-
-                entity.HasIndex(e => e.ProductTypeId)
-                    .HasName("ix_industryActivityProducts_productTypeID");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_industryActivityProducts_typeID");
-
-                entity.Property(e => e.ActivityId).HasColumnName("activityID");
-
-                entity.Property(e => e.ProductTypeId).HasColumnName("productTypeID");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<IndustryActivityRaces>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("industryActivityRaces");
-
-                entity.HasIndex(e => e.ProductTypeId)
-                    .HasName("ix_industryActivityRaces_productTypeID");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_industryActivityRaces_typeID");
-
-                entity.Property(e => e.ActivityId).HasColumnName("activityID");
-
-                entity.Property(e => e.ProductTypeId).HasColumnName("productTypeID");
-
-                entity.Property(e => e.RaceId).HasColumnName("raceID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<IndustryActivitySkills>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("industryActivitySkills");
-
-                entity.HasIndex(e => e.SkillId)
-                    .HasName("ix_industryActivitySkills_skillID");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_industryActivitySkills_typeID");
-
-                entity.HasIndex(e => new { e.TypeId, e.ActivityId })
-                    .HasName("industryActivitySkills_idx1");
-
-                entity.Property(e => e.ActivityId).HasColumnName("activityID");
-
-                entity.Property(e => e.Level).HasColumnName("level");
-
-                entity.Property(e => e.SkillId).HasColumnName("skillID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<IndustryBlueprints>(entity =>
-            {
-                entity.HasKey(e => e.TypeId);
-
-                entity.ToTable("industryBlueprints");
-
-                entity.Property(e => e.TypeId)
-                    .HasColumnName("typeID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.MaxProductionLimit).HasColumnName("maxProductionLimit");
-            });
+            
 
             modelBuilder.Entity<InvCategories>(entity =>
             {

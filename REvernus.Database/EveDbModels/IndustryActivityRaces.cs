@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class IndustryActivityRaces
+    public class IndustryActivityRaces
     {
         public long? TypeId { get; set; }
         public long? ActivityId { get; set; }
