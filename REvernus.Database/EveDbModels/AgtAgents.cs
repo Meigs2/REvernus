@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class AgtAgents
+    public class AgtAgents
     {
         public long AgentId { get; set; }
         public long? DivisionId { get; set; }
