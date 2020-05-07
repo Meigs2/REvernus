@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvMetaGroups
+    public class InvMetaGroups
     {
         public long MetaGroupId { get; set; }
         public string MetaGroupName { get; set; }

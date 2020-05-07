@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvTypeReactions
+    public class InvTypeReactions
     {
         public long ReactionTypeId { get; set; }
         public byte[] Input { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvFlags
+    public class InvFlags
     {
         public long FlagId { get; set; }
         public string FlagName { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvMarketGroups
+    public class InvMarketGroups
     {
         public long MarketGroupId { get; set; }
         public long? ParentGroupId { get; set; }

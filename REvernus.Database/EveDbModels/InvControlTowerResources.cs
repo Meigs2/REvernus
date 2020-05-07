@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvControlTowerResources
+    public class InvControlTowerResources
     {
         public long ControlTowerTypeId { get; set; }
         public long ResourceTypeId { get; set; }

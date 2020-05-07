@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvContrabandTypes
+    public class InvContrabandTypes
     {
         public long FactionId { get; set; }
         public long TypeId { get; set; }

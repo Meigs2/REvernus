@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvMetaTypes
+    public class InvMetaTypes
     {
         public long TypeId { get; set; }
         public long? ParentTypeId { get; set; }

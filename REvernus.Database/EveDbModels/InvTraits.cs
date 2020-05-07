@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class InvTraits
+    public class InvTraits
     {
         public long TraitId { get; set; }
         public long? TypeId { get; set; }
