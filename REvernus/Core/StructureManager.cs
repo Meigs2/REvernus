@@ -20,6 +20,8 @@ using REvernus.Views;
 
 namespace REvernus.Core
 {
+    using REvernus.Database.Contexts;
+
     public static class StructureManager
     {
         public static ObservableCollection<PlayerStructure> Structures = new ObservableCollection<PlayerStructure>();

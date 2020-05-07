@@ -8,6 +8,8 @@ using REvernus.Models.UserDbModels;
 
 namespace REvernus.Migrations
 {
+    using REvernus.Database.Contexts;
+
     [DbContext(typeof(UserContext))]
     [Migration("20200406075811_AddCharStructs")]
     partial class AddCharStructs

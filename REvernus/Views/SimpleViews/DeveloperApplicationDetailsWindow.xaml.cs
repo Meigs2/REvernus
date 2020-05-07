@@ -12,10 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore;
-using REvernus.Models.UserDbModels;
 
 namespace REvernus.Views.SimpleViews
 {
+    using REvernus.Database.Contexts;
+    using REvernus.Database.UserDbModels;
+
     /// <summary>
     /// Interaction logic for DeveloperApplicationDetailsWindow.xaml
     /// </summary>

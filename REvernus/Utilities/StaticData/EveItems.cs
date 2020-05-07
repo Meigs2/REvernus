@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
-using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities.StaticData
 {

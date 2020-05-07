@@ -13,6 +13,8 @@ using REvernus.Views.SimpleViews;
 
 namespace REvernus.ViewModels
 {
+    using REvernus.Database.Contexts;
+
     public class MainWindowViewModel : ViewModelBase
     {
 

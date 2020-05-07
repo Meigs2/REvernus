@@ -12,6 +12,8 @@ using REvernus.Properties;
 
 namespace REvernus.Core.ESI
 {
+    using REvernus.Database.Contexts;
+
     internal static class EsiData
     {
         public static EVEStandardAPI EsiClient

@@ -20,6 +20,8 @@ using REvernus.Views.SimpleViews;
 
 namespace REvernus.Core
 {
+    using REvernus.Database.Contexts;
+
     public sealed class CharacterManager : BindableBase
     {
         private static readonly log4net.ILog Log =

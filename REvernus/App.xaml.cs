@@ -9,7 +9,6 @@ using EVEStandard;
 using Microsoft.EntityFrameworkCore;
 using REvernus.Core;
 using REvernus.Core.ESI;
-using REvernus.Models.UserDbModels;
 using REvernus.Properties;
 using REvernus.Settings;
 using REvernus.Utilities.StaticData;
@@ -19,6 +18,9 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace REvernus
 {
+    using REvernus.Database.Contexts;
+    using REvernus.Models.UserDbModels;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

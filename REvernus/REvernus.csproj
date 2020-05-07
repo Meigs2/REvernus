@@ -56,7 +56,10 @@
     <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.111" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\REvernus.Database\REvernus.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>

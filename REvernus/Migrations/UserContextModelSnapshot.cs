@@ -7,6 +7,8 @@ using REvernus.Models.UserDbModels;
 
 namespace REvernus.Migrations
 {
+    using REvernus.Database.Contexts;
+
     [DbContext(typeof(UserContext))]
     partial class UserContextModelSnapshot : ModelSnapshot
     {
