@@ -14,7 +14,7 @@ namespace REvernus.Utilities.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            using var db = new eveContext();
+            using var db = new EveContext();
             try
             {
                 return db.InvTypes.FirstOrDefault(o => o.TypeId == System.Convert.ToInt64(value)); ;
@@ -27,7 +27,7 @@ namespace REvernus.Utilities.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            using var db = new eveContext();
+            using var db = new EveContext();
             try
             {
                 return db.InvTypes.FirstOrDefault(o => o.TypeName == System.Convert.ToString(value));

@@ -16,7 +16,7 @@ namespace REvernus.Utilities
         public static bool TryGetRegionFromSystem(long? systemId, out int regionId)
         {
             regionId = 0;
-            using var db = new eveContext();
+            using var db = new EveContext();
             try
             {
                 var solarSystem = db.MapSolarSystems.FirstOrDefault(o => o.SolarSystemId == systemId);

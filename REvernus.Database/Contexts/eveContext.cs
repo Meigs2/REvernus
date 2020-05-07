@@ -4,106 +4,105 @@
 
     using REvernus.Database.EveDbModels;
 
-    // ReSharper disable once InconsistentNaming
-    public class eveContext : DbContext
+    public class EveContext : DbContext
     {
-        public eveContext()
+        public EveContext()
         {
         }
 
-        public eveContext(DbContextOptions<eveContext> options)
+        public EveContext(DbContextOptions<EveContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<AgtAgentTypes> AgtAgentTypes { get; set; }
-        public virtual DbSet<AgtAgents> AgtAgents { get; set; }
-        public virtual DbSet<AgtResearchAgents> AgtResearchAgents { get; set; }
-        public virtual DbSet<CertCerts> CertCerts { get; set; }
-        public virtual DbSet<CertMasteries> CertMasteries { get; set; }
-        public virtual DbSet<CertSkills> CertSkills { get; set; }
-        public virtual DbSet<ChrAncestries> ChrAncestries { get; set; }
-        public virtual DbSet<ChrAttributes> ChrAttributes { get; set; }
-        public virtual DbSet<ChrBloodlines> ChrBloodlines { get; set; }
-        public virtual DbSet<ChrFactions> ChrFactions { get; set; }
-        public virtual DbSet<ChrRaces> ChrRaces { get; set; }
-        public virtual DbSet<CrpActivities> CrpActivities { get; set; }
-        public virtual DbSet<CrpNpccorporationDivisions> CrpNpccorporationDivisions { get; set; }
-        public virtual DbSet<CrpNpccorporationResearchFields> CrpNpccorporationResearchFields { get; set; }
-        public virtual DbSet<CrpNpccorporationTrades> CrpNpccorporationTrades { get; set; }
-        public virtual DbSet<CrpNpccorporations> CrpNpccorporations { get; set; }
-        public virtual DbSet<CrpNpcdivisions> CrpNpcdivisions { get; set; }
-        public virtual DbSet<DgmAttributeCategories> DgmAttributeCategories { get; set; }
-        public virtual DbSet<DgmAttributeTypes> DgmAttributeTypes { get; set; }
-        public virtual DbSet<DgmEffects> DgmEffects { get; set; }
-        public virtual DbSet<DgmExpressions> DgmExpressions { get; set; }
-        public virtual DbSet<DgmTypeAttributes> DgmTypeAttributes { get; set; }
-        public virtual DbSet<DgmTypeEffects> DgmTypeEffects { get; set; }
-        public virtual DbSet<EveGraphics> EveGraphics { get; set; }
-        public virtual DbSet<EveIcons> EveIcons { get; set; }
-        public virtual DbSet<EveUnits> EveUnits { get; set; }
-        public virtual DbSet<IndustryActivity> IndustryActivity { get; set; }
-        public virtual DbSet<IndustryActivityMaterials> IndustryActivityMaterials { get; set; }
-        public virtual DbSet<IndustryActivityProbabilities> IndustryActivityProbabilities { get; set; }
-        public virtual DbSet<IndustryActivityProducts> IndustryActivityProducts { get; set; }
-        public virtual DbSet<IndustryActivityRaces> IndustryActivityRaces { get; set; }
-        public virtual DbSet<IndustryActivitySkills> IndustryActivitySkills { get; set; }
-        public virtual DbSet<IndustryBlueprints> IndustryBlueprints { get; set; }
-        public virtual DbSet<InvCategories> InvCategories { get; set; }
-        public virtual DbSet<InvContrabandTypes> InvContrabandTypes { get; set; }
-        public virtual DbSet<InvControlTowerResourcePurposes> InvControlTowerResourcePurposes { get; set; }
-        public virtual DbSet<InvControlTowerResources> InvControlTowerResources { get; set; }
-        public virtual DbSet<InvFlags> InvFlags { get; set; }
-        public virtual DbSet<InvGroups> InvGroups { get; set; }
-        public virtual DbSet<InvItems> InvItems { get; set; }
-        public virtual DbSet<InvMarketGroups> InvMarketGroups { get; set; }
-        public virtual DbSet<InvMetaGroups> InvMetaGroups { get; set; }
-        public virtual DbSet<InvMetaTypes> InvMetaTypes { get; set; }
-        public virtual DbSet<InvNames> InvNames { get; set; }
-        public virtual DbSet<InvPositions> InvPositions { get; set; }
-        public virtual DbSet<InvTraits> InvTraits { get; set; }
-        public virtual DbSet<InvTypeMaterials> InvTypeMaterials { get; set; }
-        public virtual DbSet<InvTypeReactions> InvTypeReactions { get; set; }
-        public virtual DbSet<InvTypes> InvTypes { get; set; }
-        public virtual DbSet<InvUniqueNames> InvUniqueNames { get; set; }
-        public virtual DbSet<InvVolumes> InvVolumes { get; set; }
-        public virtual DbSet<MapCelestialStatistics> MapCelestialStatistics { get; set; }
-        public virtual DbSet<MapConstellationJumps> MapConstellationJumps { get; set; }
-        public virtual DbSet<MapConstellations> MapConstellations { get; set; }
-        public virtual DbSet<MapDenormalize> MapDenormalize { get; set; }
-        public virtual DbSet<MapJumps> MapJumps { get; set; }
-        public virtual DbSet<MapLandmarks> MapLandmarks { get; set; }
-        public virtual DbSet<MapLocationScenes> MapLocationScenes { get; set; }
-        public virtual DbSet<MapLocationWormholeClasses> MapLocationWormholeClasses { get; set; }
-        public virtual DbSet<MapRegionJumps> MapRegionJumps { get; set; }
-        public virtual DbSet<MapRegions> MapRegions { get; set; }
-        public virtual DbSet<MapSolarSystemJumps> MapSolarSystemJumps { get; set; }
-        public virtual DbSet<MapSolarSystems> MapSolarSystems { get; set; }
-        public virtual DbSet<MapUniverse> MapUniverse { get; set; }
-        public virtual DbSet<PlanetSchematics> PlanetSchematics { get; set; }
-        public virtual DbSet<PlanetSchematicsPinMap> PlanetSchematicsPinMap { get; set; }
-        public virtual DbSet<PlanetSchematicsTypeMap> PlanetSchematicsTypeMap { get; set; }
-        public virtual DbSet<RamActivities> RamActivities { get; set; }
-        public virtual DbSet<RamAssemblyLineStations> RamAssemblyLineStations { get; set; }
-        public virtual DbSet<RamAssemblyLineTypeDetailPerCategory> RamAssemblyLineTypeDetailPerCategory { get; set; }
-        public virtual DbSet<RamAssemblyLineTypeDetailPerGroup> RamAssemblyLineTypeDetailPerGroup { get; set; }
-        public virtual DbSet<RamAssemblyLineTypes> RamAssemblyLineTypes { get; set; }
-        public virtual DbSet<RamInstallationTypeContents> RamInstallationTypeContents { get; set; }
-        public virtual DbSet<SkinLicense> SkinLicense { get; set; }
-        public virtual DbSet<SkinMaterials> SkinMaterials { get; set; }
-        public virtual DbSet<SkinShip> SkinShip { get; set; }
-        public virtual DbSet<Skins> Skins { get; set; }
-        public virtual DbSet<StaOperationServices> StaOperationServices { get; set; }
-        public virtual DbSet<StaOperations> StaOperations { get; set; }
-        public virtual DbSet<StaServices> StaServices { get; set; }
-        public virtual DbSet<StaStationTypes> StaStationTypes { get; set; }
-        public virtual DbSet<StaStations> StaStations { get; set; }
-        public virtual DbSet<TranslationTables> TranslationTables { get; set; }
-        public virtual DbSet<TrnTranslationColumns> TrnTranslationColumns { get; set; }
-        public virtual DbSet<TrnTranslationLanguages> TrnTranslationLanguages { get; set; }
-        public virtual DbSet<TrnTranslations> TrnTranslations { get; set; }
-        public virtual DbSet<WarCombatZoneSystems> WarCombatZoneSystems { get; set; }
-        public virtual DbSet<WarCombatZones> WarCombatZones { get; set; }
+        public DbSet<AgtAgentTypes> AgtAgentTypes { get; set; }
+        public DbSet<AgtAgents> AgtAgents { get; set; }
+        public DbSet<AgtResearchAgents> AgtResearchAgents { get; set; }
+        public DbSet<CertCerts> CertCerts { get; set; }
+        public DbSet<CertMasteries> CertMasteries { get; set; }
+        public DbSet<CertSkills> CertSkills { get; set; }
+        public DbSet<ChrAncestries> ChrAncestries { get; set; }
+        public DbSet<ChrAttributes> ChrAttributes { get; set; }
+        public DbSet<ChrBloodlines> ChrBloodlines { get; set; }
+        public DbSet<ChrFactions> ChrFactions { get; set; }
+        public DbSet<ChrRaces> ChrRaces { get; set; }
+        public DbSet<CrpActivities> CrpActivities { get; set; }
+        public DbSet<CrpNpccorporationDivisions> CrpNpccorporationDivisions { get; set; }
+        public DbSet<CrpNpccorporationResearchFields> CrpNpccorporationResearchFields { get; set; }
+        public DbSet<CrpNpccorporationTrades> CrpNpccorporationTrades { get; set; }
+        public DbSet<CrpNpccorporations> CrpNpccorporations { get; set; }
+        public DbSet<CrpNpcdivisions> CrpNpcdivisions { get; set; }
+        public DbSet<DgmAttributeCategories> DgmAttributeCategories { get; set; }
+        public DbSet<DgmAttributeTypes> DgmAttributeTypes { get; set; }
+        public DbSet<DgmEffects> DgmEffects { get; set; }
+        public DbSet<DgmExpressions> DgmExpressions { get; set; }
+        public DbSet<DgmTypeAttributes> DgmTypeAttributes { get; set; }
+        public DbSet<DgmTypeEffects> DgmTypeEffects { get; set; }
+        public DbSet<EveGraphics> EveGraphics { get; set; }
+        public DbSet<EveIcons> EveIcons { get; set; }
+        public DbSet<EveUnits> EveUnits { get; set; }
+        public DbSet<IndustryActivity> IndustryActivity { get; set; }
+        public DbSet<IndustryActivityMaterials> IndustryActivityMaterials { get; set; }
+        public DbSet<IndustryActivityProbabilities> IndustryActivityProbabilities { get; set; }
+        public DbSet<IndustryActivityProducts> IndustryActivityProducts { get; set; }
+        public DbSet<IndustryActivityRaces> IndustryActivityRaces { get; set; }
+        public DbSet<IndustryActivitySkills> IndustryActivitySkills { get; set; }
+        public DbSet<IndustryBlueprints> IndustryBlueprints { get; set; }
+        public DbSet<InvCategories> InvCategories { get; set; }
+        public DbSet<InvContrabandTypes> InvContrabandTypes { get; set; }
+        public DbSet<InvControlTowerResourcePurposes> InvControlTowerResourcePurposes { get; set; }
+        public DbSet<InvControlTowerResources> InvControlTowerResources { get; set; }
+        public DbSet<InvFlags> InvFlags { get; set; }
+        public DbSet<InvGroups> InvGroups { get; set; }
+        public DbSet<InvItems> InvItems { get; set; }
+        public DbSet<InvMarketGroups> InvMarketGroups { get; set; }
+        public DbSet<InvMetaGroups> InvMetaGroups { get; set; }
+        public DbSet<InvMetaTypes> InvMetaTypes { get; set; }
+        public DbSet<InvNames> InvNames { get; set; }
+        public DbSet<InvPositions> InvPositions { get; set; }
+        public DbSet<InvTraits> InvTraits { get; set; }
+        public DbSet<InvTypeMaterials> InvTypeMaterials { get; set; }
+        public DbSet<InvTypeReactions> InvTypeReactions { get; set; }
+        public DbSet<InvTypes> InvTypes { get; set; }
+        public DbSet<InvUniqueNames> InvUniqueNames { get; set; }
+        public DbSet<InvVolumes> InvVolumes { get; set; }
+        public DbSet<MapCelestialStatistics> MapCelestialStatistics { get; set; }
+        public DbSet<MapConstellationJumps> MapConstellationJumps { get; set; }
+        public DbSet<MapConstellations> MapConstellations { get; set; }
+        public DbSet<MapDenormalize> MapDenormalize { get; set; }
+        public DbSet<MapJumps> MapJumps { get; set; }
+        public DbSet<MapLandmarks> MapLandmarks { get; set; }
+        public DbSet<MapLocationScenes> MapLocationScenes { get; set; }
+        public DbSet<MapLocationWormholeClasses> MapLocationWormholeClasses { get; set; }
+        public DbSet<MapRegionJumps> MapRegionJumps { get; set; }
+        public DbSet<MapRegions> MapRegions { get; set; }
+        public DbSet<MapSolarSystemJumps> MapSolarSystemJumps { get; set; }
+        public DbSet<MapSolarSystems> MapSolarSystems { get; set; }
+        public DbSet<MapUniverse> MapUniverse { get; set; }
+        public DbSet<PlanetSchematics> PlanetSchematics { get; set; }
+        public DbSet<PlanetSchematicsPinMap> PlanetSchematicsPinMap { get; set; }
+        public DbSet<PlanetSchematicsTypeMap> PlanetSchematicsTypeMap { get; set; }
+        public DbSet<RamActivities> RamActivities { get; set; }
+        public DbSet<RamAssemblyLineStations> RamAssemblyLineStations { get; set; }
+        public DbSet<RamAssemblyLineTypeDetailPerCategory> RamAssemblyLineTypeDetailPerCategory { get; set; }
+        public DbSet<RamAssemblyLineTypeDetailPerGroup> RamAssemblyLineTypeDetailPerGroup { get; set; }
+        public DbSet<RamAssemblyLineTypes> RamAssemblyLineTypes { get; set; }
+        public DbSet<RamInstallationTypeContents> RamInstallationTypeContents { get; set; }
+        public DbSet<SkinLicense> SkinLicense { get; set; }
+        public DbSet<SkinMaterials> SkinMaterials { get; set; }
+        public DbSet<SkinShip> SkinShip { get; set; }
+        public DbSet<Skins> Skins { get; set; }
+        public DbSet<StaOperationServices> StaOperationServices { get; set; }
+        public DbSet<StaOperations> StaOperations { get; set; }
+        public DbSet<StaServices> StaServices { get; set; }
+        public DbSet<StaStationTypes> StaStationTypes { get; set; }
+        public DbSet<StaStations> StaStations { get; set; }
+        public DbSet<TranslationTables> TranslationTables { get; set; }
+        public DbSet<TrnTranslationColumns> TrnTranslationColumns { get; set; }
+        public DbSet<TrnTranslationLanguages> TrnTranslationLanguages { get; set; }
+        public DbSet<TrnTranslations> TrnTranslations { get; set; }
+        public DbSet<WarCombatZoneSystems> WarCombatZoneSystems { get; set; }
+        public DbSet<WarCombatZones> WarCombatZones { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -115,68 +114,6 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AgtAgentTypes>(entity =>
-            {
-                entity.HasKey(e => e.AgentTypeId);
-
-                entity.ToTable("agtAgentTypes");
-
-                entity.Property(e => e.AgentTypeId)
-                    .HasColumnName("agentTypeID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.AgentType)
-                    .HasColumnName("agentType")
-                    .HasColumnType("VARCHAR(50)");
-            });
-
-            modelBuilder.Entity<AgtAgents>(entity =>
-            {
-                entity.HasKey(e => e.AgentId);
-
-                entity.ToTable("agtAgents");
-
-                entity.HasIndex(e => e.CorporationId)
-                    .HasName("ix_agtAgents_corporationID");
-
-                entity.HasIndex(e => e.LocationId)
-                    .HasName("ix_agtAgents_locationID");
-
-                entity.Property(e => e.AgentId)
-                    .HasColumnName("agentID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.AgentTypeId).HasColumnName("agentTypeID");
-
-                entity.Property(e => e.CorporationId).HasColumnName("corporationID");
-
-                entity.Property(e => e.DivisionId).HasColumnName("divisionID");
-
-                entity.Property(e => e.IsLocator)
-                    .HasColumnName("isLocator")
-                    .HasColumnType("BOOLEAN");
-
-                entity.Property(e => e.Level).HasColumnName("level");
-
-                entity.Property(e => e.LocationId).HasColumnName("locationID");
-
-                entity.Property(e => e.Quality).HasColumnName("quality");
-            });
-
-            modelBuilder.Entity<AgtResearchAgents>(entity =>
-            {
-                entity.HasKey(e => new { e.AgentId, e.TypeId });
-
-                entity.ToTable("agtResearchAgents");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_agtResearchAgents_typeID");
-
-                entity.Property(e => e.AgentId).HasColumnName("agentID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
             modelBuilder.Entity<CertCerts>(entity =>
             {
                 entity.HasKey(e => e.CertId);

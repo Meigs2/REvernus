@@ -109,7 +109,7 @@ namespace REvernus.Core
         public static bool TryGetNpcStation(long stationId, out StaStations station)
         {
             station = null;
-            using var db = new eveContext();
+            using var db = new EveContext();
             try
             {
                 station = db.StaStations.FirstOrDefault(o => o.StationId == stationId);

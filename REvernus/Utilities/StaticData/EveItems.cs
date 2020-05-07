@@ -17,7 +17,7 @@ namespace REvernus.Utilities.StaticData
 
         public static void Initialize()
         {
-            using var db = new eveContext();
+            using var db = new EveContext();
             try
             {
                 var items = db.InvTypes
