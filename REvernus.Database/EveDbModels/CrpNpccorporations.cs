@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class CrpNpccorporations
+    public class CrpNpccorporations
     {
         public long CorporationId { get; set; }
         public string Size { get; set; }

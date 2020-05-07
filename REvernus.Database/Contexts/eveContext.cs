@@ -116,140 +116,15 @@
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EveContext).Assembly);
 
-            modelBuilder.Entity<CrpNpccorporationDivisions>(entity =>
-            {
-                entity.HasKey(e => new { e.CorporationId, e.DivisionId });
+            
 
-                entity.ToTable("crpNPCCorporationDivisions");
+           
 
-                entity.Property(e => e.CorporationId).HasColumnName("corporationID");
+            
 
-                entity.Property(e => e.DivisionId).HasColumnName("divisionID");
+            
 
-                entity.Property(e => e.Size).HasColumnName("size");
-            });
-
-            modelBuilder.Entity<CrpNpccorporationResearchFields>(entity =>
-            {
-                entity.HasKey(e => new { e.SkillId, e.CorporationId });
-
-                entity.ToTable("crpNPCCorporationResearchFields");
-
-                entity.Property(e => e.SkillId).HasColumnName("skillID");
-
-                entity.Property(e => e.CorporationId).HasColumnName("corporationID");
-            });
-
-            modelBuilder.Entity<CrpNpccorporationTrades>(entity =>
-            {
-                entity.HasKey(e => new { e.CorporationId, e.TypeId });
-
-                entity.ToTable("crpNPCCorporationTrades");
-
-                entity.Property(e => e.CorporationId).HasColumnName("corporationID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<CrpNpccorporations>(entity =>
-            {
-                entity.HasKey(e => e.CorporationId);
-
-                entity.ToTable("crpNPCCorporations");
-
-                entity.Property(e => e.CorporationId)
-                    .HasColumnName("corporationID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Border).HasColumnName("border");
-
-                entity.Property(e => e.Corridor).HasColumnName("corridor");
-
-                entity.Property(e => e.Description)
-                    .HasColumnName("description")
-                    .HasColumnType("VARCHAR(4000)");
-
-                entity.Property(e => e.EnemyId).HasColumnName("enemyID");
-
-                entity.Property(e => e.Extent)
-                    .HasColumnName("extent")
-                    .HasColumnType("CHAR(1)");
-
-                entity.Property(e => e.FactionId).HasColumnName("factionID");
-
-                entity.Property(e => e.FriendId).HasColumnName("friendID");
-
-                entity.Property(e => e.Fringe).HasColumnName("fringe");
-
-                entity.Property(e => e.Hub).HasColumnName("hub");
-
-                entity.Property(e => e.IconId).HasColumnName("iconID");
-
-                entity.Property(e => e.InitialPrice).HasColumnName("initialPrice");
-
-                entity.Property(e => e.InvestorId1).HasColumnName("investorID1");
-
-                entity.Property(e => e.InvestorId2).HasColumnName("investorID2");
-
-                entity.Property(e => e.InvestorId3).HasColumnName("investorID3");
-
-                entity.Property(e => e.InvestorId4).HasColumnName("investorID4");
-
-                entity.Property(e => e.InvestorShares1).HasColumnName("investorShares1");
-
-                entity.Property(e => e.InvestorShares2).HasColumnName("investorShares2");
-
-                entity.Property(e => e.InvestorShares3).HasColumnName("investorShares3");
-
-                entity.Property(e => e.InvestorShares4).HasColumnName("investorShares4");
-
-                entity.Property(e => e.MinSecurity)
-                    .HasColumnName("minSecurity")
-                    .HasColumnType("FLOAT");
-
-                entity.Property(e => e.PublicShares).HasColumnName("publicShares");
-
-                entity.Property(e => e.Scattered)
-                    .HasColumnName("scattered")
-                    .HasColumnType("BOOLEAN");
-
-                entity.Property(e => e.Size)
-                    .HasColumnName("size")
-                    .HasColumnType("CHAR(1)");
-
-                entity.Property(e => e.SizeFactor)
-                    .HasColumnName("sizeFactor")
-                    .HasColumnType("FLOAT");
-
-                entity.Property(e => e.SolarSystemId).HasColumnName("solarSystemID");
-
-                entity.Property(e => e.StationCount).HasColumnName("stationCount");
-
-                entity.Property(e => e.StationSystemCount).HasColumnName("stationSystemCount");
-            });
-
-            modelBuilder.Entity<CrpNpcdivisions>(entity =>
-            {
-                entity.HasKey(e => e.DivisionId);
-
-                entity.ToTable("crpNPCDivisions");
-
-                entity.Property(e => e.DivisionId)
-                    .HasColumnName("divisionID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Description)
-                    .HasColumnName("description")
-                    .HasColumnType("VARCHAR(1000)");
-
-                entity.Property(e => e.DivisionName)
-                    .HasColumnName("divisionName")
-                    .HasColumnType("VARCHAR(100)");
-
-                entity.Property(e => e.LeaderType)
-                    .HasColumnName("leaderType")
-                    .HasColumnType("VARCHAR(100)");
-            });
+            
 
             modelBuilder.Entity<DgmAttributeCategories>(entity =>
             {
