@@ -13,14 +13,14 @@ using EVEStandard.Models.API;
 using Microsoft.EntityFrameworkCore.Internal;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Models.EveDbModels;
-using REvernus.Models.UserDbModels;
 using REvernus.Utilities;
 using REvernus.Views;
 
 namespace REvernus.Core
 {
     using REvernus.Database.Contexts;
+    using REvernus.Database.EveDbModels;
+    using REvernus.Database.UserDbModels;
 
     public static class StructureManager
     {

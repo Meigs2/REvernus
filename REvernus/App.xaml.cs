@@ -19,7 +19,6 @@ using MessageBox = System.Windows.MessageBox;
 namespace REvernus
 {
     using REvernus.Database.Contexts;
-    using REvernus.Models.UserDbModels;
 
     /// <summary>
     /// Interaction logic for App.xaml

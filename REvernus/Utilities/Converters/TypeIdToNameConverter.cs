@@ -5,10 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
-using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities.Converters
 {
+    using REvernus.Database.Contexts;
+
     public class TypeIdToNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

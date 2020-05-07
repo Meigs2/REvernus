@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
-namespace REvernus.Models.UserDbModels
+﻿namespace REvernus.Database.UserDbModels
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class DeveloperApplication
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]

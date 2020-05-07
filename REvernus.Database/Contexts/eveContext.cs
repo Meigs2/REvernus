@@ -3,10 +3,9 @@
     using Microsoft.EntityFrameworkCore;
 
     using REvernus.Database.EveDbModels;
-    using REvernus.Models.EveDbModels;
 
     // ReSharper disable once InconsistentNaming
-    public partial class eveContext : DbContext
+    public class eveContext : DbContext
     {
         public eveContext()
         {
@@ -2590,9 +2589,7 @@
                 entity.Property(e => e.FactionId).HasColumnName("factionID");
             });
 
-            OnModelCreatingPartial(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

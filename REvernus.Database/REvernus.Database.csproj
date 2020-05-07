@@ -15,4 +15,8 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EveEntityConfigurations\" />
+  </ItemGroup>
+
 </Project>

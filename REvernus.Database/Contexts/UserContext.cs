@@ -2,7 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
 
-    using REvernus.Models.UserDbModels;
+    using REvernus.Database.UserDbModels;
 
     public class UserContext : DbContext
     {

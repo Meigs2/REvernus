@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace REvernus.Models.EveDbModels
+﻿namespace REvernus.Database.EveDbModels
 {
     public partial class WarCombatZoneSystems
     {
