@@ -1205,6 +1205,14 @@ namespace REvernus.Models.EveDbModels
                     .HasColumnType("VARCHAR(100)");
 
                 entity.Property(e => e.ParentGroupId).HasColumnName("parentGroupID");
+
+                entity.HasOne(e => e.Parent)
+                    .WithMany(e => e.Children)
+                    .HasForeignKey(e => e.ParentGroupId);
+
+                entity.HasMany(e => e.InventoryChildren)
+                    .WithOne(e => e.MarketGroup)
+                    .HasForeignKey(e => e.MarketGroupId);
             });
 
             modelBuilder.Entity<InvMetaGroups>(entity =>
