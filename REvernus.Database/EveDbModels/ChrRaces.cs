@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class ChrRaces
+    public class ChrRaces
     {
         public long RaceId { get; set; }
         public string RaceName { get; set; }

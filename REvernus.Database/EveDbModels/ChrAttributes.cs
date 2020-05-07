@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class ChrAttributes
+    public class ChrAttributes
     {
         public long AttributeId { get; set; }
         public string AttributeName { get; set; }

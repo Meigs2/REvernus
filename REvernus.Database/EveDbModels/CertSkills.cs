@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class CertSkills
+    public class CertSkills
     {
         public long? CertId { get; set; }
         public long? SkillId { get; set; }

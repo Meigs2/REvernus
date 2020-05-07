@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class ChrAncestries
+    public class ChrAncestries
     {
         public long AncestryId { get; set; }
         public string AncestryName { get; set; }

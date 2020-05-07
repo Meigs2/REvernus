@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class ChrFactions
+    public class ChrFactions
     {
         public long FactionId { get; set; }
         public string FactionName { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class ChrBloodlines
+    public class ChrBloodlines
     {
         public long BloodlineId { get; set; }
         public string BloodlineName { get; set; }
