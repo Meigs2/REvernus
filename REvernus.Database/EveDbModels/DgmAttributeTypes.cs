@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class DgmAttributeTypes
+    public class DgmAttributeTypes
     {
         public long AttributeId { get; set; }
         public string AttributeName { get; set; }

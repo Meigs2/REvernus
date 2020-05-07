@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class DgmExpressions
+    public class DgmExpressions
     {
         public long ExpressionId { get; set; }
         public long? OperandId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class DgmEffects
+    public class DgmEffects
     {
         public long EffectId { get; set; }
         public string EffectName { get; set; }
