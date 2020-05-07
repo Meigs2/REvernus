@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class EveGraphics
+    public class EveGraphics
     {
         public long GraphicId { get; set; }
         public string SofFactionName { get; set; }
