@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Media;
-using System.Net;
 using System.Net.Http;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Shell;
@@ -14,6 +11,8 @@ using REvernus.Views.SimpleViews;
 
 namespace REvernus.Utilities.StaticData
 {
+    using REvernus.Utilites;
+
     public class SdeDownloader
     {
         private readonly log4net.ILog _log =

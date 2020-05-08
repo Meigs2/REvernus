@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Jot;
-using Jot.Configuration;
 using Jot.Storage;
-using REvernus.ViewModels;
-using REvernus.Views;
 
 namespace REvernus.Core
 {
+    using REvernus.Utilites;
+
     public  static class Services
     {
-        public static Tracker Tracker = new Tracker(new JsonFileStore(Utilities.Paths.SerializedDataFolder));
+        public static Tracker Tracker = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
 
         /// <summary>
         /// This class initializes the tracker for tracking the status of objects, ex the position of a window

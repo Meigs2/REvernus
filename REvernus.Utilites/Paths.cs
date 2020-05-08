@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-namespace REvernus.Utilities
+﻿namespace REvernus.Utilites
 {
+    using System;
+    using System.IO;
+
     public static class Paths
     {
         // Directories

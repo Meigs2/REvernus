@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using REvernus.Database.EveDbModels;
+    using REvernus.Utilites;
 
     public class EveContext : DbContext
     {
@@ -108,7 +109,7 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite($"DataSource={Utilities.Paths.SdeDataBasePath};");
+                optionsBuilder.UseSqlite($"DataSource={Paths.SdeDataBasePath};");
             }
         }
 

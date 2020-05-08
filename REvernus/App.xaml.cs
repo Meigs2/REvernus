@@ -1,11 +1,8 @@
 ﻿using REvernus.Utilities;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
-using EVEStandard;
 using Microsoft.EntityFrameworkCore;
 using REvernus.Core;
 using REvernus.Core.ESI;
@@ -19,6 +16,7 @@ using MessageBox = System.Windows.MessageBox;
 namespace REvernus
 {
     using REvernus.Database.Contexts;
+    using REvernus.Utilites;
 
     /// <summary>
     /// Interaction logic for App.xaml

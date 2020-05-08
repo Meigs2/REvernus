@@ -2,29 +2,20 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;
-using REvernus.Utilities.StaticData;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Data;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Threading;
 using EVEStandard.Models.API;
 using Gma.System.MouseKeyHook;
-using ICSharpCode.SharpZipLib.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Utilities;
 using REvernus.Utilities.Extensions;
 using Clipboard = System.Windows.Clipboard;
 using Market = REvernus.Utilities.Esi.Market;
@@ -32,6 +23,8 @@ using Status = REvernus.Utilities.Status;
 
 namespace REvernus.ViewModels
 {
+    using REvernus.Utilites;
+
     public class MarketOrdersViewerViewModel : BindableBase
     {
         public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();

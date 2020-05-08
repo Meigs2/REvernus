@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using REvernus.Database.UserDbModels;
+    using REvernus.Utilites;
 
     public class UserContext : DbContext
     {
@@ -14,7 +15,7 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite($"DataSource={Utilities.Paths.UserDataBasePath};");
+                optionsBuilder.UseSqlite($"DataSource={Paths.UserDataBasePath};");
             }
         }
     }
