@@ -3,11 +3,10 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using REvernus.Database.Contexts;
 
 namespace REvernus.Migrations
 {
-    using REvernus.Database.Contexts;
-
     [DbContext(typeof(UserContext))]
     partial class UserContextModelSnapshot : ModelSnapshot
     {
