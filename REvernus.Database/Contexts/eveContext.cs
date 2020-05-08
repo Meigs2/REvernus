@@ -112,143 +112,14 @@
             }
         }
 
+        /// <summary>
+        /// Applying entity configurations
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EveContext).Assembly);
             
-            
-
-            
-            
-
-            
-
-            
-
-            modelBuilder.Entity<TranslationTables>(entity =>
-            {
-                entity.HasKey(e => new { e.SourceTable, e.TranslatedKey });
-
-                entity.ToTable("translationTables");
-
-                entity.Property(e => e.SourceTable)
-                    .HasColumnName("sourceTable")
-                    .HasColumnType("VARCHAR(200)");
-
-                entity.Property(e => e.TranslatedKey)
-                    .HasColumnName("translatedKey")
-                    .HasColumnType("VARCHAR(200)");
-
-                entity.Property(e => e.DestinationTable)
-                    .HasColumnName("destinationTable")
-                    .HasColumnType("VARCHAR(200)");
-
-                entity.Property(e => e.TcGroupId).HasColumnName("tcGroupID");
-
-                entity.Property(e => e.TcId).HasColumnName("tcID");
-            });
-
-            modelBuilder.Entity<TrnTranslationColumns>(entity =>
-            {
-                entity.HasKey(e => e.TcId);
-
-                entity.ToTable("trnTranslationColumns");
-
-                entity.Property(e => e.TcId)
-                    .HasColumnName("tcID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.ColumnName)
-                    .IsRequired()
-                    .HasColumnName("columnName")
-                    .HasColumnType("VARCHAR(128)");
-
-                entity.Property(e => e.MasterId)
-                    .HasColumnName("masterID")
-                    .HasColumnType("VARCHAR(128)");
-
-                entity.Property(e => e.TableName)
-                    .IsRequired()
-                    .HasColumnName("tableName")
-                    .HasColumnType("VARCHAR(256)");
-
-                entity.Property(e => e.TcGroupId).HasColumnName("tcGroupID");
-            });
-
-            modelBuilder.Entity<TrnTranslationLanguages>(entity =>
-            {
-                entity.HasKey(e => e.NumericLanguageId);
-
-                entity.ToTable("trnTranslationLanguages");
-
-                entity.Property(e => e.NumericLanguageId)
-                    .HasColumnName("numericLanguageID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.LanguageId)
-                    .HasColumnName("languageID")
-                    .HasColumnType("VARCHAR(50)");
-
-                entity.Property(e => e.LanguageName)
-                    .HasColumnName("languageName")
-                    .HasColumnType("VARCHAR(200)");
-            });
-
-            modelBuilder.Entity<TrnTranslations>(entity =>
-            {
-                entity.HasKey(e => new { e.TcId, e.KeyId, e.LanguageId });
-
-                entity.ToTable("trnTranslations");
-
-                entity.Property(e => e.TcId).HasColumnName("tcID");
-
-                entity.Property(e => e.KeyId).HasColumnName("keyID");
-
-                entity.Property(e => e.LanguageId)
-                    .HasColumnName("languageID")
-                    .HasColumnType("VARCHAR(50)");
-
-                entity.Property(e => e.Text)
-                    .IsRequired()
-                    .HasColumnName("text");
-            });
-
-            modelBuilder.Entity<WarCombatZoneSystems>(entity =>
-            {
-                entity.HasKey(e => e.SolarSystemId);
-
-                entity.ToTable("warCombatZoneSystems");
-
-                entity.Property(e => e.SolarSystemId)
-                    .HasColumnName("solarSystemID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.CombatZoneId).HasColumnName("combatZoneID");
-            });
-
-            modelBuilder.Entity<WarCombatZones>(entity =>
-            {
-                entity.HasKey(e => e.CombatZoneId);
-
-                entity.ToTable("warCombatZones");
-
-                entity.Property(e => e.CombatZoneId)
-                    .HasColumnName("combatZoneID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.CenterSystemId).HasColumnName("centerSystemID");
-
-                entity.Property(e => e.CombatZoneName)
-                    .HasColumnName("combatZoneName")
-                    .HasColumnType("VARCHAR(100)");
-
-                entity.Property(e => e.Description)
-                    .HasColumnName("description")
-                    .HasColumnType("VARCHAR(500)");
-
-                entity.Property(e => e.FactionId).HasColumnName("factionID");
-            });
-
             base.OnModelCreating(modelBuilder);
         }
     }

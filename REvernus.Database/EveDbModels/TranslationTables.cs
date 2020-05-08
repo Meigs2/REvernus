@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class TranslationTables
+    public class TranslationTables
     {
         public string SourceTable { get; set; }
         public string DestinationTable { get; set; }

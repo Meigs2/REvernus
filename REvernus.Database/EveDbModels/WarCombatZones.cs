@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class WarCombatZones
+    public class WarCombatZones
     {
         public long CombatZoneId { get; set; }
         public string CombatZoneName { get; set; }

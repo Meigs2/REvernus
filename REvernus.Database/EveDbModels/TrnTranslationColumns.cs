@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class TrnTranslationColumns
+    public class TrnTranslationColumns
     {
         public long? TcGroupId { get; set; }
         public long TcId { get; set; }
