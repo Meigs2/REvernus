@@ -119,69 +119,7 @@
 
             
 
-            modelBuilder.Entity<SkinLicense>(entity =>
-            {
-                entity.HasKey(e => e.LicenseTypeId);
-
-                entity.ToTable("skinLicense");
-
-                entity.Property(e => e.LicenseTypeId)
-                    .HasColumnName("licenseTypeID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Duration).HasColumnName("duration");
-
-                entity.Property(e => e.SkinId).HasColumnName("skinID");
-            });
-
-            modelBuilder.Entity<SkinMaterials>(entity =>
-            {
-                entity.HasKey(e => e.SkinMaterialId);
-
-                entity.ToTable("skinMaterials");
-
-                entity.Property(e => e.SkinMaterialId)
-                    .HasColumnName("skinMaterialID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.DisplayNameId).HasColumnName("displayNameID");
-
-                entity.Property(e => e.MaterialSetId).HasColumnName("materialSetID");
-            });
-
-            modelBuilder.Entity<SkinShip>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("skinShip");
-
-                entity.HasIndex(e => e.SkinId)
-                    .HasName("ix_skinShip_skinID");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("ix_skinShip_typeID");
-
-                entity.Property(e => e.SkinId).HasColumnName("skinID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-            });
-
-            modelBuilder.Entity<Skins>(entity =>
-            {
-                entity.HasKey(e => e.SkinId);
-
-                entity.ToTable("skins");
-
-                entity.Property(e => e.SkinId)
-                    .HasColumnName("skinID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.InternalName)
-                    .HasColumnName("internalName")
-                    .HasColumnType("VARCHAR(70)");
-
-                entity.Property(e => e.SkinMaterialId).HasColumnName("skinMaterialID");
-            });
+            
 
             modelBuilder.Entity<StaOperationServices>(entity =>
             {

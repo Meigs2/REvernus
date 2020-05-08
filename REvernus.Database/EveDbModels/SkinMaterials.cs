@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class SkinMaterials
+    public class SkinMaterials
     {
         public long SkinMaterialId { get; set; }
         public long? DisplayNameId { get; set; }
