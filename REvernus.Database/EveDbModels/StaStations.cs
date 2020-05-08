@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class StaStations
+    public class StaStations
     {
         public long StationId { get; set; }
         public double? Security { get; set; }

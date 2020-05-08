@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class StaServices
+    public class StaServices
     {
         public long ServiceId { get; set; }
         public string ServiceName { get; set; }

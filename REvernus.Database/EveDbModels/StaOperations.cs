@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class StaOperations
+    public class StaOperations
     {
         public long? ActivityId { get; set; }
         public long OperationId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class StaStationTypes
+    public class StaStationTypes
     {
         public long StationTypeId { get; set; }
         public double? DockEntryX { get; set; }
