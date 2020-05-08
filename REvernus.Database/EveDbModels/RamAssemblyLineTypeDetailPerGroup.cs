@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class RamAssemblyLineTypeDetailPerGroup
+    public class RamAssemblyLineTypeDetailPerGroup
     {
         public long AssemblyLineTypeId { get; set; }
         public long GroupId { get; set; }

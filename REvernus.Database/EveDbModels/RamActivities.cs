@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class RamActivities
+    public class RamActivities
     {
         public long ActivityId { get; set; }
         public string ActivityName { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class RamInstallationTypeContents
+    public class RamInstallationTypeContents
     {
         public long InstallationTypeId { get; set; }
         public long AssemblyLineTypeId { get; set; }
