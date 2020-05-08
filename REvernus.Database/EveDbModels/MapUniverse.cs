@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapUniverse
+    public class MapUniverse
     {
         public long UniverseId { get; set; }
         public string UniverseName { get; set; }

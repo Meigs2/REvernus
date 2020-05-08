@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapDenormalize
+    public class MapDenormalize
     {
         public long ItemId { get; set; }
         public long? TypeId { get; set; }

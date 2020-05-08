@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapSolarSystemJumps
+    public class MapSolarSystemJumps
     {
         public long? FromRegionId { get; set; }
         public long? FromConstellationId { get; set; }

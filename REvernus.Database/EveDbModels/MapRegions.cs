@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapRegions
+    public class MapRegions
     {
         public long RegionId { get; set; }
         public string RegionName { get; set; }

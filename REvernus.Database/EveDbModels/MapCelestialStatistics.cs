@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapCelestialStatistics
+    public class MapCelestialStatistics
     {
         public long CelestialId { get; set; }
         public double? Temperature { get; set; }

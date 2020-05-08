@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapLandmarks
+    public class MapLandmarks
     {
         public long LandmarkId { get; set; }
         public string LandmarkName { get; set; }

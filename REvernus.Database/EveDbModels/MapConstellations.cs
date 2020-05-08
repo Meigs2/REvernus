@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class MapConstellations
+    public class MapConstellations
     {
         public long? RegionId { get; set; }
         public long ConstellationId { get; set; }
