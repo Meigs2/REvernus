@@ -116,52 +116,7 @@
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EveContext).Assembly);
 
-  
-
-            modelBuilder.Entity<PlanetSchematics>(entity =>
-            {
-                entity.HasKey(e => e.SchematicId);
-
-                entity.ToTable("planetSchematics");
-
-                entity.Property(e => e.SchematicId)
-                    .HasColumnName("schematicID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.CycleTime).HasColumnName("cycleTime");
-
-                entity.Property(e => e.SchematicName)
-                    .HasColumnName("schematicName")
-                    .HasColumnType("VARCHAR(255)");
-            });
-
-            modelBuilder.Entity<PlanetSchematicsPinMap>(entity =>
-            {
-                entity.HasKey(e => new { e.SchematicId, e.PinTypeId });
-
-                entity.ToTable("planetSchematicsPinMap");
-
-                entity.Property(e => e.SchematicId).HasColumnName("schematicID");
-
-                entity.Property(e => e.PinTypeId).HasColumnName("pinTypeID");
-            });
-
-            modelBuilder.Entity<PlanetSchematicsTypeMap>(entity =>
-            {
-                entity.HasKey(e => new { e.SchematicId, e.TypeId });
-
-                entity.ToTable("planetSchematicsTypeMap");
-
-                entity.Property(e => e.SchematicId).HasColumnName("schematicID");
-
-                entity.Property(e => e.TypeId).HasColumnName("typeID");
-
-                entity.Property(e => e.IsInput)
-                    .HasColumnName("isInput")
-                    .HasColumnType("BOOLEAN");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-            });
+            
 
             modelBuilder.Entity<RamActivities>(entity =>
             {

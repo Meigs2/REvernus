@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
-    public partial class PlanetSchematicsTypeMap
+    public class PlanetSchematicsTypeMap
     {
         public long SchematicId { get; set; }
         public long TypeId { get; set; }
