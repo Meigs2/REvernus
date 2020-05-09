@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REvernus", "REvernus\REvernus.csproj", "{BC1AB322-D08E-4454-AC18-895A6D52B43F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REvernus.Database", "REvernus.Database\REvernus.Database.csproj", "{431BA4C7-937D-4B9B-B7CE-77CB8F310F5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REvernus.Utilites", "REvernus.Utilites\REvernus.Utilites.csproj", "{B763E9AD-44E0-4942-85B6-FB7B279F9957}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{BC1AB322-D08E-4454-AC18-895A6D52B43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC1AB322-D08E-4454-AC18-895A6D52B43F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC1AB322-D08E-4454-AC18-895A6D52B43F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{431BA4C7-937D-4B9B-B7CE-77CB8F310F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{431BA4C7-937D-4B9B-B7CE-77CB8F310F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{431BA4C7-937D-4B9B-B7CE-77CB8F310F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{431BA4C7-937D-4B9B-B7CE-77CB8F310F5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B763E9AD-44E0-4942-85B6-FB7B279F9957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B763E9AD-44E0-4942-85B6-FB7B279F9957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B763E9AD-44E0-4942-85B6-FB7B279F9957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B763E9AD-44E0-4942-85B6-FB7B279F9957}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

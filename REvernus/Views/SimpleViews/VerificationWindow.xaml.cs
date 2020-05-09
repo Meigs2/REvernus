@@ -37,7 +37,7 @@ namespace REvernus.Views.SimpleViews
             {
                 if (AuthCodeTextBox.Text == string.Empty) return;
 
-                Authorization.AuthorizationCode = AuthCodeTextBox.Text;
+                Authorization.AuthorizationCode = AuthCodeTextBox.Text.Trim();
                 Authorization.ExpectedState = string.Empty; // Expected state is set to empty, as we don't require the user to provide it from the returned URL
 
                 Character.AccessTokenDetails = await _client.SSO.VerifyAuthorizationAsync(Authorization);

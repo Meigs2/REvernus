@@ -15,11 +15,14 @@ using System.Timers;
 using System.Windows;
 using EVEStandard.Enumerations;
 using EVEStandard.Models.API;
-using REvernus.Models.UserDbModels;
+
 using REvernus.Views.SimpleViews;
 
 namespace REvernus.Core
 {
+    using REvernus.Database.Contexts;
+    using REvernus.Database.UserDbModels;
+
     public sealed class CharacterManager : BindableBase
     {
         private static readonly log4net.ILog Log =

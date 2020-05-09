@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using EVEStandard;
 using EVEStandard.Enumerations;
 using EVEStandard.Models.SSO;
-using REvernus.Models.UserDbModels;
+
 using REvernus.Properties;
 
 namespace REvernus.Core.ESI
 {
+    using REvernus.Database.Contexts;
+
     internal static class EsiData
     {
         public static EVEStandardAPI EsiClient

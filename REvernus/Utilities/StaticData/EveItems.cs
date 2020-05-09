@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Data;
-using System.Data.SQLite;
 using System.Linq;
-using System.Threading.Tasks;
-using REvernus.Models.EveDbModels;
 
 namespace REvernus.Utilities.StaticData
 {
+    using REvernus.Database.Contexts;
+
     public class EveItems
     {
         public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; set; } = new ConcurrentDictionary<long, string>();
@@ -19,7 +17,7 @@ namespace REvernus.Utilities.StaticData
 
         public static void Initialize()
         {
-            using var db = new eveContext();
+            using var db = new EveContext();
             try
             {
                 var items = db.InvTypes

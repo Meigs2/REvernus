@@ -12,10 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore;
-using REvernus.Models.UserDbModels;
 
 namespace REvernus.Views.SimpleViews
 {
+    using REvernus.Database.Contexts;
+    using REvernus.Database.UserDbModels;
+
     /// <summary>
     /// Interaction logic for DeveloperApplicationDetailsWindow.xaml
     /// </summary>
@@ -57,8 +59,8 @@ namespace REvernus.Views.SimpleViews
                     _userContext.DeveloperApplications.RemoveRange(_userContext.DeveloperApplications);
                     _userContext.DeveloperApplications.Add(new DeveloperApplication()
                     {
-                        ClientId = ClientIdTextBox.Text,
-                        SecretKey = SecretKeyTextBox.Password,
+                        ClientId = ClientIdTextBox.Text.Trim(),
+                        SecretKey = SecretKeyTextBox.Password.Trim(),
                         CallbackUrl = CallbackUrlTextBox.Text
                     });
                     _userContext.SaveChanges();
