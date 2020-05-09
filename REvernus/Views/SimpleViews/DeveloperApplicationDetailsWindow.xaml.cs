@@ -59,8 +59,8 @@ namespace REvernus.Views.SimpleViews
                     _userContext.DeveloperApplications.RemoveRange(_userContext.DeveloperApplications);
                     _userContext.DeveloperApplications.Add(new DeveloperApplication()
                     {
-                        ClientId = ClientIdTextBox.Text,
-                        SecretKey = SecretKeyTextBox.Password,
+                        ClientId = ClientIdTextBox.Text.Trim(),
+                        SecretKey = SecretKeyTextBox.Password.Trim(),
                         CallbackUrl = CallbackUrlTextBox.Text
                     });
                     _userContext.SaveChanges();

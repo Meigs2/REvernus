@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace REvernus.Migrations
+namespace REvernus.Database.Migrations
 {
     using REvernus.Database.Contexts;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace REvernus.Migrations
+namespace REvernus.Database.Migrations
 {
     public partial class AddDeveloperApplication : Migration
     {
