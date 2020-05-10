@@ -1,4 +1,6 @@
-﻿namespace REvernus.Database.EveDbModels
+﻿using System.Collections.Generic;
+
+namespace REvernus.Database.EveDbModels
 {
     public class InvMarketGroups
     {

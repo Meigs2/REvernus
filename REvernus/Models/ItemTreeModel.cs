@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text.Json;
-using EVEStandard.Models;
-using Microsoft.Extensions.Caching.Distributed;
-using REvernus.Models.EveDbModels;
+using REvernus.Database.Contexts;
 
 namespace REvernus.Models
 {
+    using Database.EveDbModels;
+
     public class ItemTreeModel : INotifyPropertyChanged
     {
         private readonly Dictionary<InvMarketGroups, ItemTreeModel> _dictionary = new Dictionary<InvMarketGroups, ItemTreeModel>();
@@ -90,7 +88,7 @@ namespace REvernus.Models
         {
             IsExpanded = true;
             //Perform recursive method to build treeview 
-            using var context = new eveContext();
+            using var context = new EveContext();
             var items = context.InvTypes.Where(i => i.MarketGroup != null).ToList();
             var markets = context.InvMarketGroups.ToList();
 

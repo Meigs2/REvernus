@@ -61,6 +61,10 @@
             builder.Property(e => e.Volume)
                 .HasColumnName("volume")
                 .HasColumnType("FLOAT");
+
+            builder.HasOne(e => e.MarketGroup)
+                .WithMany(e => e.InventoryChildren)
+                .HasForeignKey(e => e.MarketGroupId);
         }
     }
 }

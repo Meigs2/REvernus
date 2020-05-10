@@ -34,6 +34,14 @@
                 .HasColumnType("VARCHAR(100)");
 
             builder.Property(e => e.ParentGroupId).HasColumnName("parentGroupID");
+
+            builder.HasOne(e => e.Parent)
+                .WithMany(e => e.Children)
+                .HasForeignKey(e => e.ParentGroupId);
+
+            builder.HasMany(e => e.InventoryChildren)
+                .WithOne(e => e.MarketGroup)
+                .HasForeignKey(e => e.MarketGroupId);
         }
     }
 }
