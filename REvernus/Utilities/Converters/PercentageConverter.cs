@@ -12,7 +12,9 @@
             {
                 if (value != null)
                 {
-                    var fraction = decimal.TryParse(value.ToString(), out decimal result) ? result : throw new ArgumentException(value.ToString());
+                    var fraction = decimal.TryParse(value.ToString(), out var result)
+                        ? result
+                        : throw new ArgumentException(value.ToString());
                     return fraction.ToString("P2");
                 }
             }
