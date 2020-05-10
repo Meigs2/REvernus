@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
 
 namespace REvernus.Utilities.Converters
@@ -17,7 +14,7 @@ namespace REvernus.Utilities.Converters
             using var db = new EveContext();
             try
             {
-                return db.InvTypes.FirstOrDefault(o => o.TypeId == System.Convert.ToInt64(value)); ;
+                return db.InvTypes.FirstOrDefault(o => o.TypeId == System.Convert.ToInt64(value));
             }
             finally
             {
