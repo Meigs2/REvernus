@@ -34,7 +34,7 @@ function SpeechError {
 	Speech 'Alert! Bad code intrudes to master.'
 }
 
-PathToSolutionFile="$PathToProject\Tap.Rent2.Server\src\Tap.Rent2.sln"
+PathToSolutionFile="$PathToProject\REvernus.sln"
 
 # Build solution in Debug configuration
 
