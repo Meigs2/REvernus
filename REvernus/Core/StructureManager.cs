@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.SQLite;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Enumerations;
-using EVEStandard.Models;
-using EVEStandard.Models.API;
-using Microsoft.EntityFrameworkCore.Internal;
-using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Utilities;
 using REvernus.Views;
 
 namespace REvernus.Core
@@ -24,7 +13,7 @@ namespace REvernus.Core
 
     public static class StructureManager
     {
-        public static ObservableCollection<PlayerStructure> Structures = new ObservableCollection<PlayerStructure>();
+        public static readonly ObservableCollection<PlayerStructure> Structures = new ObservableCollection<PlayerStructure>();
 
         public static void Initialize()
         {

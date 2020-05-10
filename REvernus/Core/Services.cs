@@ -8,7 +8,7 @@ namespace REvernus.Core
 
     public  static class Services
     {
-        public static Tracker Tracker = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
+        public static readonly Tracker Tracker = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
 
         /// <summary>
         /// This class initializes the tracker for tracking the status of objects, ex the position of a window
