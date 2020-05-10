@@ -22,6 +22,7 @@
         // ReSharper disable once IdentifierTypo
         private const string FUZZWORK_LATEST_DB_PATH = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
 
+        // ReSharper disable once PossibleNullReferenceException
         private readonly ILog _log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

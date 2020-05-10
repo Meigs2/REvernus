@@ -14,6 +14,7 @@
 
     public class CharacterManagerViewModel
     {
+        // ReSharper disable once PossibleNullReferenceException
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

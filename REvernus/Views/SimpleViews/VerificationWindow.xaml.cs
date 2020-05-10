@@ -18,6 +18,7 @@
     /// </summary>
     public partial class VerificationWindow
     {
+        // ReSharper disable once PossibleNullReferenceException
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

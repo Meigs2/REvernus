@@ -20,6 +20,7 @@
 
     public class MainWindowViewModel : ViewModelBase
     {
+        // ReSharper disable once PossibleNullReferenceException
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

@@ -2,9 +2,9 @@
 {
     using JetBrains.Annotations;
 
+    [PublicAPI]
     public class InvPositions
     {
-        [PublicAPI]
         public long ItemId { get; set; }
 
         public double? Pitch { get; set; }

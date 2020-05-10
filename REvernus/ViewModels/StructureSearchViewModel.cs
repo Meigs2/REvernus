@@ -25,6 +25,7 @@
     public class StructureSearchViewModel : BindableBase
     {
         // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once PossibleNullReferenceException
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -57,8 +58,6 @@
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
         }
-
-        public object IsSelected => throw new NotImplementedException();
 
         public string SearchBoxText
         {
