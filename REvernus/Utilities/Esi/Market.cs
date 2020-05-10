@@ -11,7 +11,7 @@ using EVEStandard.Models.API;
 using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
-using REvernus.Models.EveDbModels;
+
 using Type = System.Type;
 
 namespace REvernus.Utilities.Esi

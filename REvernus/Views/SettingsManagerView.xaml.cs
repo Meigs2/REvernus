@@ -12,6 +12,8 @@ using System.Windows.Interop;
 
 namespace REvernus.Views
 {
+    using REvernus.Utilites;
+
     /// <summary>
     /// Interaction logic for SettingsManagerView.xaml
     /// </summary>
@@ -24,7 +26,7 @@ namespace REvernus.Views
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Utilities.Paths.SerializedDataFolder));
+        private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
         public SettingsManagerView()
         {
             Loaded += (sender, args) =>
