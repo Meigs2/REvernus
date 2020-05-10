@@ -1,27 +1,21 @@
-﻿using System;
-using System.Net;
-using Prism.Commands;
-using REvernus.Models;
-
-namespace REvernus.ViewModels
+﻿namespace REvernus.ViewModels
 {
+    using System;
+    using System.Net;
+    using System.Reflection;
+
     using JetBrains.Annotations;
+
+    using log4net;
+
+    using Prism.Commands;
+
+    using REvernus.Models;
 
     public class CharacterManagerViewModel
     {
-        private static readonly log4net.ILog Log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public CharacterManagerModel Model { get; set; } = new CharacterManagerModel();
-
-        #region Commands
-
-        public DelegateCommand AddCharacterCommand { get; set; }
-
-        [UsedImplicitly]
-        public DelegateCommand RemoveCharacterCommand { get; set; }
-
-        #endregion
+        private static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public CharacterManagerViewModel()
         {
@@ -29,6 +23,8 @@ namespace REvernus.ViewModels
 
             RemoveCharacterCommand = new DelegateCommand(RemoveCharacters);
         }
+
+        public CharacterManagerModel Model { get; set; } = new CharacterManagerModel();
 
         private void AddNewCharacter()
         {
@@ -39,15 +35,21 @@ namespace REvernus.ViewModels
             catch (Exception e)
             {
                 if (!(e is HttpListenerException))
-                {
                     Log.Error(e);
-                }
             }
         }
 
         private void RemoveCharacters()
         {
-
         }
+
+        #region Commands
+
+        public DelegateCommand AddCharacterCommand { get; set; }
+
+        [UsedImplicitly]
+        public DelegateCommand RemoveCharacterCommand { get; set; }
+
+        #endregion
     }
 }
