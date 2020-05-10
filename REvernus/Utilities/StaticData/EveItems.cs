@@ -8,7 +8,7 @@ namespace REvernus.Utilities.StaticData
 
     public class EveItems
     {
-        public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; set; } = new ConcurrentDictionary<long, string>();
+        public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; } = new ConcurrentDictionary<long, string>();
 
         public static string TypeIdToTypeName(long typeId)
         {

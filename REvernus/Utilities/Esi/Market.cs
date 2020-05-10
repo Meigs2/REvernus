@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using EVEStandard.Enumerations;
 using EVEStandard.Models;
@@ -11,8 +9,6 @@ using EVEStandard.Models.API;
 using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
-
-using Type = System.Type;
 
 namespace REvernus.Utilities.Esi
 {
@@ -22,7 +18,7 @@ namespace REvernus.Utilities.Esi
         {
             try
             {
-                using var a = Status.GetNewStatusHandle();
+                Status.GetNewStatusHandle();
                 var publicAuth = new AuthDTO()
                 {
                     AccessToken = App.CharacterManager.SelectedCharacter.AccessTokenDetails,
@@ -103,7 +99,7 @@ namespace REvernus.Utilities.Esi
 
         public static async Task<List<MarketOrder>> GetOrdersInRegion(int region, long? typeId = null)
         {
-            using var a = Status.GetNewStatusHandle();
+            Status.GetNewStatusHandle();
             var ordersHashSet = new HashSet<MarketOrder>();
             var taskList = new List<Task>();
 
@@ -119,7 +115,7 @@ namespace REvernus.Utilities.Esi
                     var i1 = i;
                     taskList.Add(Task.Run(async () =>
                     {
-                        using var a1 = Status.GetNewStatusHandle();
+                        Status.GetNewStatusHandle();
                         var result = await EsiData.EsiClient.Market.ListOrdersInRegionV1Async(region, typeId, i1);
                         ordersHashSet.UnionWith(result.Model);
                     }));
@@ -142,7 +138,7 @@ namespace REvernus.Utilities.Esi
         {
             try
             {
-                using var a = Status.GetNewStatusHandle();
+                Status.GetNewStatusHandle();
                 var ordersHashSet = new ConcurrentBag<MarketOrder>();
                 var taskList = new List<Task>();
 
@@ -178,7 +174,7 @@ namespace REvernus.Utilities.Esi
                             var i1 = i;
                             taskList.Add(Task.Run(async () =>
                             {
-                                using var a1 = Status.GetNewStatusHandle();
+                                Status.GetNewStatusHandle();
                                 try
                                 {
                                     var result = await EsiData.EsiClient.Market.ListOrdersInStructureV1Async(auth, structure.StructureId, i1);

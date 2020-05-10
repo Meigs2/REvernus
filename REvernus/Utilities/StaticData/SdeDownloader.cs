@@ -19,7 +19,7 @@ namespace REvernus.Utilities.StaticData
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // ReSharper disable once IdentifierTypo
-        private readonly string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
+        private const string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
         private Window _window;
 
         public async Task DownloadLatestSde()
