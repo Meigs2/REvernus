@@ -18,8 +18,9 @@
         {
         }
 
-        public DbSet<AgtAgentTypes> AgtAgentTypes { get; set; }
         public DbSet<AgtAgents> AgtAgents { get; set; }
+
+        public DbSet<AgtAgentTypes> AgtAgentTypes { get; set; }
         public DbSet<AgtResearchAgents> AgtResearchAgents { get; set; }
         public DbSet<CertCerts> CertCerts { get; set; }
         public DbSet<CertMasteries> CertMasteries { get; set; }
@@ -32,8 +33,8 @@
         public DbSet<CrpActivities> CrpActivities { get; set; }
         public DbSet<CrpNpccorporationDivisions> CrpNpccorporationDivisions { get; set; }
         public DbSet<CrpNpccorporationResearchFields> CrpNpccorporationResearchFields { get; set; }
-        public DbSet<CrpNpccorporationTrades> CrpNpccorporationTrades { get; set; }
         public DbSet<CrpNpccorporations> CrpNpccorporations { get; set; }
+        public DbSet<CrpNpccorporationTrades> CrpNpccorporationTrades { get; set; }
         public DbSet<CrpNpcdivisions> CrpNpcdivisions { get; set; }
         public DbSet<DgmAttributeCategories> DgmAttributeCategories { get; set; }
         public DbSet<DgmAttributeTypes> DgmAttributeTypes { get; set; }
@@ -66,9 +67,10 @@
         public DbSet<InvTraits> InvTraits { get; set; }
         public DbSet<InvTypeMaterials> InvTypeMaterials { get; set; }
         public DbSet<InvTypeReactions> InvTypeReactions { get; set; }
-        
+
         [UsedImplicitly]
         public DbSet<InvTypes> InvTypes { get; set; }
+
         public DbSet<InvUniqueNames> InvUniqueNames { get; set; }
         public DbSet<InvVolumes> InvVolumes { get; set; }
         public DbSet<MapCelestialStatistics> MapCelestialStatistics { get; set; }
@@ -82,9 +84,10 @@
         public DbSet<MapRegionJumps> MapRegionJumps { get; set; }
         public DbSet<MapRegions> MapRegions { get; set; }
         public DbSet<MapSolarSystemJumps> MapSolarSystemJumps { get; set; }
-        
-        [UsedImplicitly] 
+
+        [UsedImplicitly]
         public DbSet<MapSolarSystems> MapSolarSystems { get; set; }
+
         public DbSet<MapUniverse> MapUniverse { get; set; }
         public DbSet<PlanetSchematics> PlanetSchematics { get; set; }
         public DbSet<PlanetSchematicsPinMap> PlanetSchematicsPinMap { get; set; }
@@ -97,38 +100,37 @@
         public DbSet<RamInstallationTypeContents> RamInstallationTypeContents { get; set; }
         public DbSet<SkinLicense> SkinLicense { get; set; }
         public DbSet<SkinMaterials> SkinMaterials { get; set; }
-        public DbSet<SkinShip> SkinShip { get; set; }
         public DbSet<Skins> Skins { get; set; }
-        public DbSet<StaOperationServices> StaOperationServices { get; set; }
+        public DbSet<SkinShip> SkinShip { get; set; }
         public DbSet<StaOperations> StaOperations { get; set; }
+        public DbSet<StaOperationServices> StaOperationServices { get; set; }
         public DbSet<StaServices> StaServices { get; set; }
-        public DbSet<StaStationTypes> StaStationTypes { get; set; }
 
         [UsedImplicitly]
         public DbSet<StaStations> StaStations { get; set; }
+
+        public DbSet<StaStationTypes> StaStationTypes { get; set; }
         public DbSet<TranslationTables> TranslationTables { get; set; }
         public DbSet<TrnTranslationColumns> TrnTranslationColumns { get; set; }
         public DbSet<TrnTranslationLanguages> TrnTranslationLanguages { get; set; }
         public DbSet<TrnTranslations> TrnTranslations { get; set; }
-        public DbSet<WarCombatZoneSystems> WarCombatZoneSystems { get; set; }
         public DbSet<WarCombatZones> WarCombatZones { get; set; }
+        public DbSet<WarCombatZoneSystems> WarCombatZoneSystems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {
                 optionsBuilder.UseSqlite($"DataSource={Paths.SdeDataBasePath};");
-            }
         }
 
         /// <summary>
-        /// Applying entity configurations
+        ///     Applying entity configurations
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EveContext).Assembly);
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }

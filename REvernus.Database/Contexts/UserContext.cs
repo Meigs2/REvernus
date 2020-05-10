@@ -10,20 +10,18 @@
     public class UserContext : DbContext
     {
         [UsedImplicitly]
-        public DbSet<CharacterInformation> Characters { get; set; }
-        
-        [UsedImplicitly]
         public DbSet<AddedStructure> AddedStructures { get; set; }
-        
+
+        [UsedImplicitly]
+        public DbSet<CharacterInformation> Characters { get; set; }
+
         [UsedImplicitly]
         public DbSet<DeveloperApplication> DeveloperApplications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {
                 optionsBuilder.UseSqlite($"DataSource={Paths.UserDataBasePath};");
-            }
         }
     }
 }
