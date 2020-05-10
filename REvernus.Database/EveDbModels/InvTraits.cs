@@ -1,7 +1,10 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
+    using JetBrains.Annotations;
+
     public class InvTraits
     {
+        [PublicAPI]
         public long TraitId { get; set; }
         public long? TypeId { get; set; }
         public long? SkillId { get; set; }

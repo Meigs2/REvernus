@@ -1,7 +1,10 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
+    using JetBrains.Annotations;
+
     public class InvPositions
     {
+        [PublicAPI]
         public long ItemId { get; set; }
         public double X { get; set; }
         public double Y { get; set; }

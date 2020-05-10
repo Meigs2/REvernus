@@ -1,5 +1,8 @@
-﻿namespace REvernus.Database.EveDbModels
+﻿using JetBrains.Annotations;
+
+namespace REvernus.Database.EveDbModels
 {
+    [PublicAPI]
     public class IndustryActivity
     {
         public long TypeId { get; set; }
