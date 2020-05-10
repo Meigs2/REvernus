@@ -37,6 +37,7 @@
 
         [CanBeNull]
         public static readonly AppSettings Settings = new AppSettings();
+
         public new static MainWindowView MainWindow { get; private set; }
 
         private void Application_Startup(object sender, StartupEventArgs e)

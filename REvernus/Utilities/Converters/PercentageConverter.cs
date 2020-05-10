@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace REvernus.Utilities.Converters
+﻿namespace REvernus.Utilities.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
     public class PercentageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -25,10 +25,11 @@ namespace REvernus.Utilities.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {   
+        {
             try
             {
-                if (value == null) return null;
+                if (value == null)
+                    return null;
                 var valueWithoutPercentage = value.ToString().TrimEnd(' ', '%');
                 return decimal.Parse(valueWithoutPercentage) / 100;
             }
