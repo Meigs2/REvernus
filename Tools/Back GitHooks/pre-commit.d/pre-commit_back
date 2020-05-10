@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Full path to project. Last slash doesn't need.
+PathToProject='[project-path]'
+PathToProject=${PathToProject//\\//}
+# Full path to ReSharperCLT https://www.jetbrains.com/resharper/features/command-line.html
+# Without slash at the end.
+PathToReSharperClt="$PathToProject/Tools/working-directory/resharper-clt"
+PartialPathToSolutionFolder=""
+PathToSolutionFile="$PathToProject/REvernus.sln"
+
+PathToCleanupWorkingFolder="$PathToProject/Tools/working-directory/cleanup-dir"
+PathToGitDiffOutput="$PathToCleanupWorkingFolder/diff.txt"
+
+RED="\033[0;31m"
+GREEN="\033[1;32m"
+YELLOW="\033[1;33m"
+NC="\033[0m" # No Color
+
+# Getting the list of new/changed files, which are git stage
+
+mkdir -p "$PathToCleanupWorkingFolder" # Create working directory
+touch "$PathToGitDiffOutput" # Create file to record file paths
+
+git diff --cached --name-only --diff-filter=ACM -- "$PathToProject"> "$PathToGitDiffOutput" # Writing files names to check
+truncate -s -1 "$PathToGitDiffOutput" # Deleting new line symbol
+
+CheckFiles=`cat "$PathToGitDiffOutput" | tr "\n" ";"` # Relative file paths for check!!!!! (Can be fixed to start from any folder)
+CheckFilesRelative="${CheckFiles//$PartialPathToSolutionFolder/}" # Relative paths for check (Relative to sln)
+
+# Starting code cleanup.
+
+echo -e "${YELLOW}Starting code cleanup fo solution $PathToSolutionFile${NC}"
+"$PathToReSharperClt/CleanupCode.exe" --include="$CheckFilesRelative" --exclude="**/Migrations/*" "$PathToSolutionFile"
+
+exit 0

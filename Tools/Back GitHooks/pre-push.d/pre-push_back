@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Full path to project. Last slash doesn't need.
+PathToProject='[project-path]'
+# Full path to ReSharperCLT https://www.jetbrains.com/resharper/features/command-line.html
+PathToReSharperClt="$PathToProject\Tools\working-directory\resharper-clt"
+# path to report of ReSharper inspection
+PathToInspectionOutput="$PathToProject\Tools\working-directory\inspector-reports\inspections.log"
+
+RED="\033[0;31m"
+GREEN="\033[1;32m"
+YELLOW="\033[1;33m"
+NC="\033[0m" # No Color
+
+# Check the last pushing commit..
+# If WIP, stop future inspection.
+CurrentBranch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+LastCommit=$(git log origin..$CurrentBranch -1 --pretty=%B)
+WipCommentPattern='WIP.+'
+
+echo -e "${YELLOW}Analyze commit $LastCommit from branch $CurrentBranch.${NC}"
+
+if [[ $LastCommit =~ $WipCommentPattern ]]; then
+	exit 0
+fi
+
+# Sound notification to notify if push failed. Used when push going to be long time check.
+# To remove sounds comment body of SpeechError function.
+function Speech {
+	PowerShell -Command "Add-Type –AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('$1');"
+}
+
+function SpeechError {
+	Speech 'Alert! Bad code intrudes to master.'
+}
+
+PathToSolutionFile="$PathToProject\Tap.Rent2.Server\src\Tap.Rent2.sln"
+
+# Build solution in Debug configuration
+
+#Some optimizes
+DOTNET_CLI_TELEMETRY_OPTOUT=1
+DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
+echo -e "${YELLOW}Building solution $PathToSolutionFile in DEBUG config${NC}"
+# TODO Fix the encoding of results
+# Output can be unreadable.
+# .net core has a problem https://github.com/dotnet/cli/issues/7913.
+dotnet build $PathToSolutionFile
+
+# $? environment variable, that store error code of last operation.
+# Our case is build of solution.
+rc=$?
+if [[ $rc != 0 ]] ; then
+	echo -e "${RED}Cannot build the solution.${NC}"
+	echo -e "Fix the errors and try to push again."
+	echo -e "Recomendation: Rebuild your solution from visual studio."
+	echo ""
+	
+	SpeechError
+	
+	exit $rc
+fi
+
+# Start inspector analisys.
+
+echo -e "${YELLOW}Starting inspector analisys on solution $PathToSolutionFile${NC}"
+"$PathToReSharperClt\InspectCode.exe" "$PathToSolutionFile" -o="$PathToInspectionOutput" -s=WARNING -f=text --verbosity=warn --swea
+
+# Checks all lines in inspector report.
+# First line always contains the solution name.
+# This is not an warning. Ignore this.
+# The other line print in the console.
+# If there are warnings - remember that.
+
+NotInspectorWarningPattern='Solution.+'
+HasInspectorErrors=false
+
+if [ -e "$PathToInspectionOutput" ]; then
+	echo >&2 'INSPECTOR WARNINGS'
+	echo >&2 '============================'
+	while IFS= read -r line
+	do
+		# Ignore line from regular expression. Its header line.
+		# The other lines are warnings.
+		if [[ ! $line =~ $NotInspectorWarningPattern ]]; then
+			HasInspectorErrors=true
+			echo >&2 "$line"
+		fi
+	done < "$PathToInspectionOutput"
+	
+	echo >&2 '============================'
+	
+	# If there is warnings, then forbid to push. (exit 1).
+	if [ $HasInspectorErrors = true ] ; then 
+		echo >&2 "${RED}To push, you need to fix inspector warnings ReSharper${NC}."
+		echo >&2 'Warnings are in report'
+		echo >&2 "$PathToInspectionOutput"
+		
+		SpeechError
+		
+		exit 1
+	fi
+fi
+
+exit 0

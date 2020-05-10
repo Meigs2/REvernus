@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Full path to project. Last slash doesn't need.
+PathToProject='[project-path]'
+PathToProject=${PathToProject//\\//}
+# Full path to ReSharperCLT https://www.jetbrains.com/resharper/features/command-line.html
+# Without slash at the end.
+
+PathToCleanupWorkingFolder="$PathToProject/Tools/working-directory/cleanup-dir"
+PathToGitDiffOutput="$PathToCleanupWorkingFolder/diff.txt"
+
+# Cleanup commit
+
+sed -i -e "s|^|$PathToProject/|" "$PathToGitDiffOutput" # change relatve paths to absolute
+sed -i -e '$a\' "$PathToGitDiffOutput"
+while read in; do git add `cygpath -u "$in"`; done < "$PathToGitDiffOutput" # add into commit
+
+CommitCommandTemplate="git commit --no-verify --quiet -m 'Auto back-end cleanup' --"
+while read in; 
+do 
+	path=`cygpath -u "$in"`; 
+	CommitCommandTemplate="${CommitCommandTemplate} ${path}"; 
+done < "$PathToGitDiffOutput"
+touch "$PathToCleanupWorkingFolder/debug.txt"
+echo "$CommitCommandTemplate" >> "$PathToCleanupWorkingFolder/debug.txt"
+eval "$CommitCommandTemplate"
+
+exit 0
