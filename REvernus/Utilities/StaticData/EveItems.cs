@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-
-namespace REvernus.Utilities.StaticData
+﻿namespace REvernus.Utilities.StaticData
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Linq;
+
     using REvernus.Database.Contexts;
 
     public class EveItems
     {
-        public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; } = new ConcurrentDictionary<long, string>();
-
-        public static string TypeIdToTypeName(long typeId)
-        {
-            return TypeIdToTypeNameDictionary[typeId];
-        }
+        public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; } =
+            new ConcurrentDictionary<long, string>();
 
         public static void Initialize()
         {
@@ -36,6 +32,11 @@ namespace REvernus.Utilities.StaticData
             {
                 db.Dispose();
             }
+        }
+
+        public static string TypeIdToTypeName(long typeId)
+        {
+            return TypeIdToTypeNameDictionary[typeId];
         }
     }
 }

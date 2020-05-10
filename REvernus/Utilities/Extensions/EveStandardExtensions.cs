@@ -1,8 +1,9 @@
-﻿using System;
-using EVEStandard.Models;
-
-namespace REvernus.Utilities.Extensions
+﻿namespace REvernus.Utilities.Extensions
 {
+    using System;
+
+    using EVEStandard.Models;
+
     public static class EveStandardExtensions
     {
         public static CharacterMarketOrder FromCsv(this CharacterMarketOrder order, string csvLine)
