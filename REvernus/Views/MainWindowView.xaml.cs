@@ -1,11 +1,12 @@
 ﻿namespace REvernus.Views
 {
     using System;
+    using System.ComponentModel;
 
     using REvernus.Core;
 
     /// <summary>
-    /// Interaction logic for MainWindowView.xaml
+    ///     Interaction logic for MainWindowView.xaml
     /// </summary>
     public partial class MainWindowView
     {
@@ -16,10 +17,10 @@
 
             Services.Tracker.Track(this);
 
-            this.Closing += MainWindowView_Closing;
+            Closing += MainWindowView_Closing;
         }
 
-        private void MainWindowView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void MainWindowView_Closing(object sender, CancelEventArgs e)
         {
             Environment.Exit(-1);
         }

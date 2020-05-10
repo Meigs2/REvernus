@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Structure Search" Height="353" Width="490">
     <Window.DataContext>
-        <viewModels:StructureSearchViewModel/>
+        <viewModels:StructureSearchViewModel />
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="ListViewItem">
@@ -18,37 +18,43 @@
         <DockPanel>
             <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="5" Text="{Binding SearchBoxText, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"></TextBox>
-                    <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}" IsEnabled="{Binding IsEnabled}">Search</Button>
+                    <TextBox Margin="5" Text="{Binding SearchBoxText, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}" />
+                    <Button Grid.Column="1" Margin="5" Command="{Binding SearchCommand}"
+                            IsEnabled="{Binding IsEnabled}">
+                        Search
+                    </Button>
                 </Grid>
                 <Grid Grid.Row="1" Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <CheckBox Content="Include Public Structures" IsChecked="{Binding IncludePublicStructures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
+                    <CheckBox Content="Include Public Structures"
+                              IsChecked="{Binding IncludePublicStructures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5" />
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Label HorizontalAlignment="Center" VerticalAlignment="Center">Search and add with:</Label>
                         <ComboBox Grid.Row="1" Margin="5" ItemsSource="{Binding Characters}"
                                   SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}"
-                                  DisplayMemberPath="CharacterName"/>
+                                  DisplayMemberPath="CharacterName" />
                     </Grid>
                 </Grid>
             </Grid>
             <Grid DockPanel.Dock="Bottom" Margin="5">
-                <Button Content="Select" Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItems, ElementName=StructureListbox}"/>
+                <Button Content="Select" Command="{Binding SelectCommand}"
+                        CommandParameter="{Binding SelectedItems, ElementName=StructureListbox}" />
             </Grid>
             <Grid>
                 <ListView Margin="5"
@@ -64,7 +70,7 @@
                     </ListView.View>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>

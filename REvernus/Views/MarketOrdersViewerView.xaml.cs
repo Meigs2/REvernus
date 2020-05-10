@@ -1,10 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-
-namespace REvernus.Views
+﻿namespace REvernus.Views
 {
+    using System.Windows;
+    using System.Windows.Controls;
+
     /// <summary>
-    /// Interaction logic for MarketOrdersViewerView.xaml
+    ///     Interaction logic for MarketOrdersViewerView.xaml
     /// </summary>
     public partial class MarketOrdersViewerView
     {
@@ -18,14 +18,10 @@ namespace REvernus.Views
             var clickedDataGrid = (DataGrid) sender;
 
             if (clickedDataGrid != SellDataGrid)
-            {
                 SellDataGrid.UnselectAll();
-            }
 
             if (clickedDataGrid != BuyDataGrid)
-            {
                 BuyDataGrid.UnselectAll();
-            }
         }
     }
 }

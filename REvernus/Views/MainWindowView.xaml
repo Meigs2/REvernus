@@ -8,48 +8,50 @@
         Title="REvernus" Height="450" Width="800"
         xmlns:views="clr-namespace:REvernus.Views">
     <Window.DataContext>
-        <local:MainWindowViewModel/>
+        <local:MainWindowViewModel />
     </Window.DataContext>
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Top" Margin="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Menu x:Name="MainWindowMenu" Grid.Column="0" Background="Transparent">
                     <MenuItem x:Name="FileMenuItem" Header="File">
-                        <MenuItem Header="Settings" Command="{Binding OpenSettingsViewCommand}"/>
-                        <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}"/>
-                        <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}"/>
-                        <MenuItem Header="Developer Application" Command="{Binding OpenDeveloperApplicationWindowCommand}"/>
-                        <Separator/>
-                        <MenuItem Header="Close" Command="{Binding CloseMainWindowCommand}"/>
+                        <MenuItem Header="Settings" Command="{Binding OpenSettingsViewCommand}" />
+                        <MenuItem Header="About" Command="{Binding AboutBoxOpenCommand}" />
+                        <MenuItem Header="Download SDE Data" Command="{Binding DownloadSdeDataMenuItemCommand}" />
+                        <MenuItem Header="Developer Application"
+                                  Command="{Binding OpenDeveloperApplicationWindowCommand}" />
+                        <Separator />
+                        <MenuItem Header="Close" Command="{Binding CloseMainWindowCommand}" />
                     </MenuItem>
                     <MenuItem Header="Tools">
-                        <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}" InputGestureText="Ctrl+M"/>
-                        <MenuItem Header="Open Structure Manager" Command="{Binding OpenStructureManagerCommand}"/>
-                        <Separator/>
+                        <MenuItem Header="Open Margin Tool" Command="{Binding OpenCloseMarginToolCommand}"
+                                  InputGestureText="Ctrl+M" />
+                        <MenuItem Header="Open Structure Manager" Command="{Binding OpenStructureManagerCommand}" />
+                        <Separator />
                     </MenuItem>
                     <MenuItem Header="Characters">
                         <!-- ReSharper disable once UnusedMember.Global -->
-                        <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
+                        <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters"
+                                  Command="{Binding CharacterManagerMenuItemCommand}" />
                     </MenuItem>
                 </Menu>
-                <ComboBox x:Name="CharacterComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="200" 
+                <ComboBox x:Name="CharacterComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="200"
                           ItemsSource="{Binding CharacterList}"
                           SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}"
                           DisplayMemberPath="CharacterName"
-                          IsSynchronizedWithCurrentItem="True">
-                </ComboBox>
+                          IsSynchronizedWithCurrentItem="True" />
             </Grid>
             <Grid DockPanel.Dock="Bottom" Height="30">
-                <TextBlock x:Name="StatusTextBlock" Text="{Binding StatusText}"/>
+                <TextBlock x:Name="StatusTextBlock" Text="{Binding StatusText}" />
             </Grid>
             <Grid>
                 <TabControl x:Name="MainTabControl">
                     <TabItem Header="Market Orders">
-                                <views:MarketOrdersViewerView/>
+                        <views:MarketOrdersViewerView />
                     </TabItem>
                 </TabControl>
             </Grid>

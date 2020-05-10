@@ -58,6 +58,8 @@
             set => SetProperty(ref _isEnabled, value);
         }
 
+        public object IsSelected => throw new NotImplementedException();
+
         public string SearchBoxText
         {
             get => _searchBoxText;
@@ -84,11 +86,6 @@
         {
             get => _structureListItems;
             set => SetProperty(ref _structureListItems, value);
-        }
-
-        public object IsSelected
-        {
-            get { throw new NotImplementedException(); }
         }
 
         public event EventHandler<StructureSearchEventArgs> SelectPressed;

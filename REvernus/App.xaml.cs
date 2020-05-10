@@ -27,6 +27,7 @@
     public partial class App
     {
         public static CharacterManager CharacterManager;
+
         // ReSharper disable once UnusedMember.Local
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

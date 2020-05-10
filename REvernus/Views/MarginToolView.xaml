@@ -1,18 +1,18 @@
 ﻿<UserControl x:Class="REvernus.Views.MarginToolView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:REvernus.ViewModels"
              xmlns:converters="clr-namespace:REvernus.Utilities.Converters"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="430">
     <UserControl.DataContext>
-        <viewModels:MarginToolViewModel/>
+        <viewModels:MarginToolViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converters:EnumBooleanConverter x:Key="EnumBooleanConverter"/>
-        <converters:PercentageConverter x:Key="PercentageConverter"/>
+        <converters:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+        <converters:PercentageConverter x:Key="PercentageConverter" />
 
     </UserControl.Resources>
     <Grid>
@@ -21,20 +21,23 @@
                 <DockPanel>
                     <Grid DockPanel.Dock="Bottom" Height="15" Margin="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Content="Always On Top" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxChecked"/>
-                        <CheckBox Content="Show Sample Profit Data" Checked="SampleDataCheckboxChecked" Unchecked="SampleDataCheckboxChecked" Grid.Column="1" HorizontalAlignment="Right"/>
+                        <CheckBox Content="Always On Top" Checked="OnTopCheckBoxChecked"
+                                  Unchecked="OnTopCheckBoxChecked" />
+                        <CheckBox Content="Show Sample Profit Data" Checked="SampleDataCheckboxChecked"
+                                  Unchecked="SampleDataCheckboxChecked" Grid.Column="1" HorizontalAlignment="Right" />
                     </Grid>
 
                     <Grid DockPanel.Dock="Top" Height="30" Visibility="Visible">
-                        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}"  FontSize="15" 
-                               xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding ItemName}"
+                               FontSize="15"
+                               xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                                ToolTip="Click to copy Item Name to Clipboard"
                                Cursor="Hand">
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseUp" >
+                                <i:EventTrigger EventName="MouseUp">
                                     <i:InvokeCommandAction Command="{Binding ItemNameCopyCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
@@ -43,56 +46,64 @@
 
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="1.2*"/>
+                            <RowDefinition Height="1.2*" />
                             <RowDefinition Height="1.3*" />
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
                             <RowDefinition Height="0" x:Name="SampleDataRowDefinition" />
                         </Grid.RowDefinitions>
                         <GroupBox>
                             <Grid x:Name="MarginGrid" Margin="2">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="1.5*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Margin:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Margin:" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                     <Viewbox Grid.Row="0" Grid.Column="1" Margin="1" HorizontalAlignment="Left">
-                                        <TextBlock Text="{Binding Margin}"/>
+                                        <TextBlock Text="{Binding Margin}" />
                                     </Viewbox>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Markup:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Markup:" HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" />
                                     <Viewbox Grid.Row="1" Grid.Column="1" Margin="1" HorizontalAlignment="Left">
-                                        <TextBlock Text="{Binding Markup}"/>
+                                        <TextBlock Text="{Binding Markup}" />
                                     </Viewbox>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Profit:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Profit}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Profit:" HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Profit}"
+                                               HorizontalAlignment="Left" VerticalAlignment="Center" />
                                 </Grid>
                                 <Grid Grid.Column="1">
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock VerticalAlignment="Center" Text="Revenue:" Margin="2" Grid.Row="0"/>
-                                        <TextBlock VerticalAlignment="Center" Text="Costs:" Margin="2" Grid.Row="1" Grid.Column="0" />
-                                        <TextBlock VerticalAlignment="Center" Text="Buyout:" Margin="2" Grid.Row="2" Grid.Column="0" />
-                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Revenue}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Costs}" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Buyout}" VerticalAlignment="Center"/>
+                                        <TextBlock VerticalAlignment="Center" Text="Revenue:" Margin="2" Grid.Row="0" />
+                                        <TextBlock VerticalAlignment="Center" Text="Costs:" Margin="2" Grid.Row="1"
+                                                   Grid.Column="0" />
+                                        <TextBlock VerticalAlignment="Center" Text="Buyout:" Margin="2" Grid.Row="2"
+                                                   Grid.Column="0" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Revenue}"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Costs}"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Buyout}"
+                                                   VerticalAlignment="Center" />
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -100,144 +111,172 @@
                         <GroupBox Grid.Row="1" Margin="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0" Grid.Column="0">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Sell Orders:" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="0"/>
-                                    <TextBlock Text="{Binding NumSellOrders}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="1"/>
+                                    <TextBlock Text="Sell Orders:" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="0" />
+                                    <TextBlock Text="{Binding NumSellOrders}" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="1" />
                                 </Grid>
                                 <Grid Grid.Row="1" Grid.Column="0">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Buy Orders:" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="0"/>
-                                    <TextBlock Text="{Binding NumBuyOrders}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="1"/>
+                                    <TextBlock Text="Buy Orders:" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="0" />
+                                    <TextBlock Text="{Binding NumBuyOrders}" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="1" />
                                 </Grid>
                                 <Grid Grid.Row="0" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="1.3*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Sell Fulfillment:" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="0"/>
-                                    <TextBlock Text="{Binding SellOrderFulfillment}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="1"/>
+                                    <TextBlock Text="Sell Fulfillment:" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="0" />
+                                    <TextBlock Text="{Binding SellOrderFulfillment}" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="1" />
                                 </Grid>
                                 <Grid Grid.Row="1" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="1.3*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Buy Fulfillment:" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="0"/>
-                                    <TextBlock Text="{Binding BuyOrderFulfillment}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Grid.Column="1"/>
+                                    <TextBlock Text="Buy Fulfillment:" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="0" />
+                                    <TextBlock Text="{Binding BuyOrderFulfillment}" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Margin="2" Grid.Column="1" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Sell:" VerticalAlignment="Center" Margin="2"/>
-                                        <TextBox Height="20" MaxLines="1" Grid.Column="1" Text="{Binding SellCopyPrice, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
-                                        <Button Grid.Column="2" Content="Copy" Height="20" Width="40" Command="{Binding SellCopyCommand}"/>
+                                        <TextBlock Text="Sell:" VerticalAlignment="Center" Margin="2" />
+                                        <TextBox Height="20" MaxLines="1" Grid.Column="1"
+                                                 Text="{Binding SellCopyPrice, UpdateSourceTrigger=PropertyChanged}"
+                                                 Margin="2" />
+                                        <Button Grid.Column="2" Content="Copy" Height="20" Width="40"
+                                                Command="{Binding SellCopyCommand}" />
                                     </Grid>
                                     <Grid Row="1">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Buy:" VerticalAlignment="Center" Margin="2"/>
-                                        <TextBox Height="20" MaxLines="1" Grid.Column="1" Text="{Binding BuyCopyPrice, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
-                                        <Button Grid.Column="2" Content="Copy" Height="20" Width="40" Command="{Binding BuyCopyCommand}" CommandParameter="BuyCopyPrice"/>
+                                        <TextBlock Text="Buy:" VerticalAlignment="Center" Margin="2" />
+                                        <TextBox Height="20" MaxLines="1" Grid.Column="1"
+                                                 Text="{Binding BuyCopyPrice, UpdateSourceTrigger=PropertyChanged}"
+                                                 Margin="2" />
+                                        <Button Grid.Column="2" Content="Copy" Height="20" Width="40"
+                                                Command="{Binding BuyCopyCommand}" CommandParameter="BuyCopyPrice" />
                                     </Grid>
                                 </Grid>
                                 <Grid Column="1" Margin="2">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="8*"/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="8*" />
                                     </Grid.ColumnDefinitions>
-                                    <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Content="No Price Copy" Grid.Row="0" Grid.Column="1"
-                                                 IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.None}}"/>
-                                    <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Sell Copy" Grid.Row="1" Grid.Column="1"
-                                                 IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.Sell}}"/>
-                                    <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Buy Copy" Grid.Row="2" Grid.Column="1"
-                                                 IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.Buy}}"/>
+                                    <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left"
+                                                 VerticalAlignment="Center" Content="No Price Copy" Grid.Row="0"
+                                                 Grid.Column="1"
+                                                 IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.None}}" />
+                                    <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left"
+                                                 VerticalAlignment="Center" Content="Sell Copy" Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.Sell}}" />
+                                    <RadioButton GroupName="CopyGroup" HorizontalAlignment="Left"
+                                                 VerticalAlignment="Center" Content="Buy Copy" Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 IsChecked="{Binding SelectedEnum, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static viewModels:MarginToolViewModel+CopyEnum.Buy}}" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="3">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0" Margin="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Buy Broker:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding BuyBroker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                    <TextBlock Text="Buy Broker:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding BuyBroker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}"
+                                             VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                                 </Grid>
                                 <Grid Grid.Column="1" Margin="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Sell Broker:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding SellBroker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                    <TextBlock Text="Sell Broker:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding SellBroker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}"
+                                             VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                                 </Grid>
                                 <Grid Grid.Column="2" Margin="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Sales Tax:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding SalesTax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                    <TextBlock Text="Sales Tax:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding SalesTax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=P, Converter={StaticResource PercentageConverter}}"
+                                             VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="4" x:Name="SampleDataGroupBox" Visibility="Hidden">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <DataGrid x:Name="TensDataGrid" ItemsSource="{Binding TensDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}" 
-                                              CanUserAddRows="False" IsReadOnly="True"/>
+                                    <DataGrid x:Name="TensDataGrid"
+                                              ItemsSource="{Binding TensDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                                              CanUserAddRows="False" IsReadOnly="True" />
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <DataGrid x:Name="FivesDataGrid" ItemsSource="{Binding FivesDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}" 
-                                              CanUserAddRows="False" IsReadOnly="True"/>
+                                    <DataGrid x:Name="FivesDataGrid"
+                                              ItemsSource="{Binding FivesDataTable, Mode=OneWay, NotifyOnSourceUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                                              CanUserAddRows="False" IsReadOnly="True" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -248,13 +287,13 @@
                 <DockPanel>
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height=".2*"/>
-                            <RowDefinition/>
+                            <RowDefinition Height=".2*" />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -264,7 +303,7 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Order Range:" VerticalAlignment="Center" Margin="2" />
                                 <TextBox Height="20" MaxLines="1" Grid.Column="1"
-                                         Text="{Binding JumpsOut, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
+                                         Text="{Binding JumpsOut, UpdateSourceTrigger=PropertyChanged}" Margin="2" />
                             </Grid>
                         </Grid>
                     </Grid>

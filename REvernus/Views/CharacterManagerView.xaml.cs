@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using REvernus.Models;
-
-namespace REvernus.Views
+﻿namespace REvernus.Views
 {
+    using System.Collections.Generic;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media;
+
+    using REvernus.Models;
+
     /// <summary>
-    /// Interaction logic for CharacterManagerView.xaml
+    ///     Interaction logic for CharacterManagerView.xaml
     /// </summary>
     public partial class CharacterManagerView
     {
@@ -20,9 +21,7 @@ namespace REvernus.Views
         {
             var result = VisualTreeHelper.HitTest(this, e.GetPosition(this));
             if (result.VisualHit.GetType() != typeof(ListBoxItem))
-            {
                 CharacterListView.UnselectAll();
-            }
         }
 
         private void DeleteCharactersButton_OnClick(object sender, MouseButtonEventArgs e)
@@ -32,6 +31,7 @@ namespace REvernus.Views
             {
                 deleteList.Add(selectedItem);
             }
+
             App.CharacterManager.RemoveCharacters(deleteList);
         }
     }

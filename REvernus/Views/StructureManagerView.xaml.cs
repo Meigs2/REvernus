@@ -1,14 +1,12 @@
-﻿using Jot;
-using Jot.Storage;
-
-namespace REvernus.Views
+﻿namespace REvernus.Views
 {
+    using Jot;
+    using Jot.Storage;
+
     using REvernus.Utilites;
 
     public partial class StructureManagerView
     {
-        private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
-
         public StructureManagerView()
         {
             InitializeComponent();
@@ -22,5 +20,7 @@ namespace REvernus.Views
 
             Tracker.Track(this);
         }
+
+        private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
     }
 }
