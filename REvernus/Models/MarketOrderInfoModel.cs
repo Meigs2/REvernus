@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EVEStandard.Models;
-using EVEStandard.Models.API;
 using Prism.Mvvm;
-using REvernus.Core;
-using REvernus.Core.ESI;
 using REvernus.Utilities.StaticData;
 
 namespace REvernus.Models

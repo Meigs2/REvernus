@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace REvernus.Models
 {
+    using JetBrains.Annotations;
+
+    [PublicAPI]
     public class ExportedOrderModel
     {
         public double Price { get; set; }
