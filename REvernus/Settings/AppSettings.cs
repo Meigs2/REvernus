@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Jot.Configuration;
 
 namespace REvernus.Settings
 {
     public class AppSettings : ITrackingAware<AppSettings>
     {
-        public CharacterManagerSettings CharacterManagerSettings { get; set; } = new CharacterManagerSettings();
-        public MarginToolSettings MarginToolSettings { get; set; } = new MarginToolSettings();
-        public MarketOrdersTabSettings MarketOrdersTabSettings { get; set; } = new MarketOrdersTabSettings();
-        public MarketSettings MarketSettings { get; set; } = new MarketSettings();
+        public CharacterManagerSettings CharacterManagerSettings { get; } = new CharacterManagerSettings();
+        public MarginToolSettings MarginToolSettings { get; } = new MarginToolSettings();
+        public MarketOrdersTabSettings MarketOrdersTabSettings { get; } = new MarketOrdersTabSettings();
+        public MarketSettings MarketSettings { get; } = new MarketSettings();
 
         public void ConfigureTracking(TrackingConfiguration<AppSettings> configuration)
         {
