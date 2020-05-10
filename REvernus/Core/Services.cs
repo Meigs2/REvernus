@@ -6,6 +6,7 @@
     using Jot.Storage;
 
     using REvernus.Utilites;
+    using REvernus.Views;
 
     public static class Services
     {

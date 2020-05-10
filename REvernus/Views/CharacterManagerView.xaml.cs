@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using REvernus.Core;
 using REvernus.Models;
 
 namespace REvernus.Views
@@ -10,7 +9,7 @@ namespace REvernus.Views
     /// <summary>
     /// Interaction logic for CharacterManagerView.xaml
     /// </summary>
-    public partial class CharacterManagerView : UserControl
+    public partial class CharacterManagerView
     {
         public CharacterManagerView()
         {

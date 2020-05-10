@@ -1,12 +1,11 @@
-﻿using System.Windows;
-using Jot;
+﻿using Jot;
 using Jot.Storage;
 
 namespace REvernus.Views
 {
     using REvernus.Utilites;
 
-    public partial class StructureManagerView : Window
+    public partial class StructureManagerView
     {
         private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
 

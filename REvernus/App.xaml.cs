@@ -18,6 +18,7 @@
     using REvernus.Utilites;
     using REvernus.Utilities;
     using REvernus.Utilities.StaticData;
+    using REvernus.Views;
     using REvernus.Views.SimpleViews;
 
     /// <summary>
@@ -26,9 +27,8 @@
     public partial class App
     {
         public static CharacterManager CharacterManager;
-#pragma warning disable IDE0052 // Remove unread private members
+        // ReSharper disable once UnusedMember.Local
         private static readonly ILog Log =
-#pragma warning restore IDE0052 // Remove unread private members
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static readonly AppSettings Settings = new AppSettings();

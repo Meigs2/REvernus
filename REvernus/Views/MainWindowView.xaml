@@ -1,11 +1,9 @@
-﻿<Window x:Class="REvernus.MainWindowView"
+﻿<Window x:Class="REvernus.Views.MainWindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:REvernus.ViewModels"
-        xmlns:characterManager="clr-namespace:REvernus.Core"
-        xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
         Title="REvernus" Height="450" Width="800"
         xmlns:views="clr-namespace:REvernus.Views">
@@ -34,6 +32,7 @@
                         <Separator/>
                     </MenuItem>
                     <MenuItem Header="Characters">
+                        <!-- ReSharper disable once UnusedMember.Global -->
                         <MenuItem x:Name="CharacterManagementMenuitem" Header="Manage Characters" Command="{Binding CharacterManagerMenuItemCommand}"/>
                     </MenuItem>
                 </Menu>

@@ -5,7 +5,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -17,7 +16,7 @@ namespace REvernus.Views
     /// <summary>
     /// Interaction logic for SettingsManagerView.xaml
     /// </summary>
-    public partial class SettingsManagerView : Window
+    public partial class SettingsManagerView
     {
         private const int GWL_STYLE = -16;
         private const int WS_SYSMENU = 0x80000;
@@ -70,7 +69,7 @@ namespace REvernus.Views
                 return;
             }
 
-            var mods = KeysHelper.ToWinforms(Keyboard.Modifiers);
+            KeysHelper.ToWinforms(Keyboard.Modifiers);
 
             // Build the shortcut key name.
             StringBuilder shortcutText = new StringBuilder();

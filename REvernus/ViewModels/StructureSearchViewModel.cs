@@ -86,6 +86,11 @@
             set => SetProperty(ref _structureListItems, value);
         }
 
+        public object IsSelected
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public event EventHandler<StructureSearchEventArgs> SelectPressed;
 
         protected virtual void OnSelectPressed()

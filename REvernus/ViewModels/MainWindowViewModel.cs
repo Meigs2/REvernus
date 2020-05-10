@@ -215,6 +215,11 @@
         public DelegateCommand OpenDeveloperApplicationWindowCommand { get; set; } =
             new DelegateCommand(OpenDeveloperApplicationWindow);
 
+        public object CharacterList
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         #endregion
     }
 }
