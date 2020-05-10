@@ -1,12 +1,12 @@
-﻿using JetBrains.Annotations;
-
-namespace REvernus.Database.EveDbModels
+﻿namespace REvernus.Database.EveDbModels
 {
+    using JetBrains.Annotations;
+
     [PublicAPI]
     public class IndustryActivity
     {
-        public long TypeId { get; set; }
         public long ActivityId { get; set; }
         public long? Time { get; set; }
+        public long TypeId { get; set; }
     }
 }

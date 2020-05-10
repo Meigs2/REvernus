@@ -5,7 +5,7 @@
     [PublicAPI]
     public class IndustryBlueprints
     {
-        public long TypeId { get; set; }
         public long? MaxProductionLimit { get; set; }
+        public long TypeId { get; set; }
     }
 }
