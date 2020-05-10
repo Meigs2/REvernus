@@ -1,29 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using REvernus.Models;
-using REvernus.Views;
-
-namespace REvernus.Core
+﻿namespace REvernus.Core
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+
     using REvernus.Database.Contexts;
     using REvernus.Database.EveDbModels;
     using REvernus.Database.UserDbModels;
+    using REvernus.Models;
+    using REvernus.Views;
 
     public static class StructureManager
     {
-        public static readonly ObservableCollection<PlayerStructure> Structures = new ObservableCollection<PlayerStructure>();
+        public static readonly ObservableCollection<PlayerStructure> Structures =
+            new ObservableCollection<PlayerStructure>();
+
+        public static string GetStructureName(long structureId)
+        {
+            // check for NPC station
+            if (TryGetNpcStation(structureId, out var station))
+                return station.StationName;
+            if (TryGetPlayerStructure(structureId, out var structure))
+                return structure.Name;
+            return "Unknown Structure";
+        }
 
         public static void Initialize()
         {
             LoadStructuresFromDatabase();
         }
 
-        public static void ShowStructureManagementWindow()
+        public static void InsertStructuresIntoDatabase(List<PlayerStructure> structures)
         {
-            var structureManagerView = new StructureManagerView();
-            structureManagerView.Show();
+            foreach (var playerStructure in structures)
+            {
+                var context = new UserContext();
+                if (!context.AddedStructures.Any(o => o.StructureId == playerStructure.StructureId))
+                    context.AddedStructures.Add(new AddedStructure
+                    {
+                        StructureId = playerStructure.StructureId,
+                        Name = playerStructure.Name,
+                        OwnerId = playerStructure.OwnerId,
+                        SolarSystemId = playerStructure.SolarSystemId,
+                        TypeId = playerStructure.TypeId.GetValueOrDefault(),
+                        AddedBy = playerStructure.AddedBy.GetValueOrDefault(),
+                        AddedAt = playerStructure.AddedAt.GetValueOrDefault(),
+                        Enabled = playerStructure.Enabled.GetValueOrDefault(),
+                        IsPublic = playerStructure.IsPublic
+                    });
+
+                context.SaveChanges();
+                context.Dispose();
+            }
         }
 
         public static void LoadStructuresFromDatabase()
@@ -47,33 +76,8 @@ namespace REvernus.Core
                 };
                 Structures.Add(structure);
             }
+
             context.Dispose();
-        }
-
-        public static void InsertStructuresIntoDatabase(List<PlayerStructure> structures)
-        {
-            foreach (var playerStructure in structures)
-            {
-                var context = new UserContext();
-                if (!context.AddedStructures.Any(o => o.StructureId == playerStructure.StructureId))
-                {
-                    context.AddedStructures.Add(new AddedStructure()
-                    {
-                        StructureId = playerStructure.StructureId,
-                        Name = playerStructure.Name,
-                        OwnerId = playerStructure.OwnerId,
-                        SolarSystemId = playerStructure.SolarSystemId,
-                        TypeId = playerStructure.TypeId.GetValueOrDefault(),
-                        AddedBy = playerStructure.AddedBy.GetValueOrDefault(),
-                        AddedAt = playerStructure.AddedAt.GetValueOrDefault(),
-                        Enabled = playerStructure.Enabled.GetValueOrDefault(),
-                        IsPublic = playerStructure.IsPublic
-                    });
-                }
-
-                context.SaveChanges();
-                context.Dispose();
-            }
         }
 
         public static void RemoveStructuresFromDatabase(IList structures)
@@ -82,17 +86,18 @@ namespace REvernus.Core
             foreach (PlayerStructure structure in structures)
             {
                 var a = context.AddedStructures.FirstOrDefault(s => s.StructureId == structure.StructureId);
-                if (a != null) context.Remove(a);
+                if (a != null)
+                    context.Remove(a);
             }
 
             context.SaveChanges();
             context.Dispose();
         }
 
-        public static bool TryGetPlayerStructure(long structureId, out PlayerStructure playerStructure)
+        public static void ShowStructureManagementWindow()
         {
-            playerStructure = Structures.FirstOrDefault(s => s.StructureId == structureId);
-            return playerStructure != null;
+            var structureManagerView = new StructureManagerView();
+            structureManagerView.Show();
         }
 
         public static bool TryGetNpcStation(long stationId, out StaStations station)
@@ -110,21 +115,10 @@ namespace REvernus.Core
             }
         }
 
-        public static string GetStructureName(long structureId)
+        public static bool TryGetPlayerStructure(long structureId, out PlayerStructure playerStructure)
         {
-            // check for NPC station
-            if (StructureManager.TryGetNpcStation(structureId, out var station))
-            {
-                return station.StationName;
-            }
-            if (StructureManager.TryGetPlayerStructure(structureId, out var structure))
-            {
-                return structure.Name;
-            }
-            else
-            {
-                return "Unknown Structure";
-            }
+            playerStructure = Structures.FirstOrDefault(s => s.StructureId == structureId);
+            return playerStructure != null;
         }
     }
 }
