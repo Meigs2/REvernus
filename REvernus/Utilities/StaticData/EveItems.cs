@@ -4,11 +4,14 @@
     using System.Collections.Concurrent;
     using System.Linq;
 
+    using JetBrains.Annotations;
+
     using REvernus.Database.Contexts;
 
     public class EveItems
     {
-        public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; } =
+        [UsedImplicitly]
+        public static ConcurrentDictionary<long, string> TypeIdToTypeNameDictionary { get; set; } =
             new ConcurrentDictionary<long, string>();
 
         public static void Initialize()

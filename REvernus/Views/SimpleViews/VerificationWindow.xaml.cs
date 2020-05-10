@@ -7,6 +7,8 @@
     using EVEStandard;
     using EVEStandard.Models.SSO;
 
+    using JetBrains.Annotations;
+
     using log4net;
 
     using REvernus.Core.ESI;
@@ -31,7 +33,9 @@
         }
 
         private Authorization Authorization { get; set; } = new Authorization();
-        public REvernusCharacter Character { get; } = new REvernusCharacter();
+
+        [UsedImplicitly]
+        public REvernusCharacter Character { get; set; } = new REvernusCharacter();
 
         private async void AcceptButton_Click(object sender, RoutedEventArgs e)
         {

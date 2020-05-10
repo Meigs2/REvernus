@@ -12,6 +12,8 @@
     using EVEStandard.Models;
     using EVEStandard.Models.API;
 
+    using JetBrains.Annotations;
+
     using log4net;
 
     using Prism.Commands;
@@ -79,7 +81,8 @@
             }
         }
 
-        public List<PlayerStructure> SelectedStructures { get; } = new List<PlayerStructure>();
+        [UsedImplicitly]
+        public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
 
         public ObservableCollection<PlayerStructure> StructureListItems
         {

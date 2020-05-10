@@ -19,6 +19,8 @@
 
     using Gma.System.MouseKeyHook;
 
+    using JetBrains.Annotations;
+
     using log4net;
 
     using Prism.Commands;
@@ -76,15 +78,18 @@
             BindingOperations.EnableCollectionSynchronization(SellOrdersCollection, _sellsLock);
         }
 
-        public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; } =
+        [UsedImplicitly]
+        public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } =
             new ObservableCollection<MarketOrderInfoModel>();
 
-        public Dictionary<string, List<CharacterMarketOrder>> CharacterToOrders { get; } =
+        [UsedImplicitly]
+        public Dictionary<string, List<CharacterMarketOrder>> CharacterToOrders { get; set; } =
             new Dictionary<string, List<CharacterMarketOrder>>();
 
         public Dictionary<long, Dictionary<int, List<MarketOrder>>> OrdersList { get; set; }
 
-        public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; } =
+        [UsedImplicitly]
+        public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } =
             new ObservableCollection<MarketOrderInfoModel>();
 
         private void InitializeRefreshTimer()
@@ -541,7 +546,8 @@
 
         #region Refresh Timer Things
 
-        public DispatcherTimer AutoRefreshTimer { get; } = new DispatcherTimer();
+        [UsedImplicitly]
+        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
 
         public bool AutoRefreshEnabled
         {
