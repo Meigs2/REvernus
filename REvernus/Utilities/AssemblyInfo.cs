@@ -4,7 +4,7 @@
     {
         public static string GetFileAssemblyVersion()
         {
-            return typeof(AssemblyInfo).Assembly.GetName().Version.ToString();
+            return typeof(AssemblyInfo).Assembly.GetName().Version?.ToString();
         }
     }
 }

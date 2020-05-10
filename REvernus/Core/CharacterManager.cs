@@ -22,7 +22,7 @@
     public sealed class CharacterManager : BindableBase
     {
         private static readonly ILog Log =
-            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         private readonly Timer _authRefreshTimer = new Timer
             { Interval = TimeSpan.FromMinutes(10).TotalMilliseconds, AutoReset = true };

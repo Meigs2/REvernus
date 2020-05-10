@@ -30,8 +30,8 @@
     {
         public static CharacterManager CharacterManager;
 
-        [CanBeNull]
         // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once PossibleNullReferenceException
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
