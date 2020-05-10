@@ -1,29 +1,30 @@
-﻿using REvernus.ViewModels;
-using System.Collections.Concurrent;
-using System.Windows;
-using System.Windows.Threading;
-
-namespace REvernus.Utilities
+﻿namespace REvernus.Utilities
 {
+    using System.Collections.Concurrent;
+    using System.Windows;
+    using System.Windows.Threading;
+
+    using REvernus.ViewModels;
+
     public class Status
     {
-        private static readonly ConcurrentDictionary<StatusHandle, StatusHandle> StatusDictionary = new ConcurrentDictionary<StatusHandle, StatusHandle>();
+        private static readonly ConcurrentDictionary<StatusHandle, StatusHandle> StatusDictionary =
+            new ConcurrentDictionary<StatusHandle, StatusHandle>();
 
         protected static string StatusText
         {
             get
             {
                 if (App.MainWindow.DataContext is MainWindowViewModel viewModel)
-                {
                     return viewModel.StatusText;
-                }
                 return "";
             }
             set
             {
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    if (App.MainWindow.DataContext is MainWindowViewModel viewModel) viewModel.StatusText = value;
+                    if (App.MainWindow.DataContext is MainWindowViewModel viewModel)
+                        viewModel.StatusText = value;
                 });
             }
         }

@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-
-namespace REvernus.Utilities
+﻿namespace REvernus.Utilities
 {
+    using System.Diagnostics;
+    using System.Runtime.InteropServices;
+
     public class Browser
     {
         public static void OpenBrowser(string url)
@@ -15,7 +15,7 @@ namespace REvernus.Utilities
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo
+                    var psi = new ProcessStartInfo
                     {
                         FileName = url,
                         UseShellExecute = true

@@ -1,17 +1,18 @@
-﻿using System.Reflection;
-using log4net;
-using log4net.Repository.Hierarchy;
-using log4net.Core;
-using log4net.Appender;
-using log4net.Layout;
-
-namespace REvernus.Utilities
+﻿namespace REvernus.Utilities
 {
+    using System.Reflection;
+
+    using log4net;
+    using log4net.Appender;
+    using log4net.Core;
+    using log4net.Layout;
+    using log4net.Repository.Hierarchy;
+
     public class Logging
     {
         public static void SetupLogging()
         {
-            var hierarchy = (Hierarchy)LogManager.GetRepository(Assembly.GetExecutingAssembly());
+            var hierarchy = (Hierarchy) LogManager.GetRepository(Assembly.GetExecutingAssembly());
 
             var patternLayout = new PatternLayout
             {

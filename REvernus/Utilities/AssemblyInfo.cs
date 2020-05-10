@@ -1,6 +1,6 @@
 ﻿namespace REvernus.Utilities
 {
-    public  class AssemblyInfo
+    public class AssemblyInfo
     {
         public static string GetFileAssemblyVersion()
         {

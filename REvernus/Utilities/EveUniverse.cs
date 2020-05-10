@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-
-namespace REvernus.Utilities
+﻿namespace REvernus.Utilities
 {
+    using System;
+    using System.Linq;
+
     using REvernus.Database.Contexts;
 
     public static class EveUniverse
