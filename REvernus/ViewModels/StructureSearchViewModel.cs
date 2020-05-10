@@ -7,11 +7,8 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using EVEStandard.Enumerations;
-using REvernus.Core;
 using REvernus.Core.ESI;
 using REvernus.Models;
 using Universe = EVEStandard.API.Universe;
@@ -20,6 +17,7 @@ namespace REvernus.ViewModels
 {
     public class StructureSearchViewModel : BindableBase
     {
+        // ReSharper disable once UnusedMember.Local
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -74,7 +72,7 @@ namespace REvernus.ViewModels
             SelectedCharacter = App.CharacterManager.SelectedCharacter;
         }
 
-        public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
+        public List<PlayerStructure> SelectedStructures { get; } = new List<PlayerStructure>();
 
         private void SelectStructures(IList selectedStructures)
         {

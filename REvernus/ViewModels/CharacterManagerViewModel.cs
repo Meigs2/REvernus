@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Prism.Commands;
-using REvernus.Core;
 using REvernus.Models;
 
 namespace REvernus.ViewModels
 {
+    using JetBrains.Annotations;
+
     public class CharacterManagerViewModel
     {
         private static readonly log4net.ILog Log =
@@ -19,6 +18,7 @@ namespace REvernus.ViewModels
 
         public DelegateCommand AddCharacterCommand { get; set; }
 
+        [UsedImplicitly]
         public DelegateCommand RemoveCharacterCommand { get; set; }
 
         #endregion

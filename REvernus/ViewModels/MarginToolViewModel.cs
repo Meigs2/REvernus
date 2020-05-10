@@ -232,18 +232,17 @@ namespace REvernus.ViewModels
 
         #endregion
 
-        private readonly List<ExportedOrderModel> Orders = new List<ExportedOrderModel>();
+        private readonly List<ExportedOrderModel> _orders = new List<ExportedOrderModel>();
 
-        private readonly FileSystemWatcher _watcher;
+        private readonly FileSystemWatcher _watcher = new FileSystemWatcher()
+        {
+            Path = Paths.EveMarketLogsFolderPath,
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime,
+            IncludeSubdirectories = true
+        };
 
         public MarginToolViewModel()
         {
-            _watcher = new FileSystemWatcher()
-            {
-                Path = Paths.EveMarketLogsFolderPath,
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime,
-                IncludeSubdirectories = true
-            };
             _watcher.Created += WatcherOnChanged;
             _watcher.EnableRaisingEvents = true;
 
@@ -276,8 +275,9 @@ namespace REvernus.ViewModels
             
             try
             {
+                // ReSharper disable once UnusedVariable
                 var currentChar = App.CharacterManager.SelectedCharacter;
-                Orders.Clear();
+                _orders.Clear();
                 using (var file = File.Open(e.FullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
                     using var reader = new StreamReader(file);
@@ -286,25 +286,28 @@ namespace REvernus.ViewModels
                         reader.ReadLine(); // read first line and disregard
                         while (!reader.EndOfStream)
                         {
-                            
-                            var values = reader.ReadLine().Split(',');
+                            var values = reader.ReadLine()?.Split(',');
                             var order = new ExportedOrderModel();
-                            order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
-                            order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])), CultureInfo.InvariantCulture);
-                            order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
-                            order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
-                            order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
-                            order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
-                            order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
-                            order.IsBuyOrder = bool.Parse(values[7]);
-                            order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
-                            order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
-                            order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
-                            order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
-                            order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
-                            order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
+                            if (values != null)
+                            {
+                                order.Price = double.Parse(values[0], CultureInfo.InvariantCulture);
+                                order.VolumeRemaining = Convert.ToInt32(Math.Floor(Convert.ToDouble(values[1])),
+                                    CultureInfo.InvariantCulture);
+                                order.TypeId = int.Parse(values[2], CultureInfo.InvariantCulture);
+                                order.Range = int.Parse(values[3], CultureInfo.InvariantCulture);
+                                order.OrderId = long.Parse(values[4], CultureInfo.InvariantCulture);
+                                order.VolumeEntered = int.Parse(values[5], CultureInfo.InvariantCulture);
+                                order.MinVolume = int.Parse(values[6], CultureInfo.InvariantCulture);
+                                order.IsBuyOrder = bool.Parse(values[7]);
+                                order.DateIssued = DateTime.Parse(values[8], CultureInfo.InvariantCulture);
+                                order.Duration = int.Parse(values[9], CultureInfo.InvariantCulture);
+                                order.StationId = long.Parse(values[10], CultureInfo.InvariantCulture);
+                                order.RegionId = int.Parse(values[11], CultureInfo.InvariantCulture);
+                                order.SystemId = int.Parse(values[12], CultureInfo.InvariantCulture);
+                                order.NumJumpsAway = int.Parse(values[13], CultureInfo.InvariantCulture);
+                            }
 
-                            Orders.Add(order);
+                            _orders.Add(order);
                            
                         }
                     }
@@ -315,7 +318,7 @@ namespace REvernus.ViewModels
                 }
 
                 // Filter results
-                var filteredOrders = Orders.Where(o => o.NumJumpsAway <= JumpsOut).ToList();
+                var filteredOrders = _orders.Where(o => o.NumJumpsAway <= JumpsOut).ToList();
                 var filteredSellOrders = filteredOrders.Where(o => !o.IsBuyOrder).ToList();
                 var filteredBuyOrders = filteredOrders.Where(o => o.IsBuyOrder).ToList();
 
@@ -333,8 +336,8 @@ namespace REvernus.ViewModels
                 }
 
 
-                string[] temp = e.Name.Split('.');
-                List<string> tempList = temp[0].Split('-').ToList<string>();
+                var temp = e.Name.Split('.');
+                var tempList = temp[0].Split('-').ToList<string>();
                 tempList.RemoveAt(0);
                 tempList.RemoveAt(tempList.Count - 1);
                 ItemName = string.Join("-", tempList.ToArray());

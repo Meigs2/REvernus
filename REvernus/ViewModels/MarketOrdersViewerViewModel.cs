@@ -27,9 +27,9 @@ namespace REvernus.ViewModels
 
     public class MarketOrdersViewerViewModel : BindableBase
     {
-        public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
-        public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; set; } = new ObservableCollection<MarketOrderInfoModel>();
-        public Dictionary<string, List<CharacterMarketOrder>> CharacterToOrders { get; set; } = new Dictionary<string, List<CharacterMarketOrder>>();
+        public ObservableCollection<MarketOrderInfoModel> SellOrdersCollection { get; } = new ObservableCollection<MarketOrderInfoModel>();
+        public ObservableCollection<MarketOrderInfoModel> BuyOrdersCollection { get; } = new ObservableCollection<MarketOrderInfoModel>();
+        public Dictionary<string, List<CharacterMarketOrder>> CharacterToOrders { get; } = new Dictionary<string, List<CharacterMarketOrder>>();
         public Dictionary<long, Dictionary<int, List<MarketOrder>>> OrdersList { get; set; }
 
         #region Bindings
@@ -216,7 +216,7 @@ namespace REvernus.ViewModels
                             Scopes = EVEStandard.Enumerations.Scopes.ESI_UI_OPEN_WINDOW_1,
                             AccessToken = character.AccessTokenDetails
                         };
-                        if (App.Settings.MarketOrdersTabSettings.ShowInEveClient == true)
+                        if (App.Settings.MarketOrdersTabSettings.ShowInEveClient)
                         {
                             await EsiData.EsiClient.UserInterface.OpenMarketDetailsV1Async(dto, currentItem.ItemId);
                         }
@@ -229,7 +229,7 @@ namespace REvernus.ViewModels
                 }
 
                 Clipboard.SetText(Math.Round(currentItem.Order.IsBuyOrder == true ? (currentItem.BuyOrders[0].Price + App.Settings.MarketSettings.GetUndercut) :
-                    (currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut), 2, MidpointRounding.ToEven).ToString("F"));
+                    currentItem.SellOrders[0].Price - App.Settings.MarketSettings.GetUndercut, 2, MidpointRounding.ToEven).ToString("F"));
 
                 if (App.Settings.MarketOrdersTabSettings.PlayOrderChangedSound) SystemSounds.Beep.Play();
             }
@@ -241,7 +241,7 @@ namespace REvernus.ViewModels
         #endregion
 
         #region Refresh Timer Things
-        public DispatcherTimer AutoRefreshTimer { get; set; } = new DispatcherTimer();
+        public DispatcherTimer AutoRefreshTimer { get; } = new DispatcherTimer();
 
         public bool AutoRefreshEnabled
         {
@@ -281,6 +281,7 @@ namespace REvernus.ViewModels
         private readonly object _sellsLock = new object();
         private bool _isEnabled = true;
 
+        // ReSharper disable once UnusedMember.Local
         private static readonly log4net.ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -402,6 +403,7 @@ namespace REvernus.ViewModels
 
         private async Task UpdateData(string characterName = "")
         {
+            // ReSharper disable once CollectionNeverUpdated.Local
             var taskList = new List<Task>();
 
             if (characterName == "")
@@ -410,7 +412,7 @@ namespace REvernus.ViewModels
                 {
                     foreach (var characterOrder in CharacterToOrders[charName])
                     {
-                        using var a = Status.GetNewStatusHandle();
+                        Status.GetNewStatusHandle();
                         // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
                         if (!OrdersList.TryGetValue(characterOrder.LocationId, out var idsToOrders)) continue;
                         if (!idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders)) continue;
@@ -464,7 +466,7 @@ namespace REvernus.ViewModels
 
                 foreach (var characterOrder in CharacterToOrders[characterName])
                 {
-                    using var a = Status.GetNewStatusHandle();
+                    Status.GetNewStatusHandle();
                     // If something didn't go wrong along the way, we now have all the public orders in the location of our current order
                     if (!OrdersList.TryGetValue(characterOrder.LocationId, out var idsToOrders)) continue;
                     if (!idsToOrders.TryGetValue(characterOrder.TypeId, out var marketOrders)) continue;
