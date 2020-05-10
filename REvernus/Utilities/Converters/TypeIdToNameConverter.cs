@@ -1,10 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Data;
-
-namespace REvernus.Utilities.Converters
+﻿namespace REvernus.Utilities.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Windows.Data;
+
     using REvernus.Database.Contexts;
 
     public class TypeIdToNameConverter : IValueConverter

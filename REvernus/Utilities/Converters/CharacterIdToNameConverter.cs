@@ -1,11 +1,11 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Data;
-
-namespace REvernus.Utilities.Converters
+﻿namespace REvernus.Utilities.Converters
 {
-    class CharacterIdToNameConverter : IValueConverter
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Windows.Data;
+
+    internal class CharacterIdToNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
