@@ -9,8 +9,6 @@
     using System.Timers;
     using System.Windows;
 
-    using JetBrains.Annotations;
-
     using log4net;
 
     using Prism.Mvvm;
@@ -23,7 +21,6 @@
 
     public sealed class CharacterManager : BindableBase
     {
-        [CanBeNull]
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -67,8 +64,13 @@
                 if (value != _selectedCharacter)
                 {
                     SetProperty(ref _selectedCharacter, value);
-                    App.Settings.CharacterManagerSettings.SelectedCharacterName =
-                        value == null ? "" : value.CharacterName;
+                    if (App.Settings != null)
+                        App.Settings.CharacterManagerSettings.SelectedCharacterName =
+                            value == null ? "" : value.CharacterName;
+                    else
+                    {
+                        throw new ArgumentException("App.Settings is null");
+                    }
                     OnSelectedCharacterChanged();
                 }
             }
