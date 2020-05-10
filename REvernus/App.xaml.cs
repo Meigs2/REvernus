@@ -6,8 +6,6 @@
     using System.Threading.Tasks;
     using System.Windows;
 
-    using JetBrains.Annotations;
-
     using log4net;
 
     using Microsoft.EntityFrameworkCore;
@@ -35,7 +33,6 @@
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        [CanBeNull]
         public static readonly AppSettings Settings = new AppSettings();
 
         public new static MainWindowView MainWindow { get; private set; }

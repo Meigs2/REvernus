@@ -23,7 +23,7 @@
         private const string FUZZWORK_LATEST_DB_PATH = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
 
         private readonly ILog _log =
-            LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private Window _window;
 

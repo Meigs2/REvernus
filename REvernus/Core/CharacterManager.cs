@@ -22,7 +22,7 @@
     public sealed class CharacterManager : BindableBase
     {
         private static readonly ILog Log =
-            LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly Timer _authRefreshTimer = new Timer
             { Interval = TimeSpan.FromMinutes(10).TotalMilliseconds, AutoReset = true };
@@ -64,11 +64,8 @@
                 if (value != _selectedCharacter)
                 {
                     SetProperty(ref _selectedCharacter, value);
-                    if (App.Settings != null)
-                        App.Settings.CharacterManagerSettings.SelectedCharacterName =
-                            value == null ? "" : value.CharacterName;
-                    else
-                        throw new ArgumentException("App.Settings is null");
+                    App.Settings.CharacterManagerSettings.SelectedCharacterName =
+                        value == null ? "" : value.CharacterName;
                     OnSelectedCharacterChanged();
                 }
             }
