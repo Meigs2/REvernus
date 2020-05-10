@@ -4,6 +4,7 @@
     {
         public static void CopyProperties<T>(T from, T to)
         {
+            // ReSharper disable once CompareNonConstrainedGenericWithNull
             if (from == null || to == null)
                 return;
             var properties = typeof(T).GetProperties();
