@@ -9,12 +9,13 @@
         <Grid VerticalAlignment="Center">
             <StackPanel Orientation="Vertical">
                 <Button x:Name="LoginButton"
-                       Content="CLICK ME"
-                       Click="LoginButton_Click" Cursor="Hand" Margin="10" MaxWidth="300"/>
+                        Content="CLICK ME"
+                        Click="LoginButton_Click" Cursor="Hand" Margin="10" MaxWidth="300" />
                 <Grid HorizontalAlignment="Center">
                     <Label Content="Enter the code displayed in your web browser after signing in." />
                 </Grid>
-                <TextBox x:Name="AuthCodeTextBox" MaxWidth="500" Background="LightGray" Margin="10" TextAlignment="Center" />
+                <TextBox x:Name="AuthCodeTextBox" MaxWidth="500" Background="LightGray" Margin="10"
+                         TextAlignment="Center" />
                 <Button x:Name="AcceptButton" Content="Accept" MaxWidth="200" Click="AcceptButton_Click" />
             </StackPanel>
         </Grid>

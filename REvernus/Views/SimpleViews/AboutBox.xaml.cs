@@ -1,9 +1,11 @@
-﻿using System.Windows.Navigation;
-
-namespace REvernus.Views.SimpleViews
+﻿namespace REvernus.Views.SimpleViews
 {
+    using System.Windows.Navigation;
+
+    using REvernus.Utilities;
+
     /// <summary>
-    /// Interaction logic for AboutBox.xaml
+    ///     Interaction logic for AboutBox.xaml
     /// </summary>
     public partial class AboutBox
     {
@@ -14,7 +16,7 @@ namespace REvernus.Views.SimpleViews
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Utilities.Browser.OpenBrowser(e.Uri.AbsoluteUri);
+            Browser.OpenBrowser(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
     }

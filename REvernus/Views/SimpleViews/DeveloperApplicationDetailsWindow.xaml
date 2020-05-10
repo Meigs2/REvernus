@@ -12,21 +12,21 @@
                 <GroupBox Grid.Row="0" Header="Developer Application Data">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <Label HorizontalAlignment="Center">Client ID:</Label>
-                            <TextBox x:Name="ClientIdTextBox" Margin="5"></TextBox>
+                            <TextBox x:Name="ClientIdTextBox" Margin="5" />
                         </StackPanel>
                         <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <Label HorizontalAlignment="Center">Secret Key:</Label>
-                            <PasswordBox x:Name="SecretKeyTextBox" Margin="5"></PasswordBox>
+                            <PasswordBox x:Name="SecretKeyTextBox" Margin="5" />
                         </StackPanel>
                         <StackPanel Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <Label HorizontalAlignment="Center">Callback URL:</Label>
-                            <TextBox x:Name="CallbackUrlTextBox" Margin="5"></TextBox>
+                            <TextBox x:Name="CallbackUrlTextBox" Margin="5" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>
