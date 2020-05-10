@@ -10,10 +10,10 @@ namespace REvernus.Views.SimpleViews
     /// <summary>
     /// Interaction logic for VerificationWindow.xaml
     /// </summary>
-    public partial class VerificationWindow : Window
+    public partial class VerificationWindow
     {
         private readonly EVEStandardAPI _client;
-        public REvernusCharacter Character { get; set; } = new REvernusCharacter();
+        public REvernusCharacter Character { get; } = new REvernusCharacter();
         private Authorization Authorization { get; set; } = new Authorization();
 
         private static readonly log4net.ILog Log =

@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.EntityFrameworkCore;
 
 namespace REvernus.Views.SimpleViews
 {
@@ -21,7 +10,7 @@ namespace REvernus.Views.SimpleViews
     /// <summary>
     /// Interaction logic for DeveloperApplicationDetailsWindow.xaml
     /// </summary>
-    public partial class DeveloperApplicationDetailsWindow : Window
+    public partial class DeveloperApplicationDetailsWindow
     {
         private readonly UserContext _userContext;
         private bool _saveData;
@@ -70,7 +59,6 @@ namespace REvernus.Views.SimpleViews
                     e.Cancel = true;
                     MessageBox.Show("One of the fields is empty. Please enter data into all fields before saving.");
                     _saveData = false;
-                    return;
                 }
             }
         }
