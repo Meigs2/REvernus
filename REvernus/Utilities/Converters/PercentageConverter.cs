@@ -10,14 +10,18 @@ namespace REvernus.Utilities.Converters
         {
             try
             {
-                if (value == null) return null;
-                var fraction = decimal.Parse(value.ToString());
-                return fraction.ToString("P2");
+                if (value != null)
+                {
+                    var fraction = decimal.Parse(value.ToString());
+                    return fraction.ToString("P2");
+                }
             }
             catch (Exception)
             {
                 return null;
             }
+
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

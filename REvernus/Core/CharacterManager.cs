@@ -9,6 +9,8 @@
     using System.Timers;
     using System.Windows;
 
+    using JetBrains.Annotations;
+
     using log4net;
 
     using Prism.Mvvm;
@@ -21,6 +23,7 @@
 
     public sealed class CharacterManager : BindableBase
     {
+        [CanBeNull]
         private static readonly ILog Log =
             LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
