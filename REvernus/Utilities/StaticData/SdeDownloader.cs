@@ -20,10 +20,10 @@
     public class SdeDownloader
     {
         // ReSharper disable once IdentifierTypo
-        private const string _fuzzworkLatestDbPath = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
+        private const string FUZZWORK_LATEST_DB_PATH = @"http://www.fuzzwork.co.uk/dump/latest/eve.db.bz2";
 
         private readonly ILog _log =
-            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         private Window _window;
 
@@ -53,7 +53,7 @@
                     });
 
                     // Download file
-                    await DownloadFileAsync(_fuzzworkLatestDbPath, Paths.CompressedSdeDataBasePath);
+                    await DownloadFileAsync(FUZZWORK_LATEST_DB_PATH, Paths.CompressedSdeDataBasePath);
 
                     // Extract .bz2 file
                     await using (var outStream = File.Create(Path.Combine(Paths.DataBaseFolderPath, "eve.db")))

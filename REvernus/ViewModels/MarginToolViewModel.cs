@@ -47,6 +47,7 @@
             TensDataTable = tempTable.Clone();
             FivesDataTable = tempTable.Clone();
 
+            // ReSharper disable once PossibleNullReferenceException
             JumpsOut = App.Settings.MarginToolSettings.JumpsOut;
         }
 
