@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEStandard;
+﻿using System.Collections.Generic;
 using EVEStandard.Models.SSO;
 using REvernus.Models;
 
@@ -10,11 +7,6 @@ namespace REvernus.Core
     public class CharacterManagerNew
     {
         public List<REvernusCharacter> Characters { get; set; }
-
-        public CharacterManagerNew()
-        {
-
-        }
 
         public Authorization GenerateEsiAuthorization(List<string> scopes)
         {
