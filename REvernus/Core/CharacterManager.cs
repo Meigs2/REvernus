@@ -68,9 +68,7 @@
                         App.Settings.CharacterManagerSettings.SelectedCharacterName =
                             value == null ? "" : value.CharacterName;
                     else
-                    {
                         throw new ArgumentException("App.Settings is null");
-                    }
                     OnSelectedCharacterChanged();
                 }
             }
