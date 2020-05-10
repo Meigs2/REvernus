@@ -10,7 +10,6 @@ using REvernus.Properties;
 using REvernus.Settings;
 using REvernus.Utilities.StaticData;
 using REvernus.Views.SimpleViews;
-using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
 namespace REvernus
@@ -21,12 +20,14 @@ namespace REvernus
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
+#pragma warning disable IDE0052 // Remove unread private members
         private static readonly log4net.ILog Log =
+#pragma warning restore IDE0052 // Remove unread private members
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static AppSettings Settings = new AppSettings();
+        public static readonly AppSettings Settings = new AppSettings();
         public static CharacterManager CharacterManager;
         public new static MainWindowView MainWindow { get; private set; }
 
