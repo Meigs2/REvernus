@@ -1,18 +1,19 @@
-﻿using System;
-using Prism.Mvvm;
-
-namespace REvernus.Settings
+﻿namespace REvernus.Settings
 {
+    using System;
+
+    using Prism.Mvvm;
+
     [Serializable]
     public class MarketOrdersTabSettings : BindableBase, ICloneable
     {
         private uint _autoUpdateMintues = 5;
         private bool _autoUpdateTimerEnabled = true;
-        private bool _showInEveClient = true;
-        private string _marketUpHotkey = "Shift+S";
         private string _marketDownHotkey = "Shift+D";
+        private string _marketUpHotkey = "Shift+S";
         private bool _playOrderChangedSound;
         private bool _resetRefreshTimerOnPriceCopy;
+        private bool _showInEveClient = true;
 
         public uint AutoUpdateMintues
         {
@@ -20,9 +21,7 @@ namespace REvernus.Settings
             set
             {
                 if (value == 0)
-                {
                     value = 1;
-                }
                 SetProperty(ref _autoUpdateMintues, value);
             }
         }
@@ -33,16 +32,10 @@ namespace REvernus.Settings
             set => SetProperty(ref _autoUpdateTimerEnabled, value);
         }
 
-        public bool ShowInEveClient
+        public string MarketDownHotkey
         {
-            get => _showInEveClient;
-            set => SetProperty(ref _showInEveClient, value);
-        }
-
-        public bool PlayOrderChangedSound
-        {
-            get => _playOrderChangedSound;
-            set => SetProperty(ref _playOrderChangedSound, value);
+            get => _marketDownHotkey;
+            set => SetProperty(ref _marketDownHotkey, value);
         }
 
         public string MarketUpHotkey
@@ -51,16 +44,22 @@ namespace REvernus.Settings
             set => SetProperty(ref _marketUpHotkey, value);
         }
 
-        public string MarketDownHotkey
+        public bool PlayOrderChangedSound
         {
-            get => _marketDownHotkey;
-            set => SetProperty(ref _marketDownHotkey, value);
+            get => _playOrderChangedSound;
+            set => SetProperty(ref _playOrderChangedSound, value);
         }
 
         public bool ResetRefreshTimerOnPriceCopy
         {
             get => _resetRefreshTimerOnPriceCopy;
             set => SetProperty(ref _resetRefreshTimerOnPriceCopy, value);
+        }
+
+        public bool ShowInEveClient
+        {
+            get => _showInEveClient;
+            set => SetProperty(ref _showInEveClient, value);
         }
 
         public object Clone()

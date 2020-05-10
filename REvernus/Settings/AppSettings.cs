@@ -1,8 +1,9 @@
-﻿using System;
-using Jot.Configuration;
-
-namespace REvernus.Settings
+﻿namespace REvernus.Settings
 {
+    using System;
+
+    using Jot.Configuration;
+
     public class AppSettings : ITrackingAware<AppSettings>
     {
         public CharacterManagerSettings CharacterManagerSettings { get; } = new CharacterManagerSettings();

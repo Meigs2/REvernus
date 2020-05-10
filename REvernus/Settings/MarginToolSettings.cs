@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace REvernus.Settings
+﻿namespace REvernus.Settings
 {
+    using System;
+
     [Serializable]
     public class MarginToolSettings
     {
