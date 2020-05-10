@@ -5,7 +5,7 @@
     [PublicAPI]
     public class PlanetSchematicsPinMap
     {
-        public long SchematicId { get; set; }
         public long PinTypeId { get; set; }
+        public long SchematicId { get; set; }
     }
 }

@@ -5,8 +5,8 @@
     [PublicAPI]
     public class InvTypeMaterials
     {
-        public long TypeId { get; set; }
         public long MaterialTypeId { get; set; }
         public long Quantity { get; set; }
+        public long TypeId { get; set; }
     }
 }
