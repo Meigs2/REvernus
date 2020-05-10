@@ -1,5 +1,7 @@
 ﻿namespace REvernus.Database.Contexts
 {
+    using JetBrains.Annotations;
+
     using Microsoft.EntityFrameworkCore;
 
     using REvernus.Database.EveDbModels;
@@ -64,6 +66,8 @@
         public DbSet<InvTraits> InvTraits { get; set; }
         public DbSet<InvTypeMaterials> InvTypeMaterials { get; set; }
         public DbSet<InvTypeReactions> InvTypeReactions { get; set; }
+        
+        [UsedImplicitly]
         public DbSet<InvTypes> InvTypes { get; set; }
         public DbSet<InvUniqueNames> InvUniqueNames { get; set; }
         public DbSet<InvVolumes> InvVolumes { get; set; }
@@ -78,6 +82,8 @@
         public DbSet<MapRegionJumps> MapRegionJumps { get; set; }
         public DbSet<MapRegions> MapRegions { get; set; }
         public DbSet<MapSolarSystemJumps> MapSolarSystemJumps { get; set; }
+        
+        [UsedImplicitly] 
         public DbSet<MapSolarSystems> MapSolarSystems { get; set; }
         public DbSet<MapUniverse> MapUniverse { get; set; }
         public DbSet<PlanetSchematics> PlanetSchematics { get; set; }
@@ -97,6 +103,8 @@
         public DbSet<StaOperations> StaOperations { get; set; }
         public DbSet<StaServices> StaServices { get; set; }
         public DbSet<StaStationTypes> StaStationTypes { get; set; }
+
+        [UsedImplicitly]
         public DbSet<StaStations> StaStations { get; set; }
         public DbSet<TranslationTables> TranslationTables { get; set; }
         public DbSet<TrnTranslationColumns> TrnTranslationColumns { get; set; }
