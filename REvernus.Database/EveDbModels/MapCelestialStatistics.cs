@@ -1,5 +1,8 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
+    using JetBrains.Annotations;
+
+    [PublicAPI]
     public class MapCelestialStatistics
     {
         public long CelestialId { get; set; }

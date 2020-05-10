@@ -1,5 +1,8 @@
 ﻿namespace REvernus.Database.EveDbModels
 {
+    using JetBrains.Annotations;
+
+    [PublicAPI]
     public class InvTypeMaterials
     {
         public long TypeId { get; set; }

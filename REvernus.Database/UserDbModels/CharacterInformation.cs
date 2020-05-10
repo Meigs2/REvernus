@@ -3,6 +3,9 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    using JetBrains.Annotations;
+
+    [PublicAPI]
     public class CharacterInformation
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
