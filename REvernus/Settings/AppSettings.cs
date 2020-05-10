@@ -10,7 +10,7 @@
     {
         [UsedImplicitly]
         public CharacterManagerSettings CharacterManagerSettings { get; set; } = new CharacterManagerSettings();
-        
+
         [UsedImplicitly]
         public MarginToolSettings MarginToolSettings { get; set; } = new MarginToolSettings();
 
