@@ -33,7 +33,6 @@ namespace REvernus.Views
         private void ItemExplorerView_OnClosing(object sender, CancelEventArgs e)
         {
             SelectedTypes = (TreeView1.ItemsSource as List<ItemTreeModel>)?[0].GetSelected();
-            (TreeView1.ItemsSource as List<ItemTreeModel>)?.Clear();
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)

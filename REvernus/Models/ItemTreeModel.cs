@@ -8,7 +8,7 @@ namespace REvernus.Models
 {
     public class ItemTreeModel : INotifyPropertyChanged
     {
-        private readonly Dictionary<InvMarketGroups, ItemTreeModel> _dictionary =
+        private static readonly Dictionary<InvMarketGroups, ItemTreeModel> Dictionary =
             new Dictionary<InvMarketGroups, ItemTreeModel>();
 
         public ItemTreeModel(string name, bool isInitiallySelected)
@@ -42,18 +42,18 @@ namespace REvernus.Models
             // Ensure marketGroupDictionary is created
             foreach (var market in markets)
             {
-                _dictionary.Add(market, new ItemTreeModel(market.MarketGroupName, false));
-                if (market.Parent == null) Children.Add(_dictionary[market]);
+                Dictionary.Add(market, new ItemTreeModel(market.MarketGroupName, false));
+                if (market.Parent == null) Children.Add(Dictionary[market]);
             }
 
             foreach (var market in markets)
                 if (market.Parent != null)
-                    _dictionary[market.Parent].Children.Add(_dictionary[market]);
+                    Dictionary[market.Parent].Children.Add(Dictionary[market]);
 
             foreach (var item in items)
             {
-                _dictionary[item.MarketGroup].HasItemChildren = true;
-                _dictionary[item.MarketGroup].Children.Add(new ItemTreeModel(item.TypeName, false) { InvType = item });
+                Dictionary[item.MarketGroup].HasItemChildren = true;
+                Dictionary[item.MarketGroup].Children.Add(new ItemTreeModel(item.TypeName, false) { InvType = item });
             }
 
             Initialize();
@@ -69,7 +69,7 @@ namespace REvernus.Models
         {
             var toReturn = new List<InvTypes>();
 
-            var parents = _dictionary.Values.Where(o => o.HasItemChildren).ToList();
+            var parents = Dictionary.Values.Where(o => o.HasItemChildren).ToList();
             foreach (var parent in parents)
                 foreach (var child in parent.Children)
                     if (child.InvType != null && child.IsChecked == true)
