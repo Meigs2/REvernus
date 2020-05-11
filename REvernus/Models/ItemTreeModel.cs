@@ -75,6 +75,7 @@ namespace REvernus.Models
                     if (child.InvType != null && child.IsChecked == true)
                         toReturn.Add(child.InvType);
 
+            Dictionary.Clear();
             return toReturn;
         }
 

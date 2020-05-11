@@ -154,9 +154,9 @@ namespace REvernus.ViewModels
             a.ShowDialog();
         }
 
-        private static void OpenItemExplorer()
+        private static void OpenItemExporter()
         {
-            var window = new ItemExplorerView();
+            var window = new ItemExporterView();
             window.ShowDialog();
         }
 
@@ -215,7 +215,7 @@ namespace REvernus.ViewModels
         public DelegateCommand OpenDeveloperApplicationWindowCommand { get; set; } =
             new DelegateCommand(OpenDeveloperApplicationWindow);
 
-        public DelegateCommand OpenItemExplorerCommand { get; set; } = new DelegateCommand(OpenItemExplorer);
+        public DelegateCommand OpenItemExplorerCommand { get; set; } = new DelegateCommand(OpenItemExporter);
 
         #endregion
     }

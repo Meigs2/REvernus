@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 
-namespace REvernus.Views
+namespace REvernus.Views.SimpleViews
 {
     /// <summary>
     ///     Interaction logic for ItemExplorerView.xaml
@@ -32,7 +32,7 @@ namespace REvernus.Views
 
         private void ItemExplorerView_OnClosing(object sender, CancelEventArgs e)
         {
-            SelectedTypes = (TreeView1.ItemsSource as List<ItemTreeModel>)?[0].GetSelected();
+            if (!WasCanceled) SelectedTypes = (TreeView1.ItemsSource as List<ItemTreeModel>)?[0].GetSelected();
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
