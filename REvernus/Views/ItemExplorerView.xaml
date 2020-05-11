@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:REvernus.Views"
         xmlns:viewModels="clr-namespace:REvernus.ViewModels"
         mc:Ignorable="d"
-        Title="ItemExplorerView" Height="450" Width="800" Loaded="ItemExplorerView_OnLoaded" Closing="ItemExplorerView_OnClosing">
+        Title="Item Explorer" Height="450" Width="800" Loaded="ItemExplorerView_OnLoaded" Closing="ItemExplorerView_OnClosing">
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
@@ -22,10 +22,22 @@
             </HierarchicalDataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
+    <DockPanel>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button DockPanel.Dock="Bottom" Height="22" Margin="5" Click="CancelButton_Click">
+                Close
+            </Button>
+            <Button DockPanel.Dock="Bottom" Height="22" Margin="5" Grid.Column="1" Click="AcceptButton_Click">
+                Accept
+            </Button>
+        </Grid>
         <TreeView x:Name="TreeView1" Margin="5" 
                   ItemContainerStyle="{StaticResource TreeViewItemStyle}" 
                   ItemTemplate="{StaticResource CheckBoxItemTemplate}" 
                   VirtualizingStackPanel.IsVirtualizing="True"/>
-    </Grid>
+    </DockPanel>
 </Window>

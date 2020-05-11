@@ -1,22 +1,38 @@
 ﻿using Gma.System.MouseKeyHook;
+using log4net;
 using Prism.Commands;
 using REvernus.Core;
+using REvernus.Database.Contexts;
 using REvernus.Models;
 using REvernus.Utilities.StaticData;
 using REvernus.Views;
+using REvernus.Views.SimpleViews;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using System.Windows;
-
-using REvernus.Views.SimpleViews;
 
 namespace REvernus.ViewModels
 {
-    using REvernus.Database.Contexts;
-
     public class MainWindowViewModel : ViewModelBase
     {
+        private static readonly ILog Log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        private Window _marginWindow;
+        private int _numActiveJobs;
+
+        private string _statusText;
+
+        public MainWindowViewModel()
+        {
+            OpenCloseMarginToolCommand = new DelegateCommand(OpenCloseMarginTool);
+
+
+            SubscribeHotKeys();
+            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
+        }
+
         public REvernusCharacter SelectedCharacter
         {
             get => App.CharacterManager.SelectedCharacter;
@@ -47,84 +63,15 @@ namespace REvernus.ViewModels
             }
         }
 
-
-
-        private static readonly log4net.ILog Log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private string _statusText;
-        private int _numActiveJobs;
-
-        public MainWindowViewModel()
-        {
-            OpenCloseMarginToolCommand = new DelegateCommand(OpenCloseMarginTool);
-
-
-            SubscribeHotKeys();
-            AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
-        }
-
-        #region HotKeys
-
-        private IKeyboardMouseEvents _keybindEvents = Hook.AppEvents();
-
-        private void UnsubscribeHotKeys(object sender, EventArgs e)
-        {
-            _keybindEvents.Dispose();
-        }
-
-        private void UnsubscribeHotKeys()
-        {
-            _keybindEvents.Dispose();
-        }
-
-        private void SubscribeHotKeys()
-        {
-            UnsubscribeHotKeys();
-
-            _keybindEvents = Hook.GlobalEvents();
-
-            var actions = new Dictionary<Combination, Action>()
-            {
-                { Combination.FromString("Control+M"), OpenCloseMarginTool }
-            };
-
-            _keybindEvents.OnCombination(actions);
-        }
-
-        #endregion
-
-
-        #region Delegates
-        public DelegateCommand OpenCloseMarginToolCommand { get; set; }
-        public DelegateCommand CharacterManagerMenuItemCommand { get; set; } = new DelegateCommand(OpenCharacterManagerWindow);
-        public DelegateCommand AboutBoxOpenCommand { get; set; } = new DelegateCommand(OpenAboutBox);
-        public DelegateCommand OpenStructureManagerCommand { get; set; } = new DelegateCommand(OpenStructureManagerWindow);
-        public DelegateCommand CloseMainWindowCommand { get; set; } = new DelegateCommand(CloseMainWindow);
-        public DelegateCommand OpenSettingsViewCommand { get; set; } = new DelegateCommand(OpenSettingsView);
-        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(async () =>
-        {
-            var downloader = new SdeDownloader();
-            await downloader.DownloadLatestSde();
-        });
-
-        public DelegateCommand OpenDeveloperApplicationWindowCommand { get; set; } = new DelegateCommand(OpenDeveloperApplicationWindow);
-
-        public DelegateCommand OpenItemExplorerCommand { get; set; } = new DelegateCommand(OpenItemExplorer);
-
-        #endregion
-
-        private Window _marginWindow;
-
         private void OpenCloseMarginTool()
         {
-            if (!App.MainWindow.IsActive && (_marginWindow != null && !_marginWindow.IsActive)) return;
+            if (!App.MainWindow.IsActive && _marginWindow != null && !_marginWindow.IsActive) return;
 
             try
             {
                 if (_marginWindow == null)
                 {
-                    _marginWindow = new Window()
+                    _marginWindow = new Window
                     {
                         Title = "Margin Tool",
                         Content = new MarginToolView(),
@@ -142,17 +89,11 @@ namespace REvernus.ViewModels
                 else
                 {
                     if (_marginWindow.WindowState == WindowState.Minimized)
-                    {
                         _marginWindow.WindowState = WindowState.Normal;
-                    }
                     else if (_marginWindow.Visibility == Visibility.Visible)
-                    {
                         _marginWindow.Visibility = Visibility.Hidden;
-                    }
                     else
-                    {
                         _marginWindow.Visibility = Visibility.Visible;
-                    }
                 }
             }
             catch (Exception e)
@@ -172,7 +113,7 @@ namespace REvernus.ViewModels
         {
             try
             {
-                Window w = new Window()
+                var w = new Window
                 {
                     Title = "Character Manager",
                     Content = new CharacterManagerView(),
@@ -218,5 +159,64 @@ namespace REvernus.ViewModels
             var window = new ItemExplorerView();
             window.ShowDialog();
         }
+
+        #region HotKeys
+
+        private IKeyboardMouseEvents _keybindEvents = Hook.AppEvents();
+
+        private void UnsubscribeHotKeys(object sender, EventArgs e)
+        {
+            _keybindEvents.Dispose();
+        }
+
+        private void UnsubscribeHotKeys()
+        {
+            _keybindEvents.Dispose();
+        }
+
+        private void SubscribeHotKeys()
+        {
+            UnsubscribeHotKeys();
+
+            _keybindEvents = Hook.GlobalEvents();
+
+            var actions = new Dictionary<Combination, Action>
+            {
+                {Combination.FromString("Control+M"), OpenCloseMarginTool}
+            };
+
+            _keybindEvents.OnCombination(actions);
+        }
+
+        #endregion
+
+
+        #region Delegates
+
+        public DelegateCommand OpenCloseMarginToolCommand { get; set; }
+
+        public DelegateCommand CharacterManagerMenuItemCommand { get; set; } =
+            new DelegateCommand(OpenCharacterManagerWindow);
+
+        public DelegateCommand AboutBoxOpenCommand { get; set; } = new DelegateCommand(OpenAboutBox);
+
+        public DelegateCommand OpenStructureManagerCommand { get; set; } =
+            new DelegateCommand(OpenStructureManagerWindow);
+
+        public DelegateCommand CloseMainWindowCommand { get; set; } = new DelegateCommand(CloseMainWindow);
+        public DelegateCommand OpenSettingsViewCommand { get; set; } = new DelegateCommand(OpenSettingsView);
+
+        public DelegateCommand DownloadSdeDataMenuItemCommand { get; set; } = new DelegateCommand(async () =>
+        {
+            var downloader = new SdeDownloader();
+            await downloader.DownloadLatestSde();
+        });
+
+        public DelegateCommand OpenDeveloperApplicationWindowCommand { get; set; } =
+            new DelegateCommand(OpenDeveloperApplicationWindow);
+
+        public DelegateCommand OpenItemExplorerCommand { get; set; } = new DelegateCommand(OpenItemExplorer);
+
+        #endregion
     }
 }
