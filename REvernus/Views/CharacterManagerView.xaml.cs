@@ -33,7 +33,7 @@ namespace REvernus.Views
             {
                 deleteList.Add(selectedItem);
             }
-            App.CharacterManager.RemoveCharacters(deleteList);
+            App.AuthProvider.RemoveCharacters(deleteList);
         }
     }
 }

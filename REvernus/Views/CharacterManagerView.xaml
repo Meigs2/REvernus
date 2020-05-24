@@ -22,7 +22,7 @@
                 <Button Margin="3" Grid.Column="0" Content="Add Character" Command="{Binding AddCharacterCommand}"/>
                 <Button Margin="3" Grid.Column="1" Content="Remove Character(s)" PreviewMouseDown="DeleteCharactersButton_OnClick"/>
             </Grid>
-            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Source={x:Static characterManger:App.CharacterManager}, Path=CharacterList}" MouseDown="CharacterListView_OnMouseDown">
+            <ListView x:Name="CharacterListView" Margin="5" ItemsSource="{Binding Source={x:Static characterManger:App.AuthProvider}, Path=CharacterList}" MouseDown="CharacterListView_OnMouseDown">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Character ID" DisplayMemberBinding="{Binding CharacterDetails.CharacterId}"/>

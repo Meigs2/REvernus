@@ -35,10 +35,10 @@ namespace REvernus.ViewModels
 
         public REvernusCharacter SelectedCharacter
         {
-            get => App.CharacterManager.SelectedCharacter;
+            get => App.AuthProvider.SelectedCharacter;
             set
             {
-                App.CharacterManager.SelectedCharacter = value;
+                App.AuthProvider.SelectedCharacter = value;
                 OnPropertyChanged();
             }
         }

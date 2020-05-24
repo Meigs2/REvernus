@@ -25,7 +25,7 @@ namespace REvernus
         public MainWindowView()
         {
             InitializeComponent();
-            CharacterComboBox.DataContext = App.CharacterManager;
+            CharacterComboBox.DataContext = App.AuthProvider;
 
             Services.Tracker.Track(this);
 

@@ -25,8 +25,8 @@ namespace REvernus.Utilities.Esi
                 using var a = Status.GetNewStatusHandle();
                 var publicAuth = new AuthDTO()
                 {
-                    AccessToken = App.CharacterManager.SelectedCharacter.AccessTokenDetails,
-                    CharacterId = App.CharacterManager.SelectedCharacter.CharacterDetails.CharacterId,
+                    AccessToken = App.AuthProvider.SelectedCharacter.AccessTokenDetails,
+                    CharacterId = App.AuthProvider.SelectedCharacter.CharacterDetails.CharacterId,
                     Scopes = Scopes.ESI_UNIVERSE_READ_STRUCTURES_1
                 };
 
@@ -146,7 +146,7 @@ namespace REvernus.Utilities.Esi
                 var ordersHashSet = new ConcurrentBag<MarketOrder>();
                 var taskList = new List<Task>();
 
-                var addedBy = App.CharacterManager.CharacterList.FirstOrDefault(c =>
+                var addedBy = App.AuthProvider.CharacterList.FirstOrDefault(c =>
                     c.CharacterDetails.CharacterId == structure.AddedBy);
 
                 if (addedBy == null)

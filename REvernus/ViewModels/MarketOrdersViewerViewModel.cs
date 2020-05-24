@@ -204,7 +204,7 @@ namespace REvernus.ViewModels
                     currentItem = (MarketOrderInfoModel)SellsSelectedItem;
                 }
 
-                var character = App.CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == currentItem.Owner);
+                var character = App.AuthProvider.CharacterList.FirstOrDefault(c => c.CharacterName == currentItem.Owner);
 
                 if (character != null)
                 {
@@ -336,8 +336,8 @@ namespace REvernus.ViewModels
 
         private async Task LoadOrdersFromEsi()
         {
-            var characterOrders = await App.CharacterManager.SelectedCharacter.GetCharacterMarketOrdersAsync();
-            var characterName = App.CharacterManager.SelectedCharacter.CharacterName;
+            var characterOrders = await App.AuthProvider.SelectedCharacter.GetCharacterMarketOrdersAsync();
+            var characterName = App.AuthProvider.SelectedCharacter.CharacterName;
             await UpdateOrders(characterOrders, characterName);
         }
 
@@ -429,7 +429,7 @@ namespace REvernus.ViewModels
                         }
 
                         var newOrder = new MarketOrderInfoModel(characterOrder,
-                            App.CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == characterName),
+                            App.AuthProvider.CharacterList.FirstOrDefault(c => c.CharacterName == characterName),
                             location, marketOrders);
                         if (characterOrder.IsBuyOrder == true)
                         {
@@ -483,7 +483,7 @@ namespace REvernus.ViewModels
                     }
 
                     var newOrder = new MarketOrderInfoModel(characterOrder,
-                        App.CharacterManager.CharacterList.FirstOrDefault(c => c.CharacterName == characterName),
+                        App.AuthProvider.CharacterList.FirstOrDefault(c => c.CharacterName == characterName),
                         location, marketOrders);
                     if (characterOrder.IsBuyOrder == true)
                     {

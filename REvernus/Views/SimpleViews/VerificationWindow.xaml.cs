@@ -17,7 +17,7 @@ namespace REvernus.Views.SimpleViews
         private Authorization Authorization { get; set; } = new Authorization();
 
         private static readonly log4net.ILog Log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public VerificationWindow(EVEStandardAPI client)
         {
