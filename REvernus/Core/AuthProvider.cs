@@ -7,6 +7,7 @@ using REvernus.Models;
 using REvernus.Views.SimpleViews;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,36 +24,26 @@ namespace REvernus.Core
         private readonly Timer _authRefreshTimer = new Timer
         { Interval = TimeSpan.FromMinutes(10).TotalMilliseconds, AutoReset = true };
 
-        private List<REvernusCharacter> _characterList;
-
         public AuthProvider()
         {
-            _characterList = new List<REvernusCharacter>();
-
-            _authRefreshTimer.Elapsed += AuthRefreshTimer_Elapsed;
-            _authRefreshTimer.Enabled = true;
-
-            Initialized += CharacterManager_Initialized;
-
-            OnInitialized();
+            CharacterList = new ObservableCollection<REvernusCharacter>();
         }
 
-        private async void CharacterManager_Initialized(object sender, EventArgs e)
-        {
-            // Load characters from Database into the AuthProvider
-            await LoadCharactersFromDb();
-        }
+        public ObservableCollection<REvernusCharacter> CharacterList { get; }
+
         private async void AuthRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             await RefreshAuths();
         }
 
-        private async Task LoadCharactersFromDb()
+        /// <summary>
+        ///     Loads characters from user.db and refreshes their auth.
+        /// </summary>
+        /// <returns></returns>
+        public async Task Initialize()
         {
             await using var userContext = new UserContext();
             var refreshTokens = userContext.Characters.Select(o => o.RefreshToken).ToList();
-
-            _characterList = new List<REvernusCharacter>();
 
             foreach (var refreshToken in refreshTokens)
             {
@@ -63,8 +54,11 @@ namespace REvernus.Core
                 };
                 character.CharacterDetails =
                     await EsiData.EsiClient.SSO.GetCharacterDetailsAsync(character.AccessTokenDetails.AccessToken);
-                _characterList.Add(character);
+                CharacterList.Add(character);
             }
+
+            _authRefreshTimer.Elapsed += AuthRefreshTimer_Elapsed;
+            _authRefreshTimer.Enabled = true;
         }
 
         public void AuthorizeNewCharacter()
@@ -73,7 +67,7 @@ namespace REvernus.Core
             verificationWindow.ShowDialog();
 
             var duplicateCharacter =
-                _characterList.SingleOrDefault(
+                CharacterList.SingleOrDefault(
                     c => c.CharacterDetails.CharacterName ==
                          verificationWindow.Character.CharacterDetails.CharacterName);
 
@@ -98,9 +92,7 @@ namespace REvernus.Core
             userContext.Characters.Add(character);
             userContext.SaveChanges();
 
-            _characterList.Add(verificationWindow.Character);
-
-            OnCharactersChanged();
+            CharacterList.Add(verificationWindow.Character);
         }
 
         public void RemoveCharacters(List<REvernusCharacter> characters)
@@ -111,19 +103,19 @@ namespace REvernus.Core
                     character.AccessTokenDetails.AccessToken);
                 EsiData.EsiClient.SSO.RevokeTokenAsync(RevokeType.ACCESS_TOKEN,
                     character.AccessTokenDetails.AccessToken);
-                _characterList.Remove(character);
+                CharacterList.Remove(character);
 
                 using var userContext = new UserContext();
-                var characterInformation = userContext.Characters.First(e => e.CharacterId == character.CharacterDetails.CharacterId);
+                var characterInformation =
+                    userContext.Characters.First(e => e.CharacterId == character.CharacterDetails.CharacterId);
                 userContext.Remove(characterInformation);
                 userContext.SaveChanges();
             }
-            OnCharactersChanged();
         }
 
         public async Task RefreshAuths()
         {
-            var taskList = _characterList.Select(character => Task.Run(async () =>
+            var taskList = CharacterList.Select(character => Task.Run(async () =>
                 {
                     await using var userContext = new UserContext();
                     var result =
@@ -139,25 +131,14 @@ namespace REvernus.Core
             await Task.WhenAll(taskList);
         }
 
-        public event EventHandler SelectedCharacterChanged;
-
-        private void OnSelectedCharacterChanged()
+        public REvernusCharacter GetCharacterById(long characterId)
         {
-            SelectedCharacterChanged?.Invoke(this, EventArgs.Empty);
+            return CharacterList.FirstOrDefault(c => c.CharacterDetails.CharacterId == characterId);
         }
 
-        public event EventHandler CharactersChanged;
-
-        private void OnCharactersChanged()
+        public REvernusCharacter GetCharacterByName(string characterName)
         {
-            CharactersChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public event EventHandler Initialized;
-
-        private void OnInitialized()
-        {
-            Initialized?.Invoke(this, EventArgs.Empty);
+            return CharacterList.FirstOrDefault(c => c.CharacterDetails.CharacterName == characterName);
         }
     }
 }

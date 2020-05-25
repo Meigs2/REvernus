@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\REvernus.Utilites\REvernus.Utilites.csproj" />
+    <ProjectReference Include="..\REvernus.Utilites\REvernus.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

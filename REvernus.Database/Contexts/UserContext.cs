@@ -1,10 +1,9 @@
-﻿namespace REvernus.Database.Contexts
+﻿using Microsoft.EntityFrameworkCore;
+using REvernus.Database.UserDbModels;
+using REvernus.Utilities;
+
+namespace REvernus.Database.Contexts
 {
-    using Microsoft.EntityFrameworkCore;
-
-    using REvernus.Database.UserDbModels;
-    using REvernus.Utilites;
-
     public class UserContext : DbContext
     {
         public DbSet<CharacterInformation> Characters { get; set; }
@@ -13,10 +12,7 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlite($"DataSource={Paths.UserDataBasePath};");
-            }
+            if (!optionsBuilder.IsConfigured) optionsBuilder.UseSqlite($"DataSource={Paths.UserDataBasePath};");
         }
     }
 }

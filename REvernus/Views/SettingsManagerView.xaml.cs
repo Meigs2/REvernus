@@ -12,21 +12,14 @@ using System.Windows.Interop;
 
 namespace REvernus.Views
 {
-    using REvernus.Utilites;
-
     /// <summary>
-    /// Interaction logic for SettingsManagerView.xaml
+    ///     Interaction logic for SettingsManagerView.xaml
     /// </summary>
     public partial class SettingsManagerView : Window
     {
         private const int GWL_STYLE = -16;
         private const int WS_SYSMENU = 0x80000;
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
         public SettingsManagerView()
         {
             Loaded += (sender, args) =>
@@ -45,12 +38,19 @@ namespace REvernus.Views
             Tracker.Track(this);
         }
 
+        private Tracker Tracker { get; } = new Tracker(new JsonFileStore(Paths.SerializedDataFolder));
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            var regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
-
 
 
         private void HotkeyTextbox(object sender, KeyEventArgs args)
@@ -59,33 +59,22 @@ namespace REvernus.Views
             args.Handled = true;
 
             // Fetch the actual shortcut key.
-            var key = (args.Key == Key.System ? args.SystemKey : args.Key);
+            var key = args.Key == Key.System ? args.SystemKey : args.Key;
 
             // Ignore modifier keys.
             if (key == Key.LeftShift || key == Key.RightShift
                                      || key == Key.LeftCtrl || key == Key.RightCtrl
                                      || key == Key.LeftAlt || key == Key.RightAlt
                                      || key == Key.LWin || key == Key.RWin)
-            {
                 return;
-            }
 
             var mods = KeysHelper.ToWinforms(Keyboard.Modifiers);
 
             // Build the shortcut key name.
-            StringBuilder shortcutText = new StringBuilder();
-            if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
-            {
-                shortcutText.Append("Control+");
-            }
-            if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0)
-            {
-                shortcutText.Append("Shift+");
-            }
-            if ((Keyboard.Modifiers & ModifierKeys.Alt) != 0)
-            {
-                shortcutText.Append("Alt+");
-            }
+            var shortcutText = new StringBuilder();
+            if ((Keyboard.Modifiers & ModifierKeys.Control) != 0) shortcutText.Append("Control+");
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0) shortcutText.Append("Shift+");
+            if ((Keyboard.Modifiers & ModifierKeys.Alt) != 0) shortcutText.Append("Alt+");
             shortcutText.Append(key.ToString());
 
             // Update the text box.

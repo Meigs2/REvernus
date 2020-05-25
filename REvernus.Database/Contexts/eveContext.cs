@@ -1,10 +1,9 @@
-﻿namespace REvernus.Database.Contexts
+﻿using Microsoft.EntityFrameworkCore;
+using REvernus.Database.EveDbModels;
+using REvernus.Utilities;
+
+namespace REvernus.Database.Contexts
 {
-    using Microsoft.EntityFrameworkCore;
-
-    using REvernus.Database.EveDbModels;
-    using REvernus.Utilites;
-
     public class EveContext : DbContext
     {
         public EveContext()
@@ -107,20 +106,17 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlite($"DataSource={Paths.SdeDataBasePath};");
-            }
+            if (!optionsBuilder.IsConfigured) optionsBuilder.UseSqlite($"DataSource={Paths.SdeDataBasePath};");
         }
 
         /// <summary>
-        /// Applying entity configurations
+        ///     Applying entity configurations
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EveContext).Assembly);
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }

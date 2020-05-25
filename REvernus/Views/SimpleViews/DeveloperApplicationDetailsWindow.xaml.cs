@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using REvernus.Database.Contexts;
+using REvernus.Database.UserDbModels;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.EntityFrameworkCore;
 
 namespace REvernus.Views.SimpleViews
 {
-    using REvernus.Database.Contexts;
-    using REvernus.Database.UserDbModels;
-
     /// <summary>
-    /// Interaction logic for DeveloperApplicationDetailsWindow.xaml
+    ///     Interaction logic for DeveloperApplicationDetailsWindow.xaml
     /// </summary>
     public partial class DeveloperApplicationDetailsWindow : Window
     {
@@ -54,10 +42,11 @@ namespace REvernus.Views.SimpleViews
         {
             if (_saveData)
             {
-                if (!ClientIdTextBox.Text.Equals("") && !SecretKeyTextBox.Password.Equals("") && !CallbackUrlTextBox.Text.Equals(""))
+                if (!ClientIdTextBox.Text.Equals("") && !SecretKeyTextBox.Password.Equals("") &&
+                    !CallbackUrlTextBox.Text.Equals(""))
                 {
                     _userContext.DeveloperApplications.RemoveRange(_userContext.DeveloperApplications);
-                    _userContext.DeveloperApplications.Add(new DeveloperApplication()
+                    _userContext.DeveloperApplications.Add(new DeveloperApplication
                     {
                         ClientId = ClientIdTextBox.Text.Trim(),
                         SecretKey = SecretKeyTextBox.Password.Trim(),
@@ -70,14 +59,13 @@ namespace REvernus.Views.SimpleViews
                     e.Cancel = true;
                     MessageBox.Show("One of the fields is empty. Please enter data into all fields before saving.");
                     _saveData = false;
-                    return;
                 }
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _saveData = true; 
+            _saveData = true;
             Close();
         }
     }

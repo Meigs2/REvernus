@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Jot.Configuration;
+﻿using Jot.Configuration;
+using System;
 
 namespace REvernus.Settings
 {

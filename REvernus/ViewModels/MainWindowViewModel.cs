@@ -3,7 +3,6 @@ using log4net;
 using Prism.Commands;
 using REvernus.Core;
 using REvernus.Database.Contexts;
-using REvernus.Models;
 using REvernus.Utilities.StaticData;
 using REvernus.Views;
 using REvernus.Views.SimpleViews;
@@ -17,7 +16,7 @@ namespace REvernus.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private static readonly ILog Log =
-            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         private Window _marginWindow;
         private int _numActiveJobs;
@@ -28,19 +27,8 @@ namespace REvernus.ViewModels
         {
             OpenCloseMarginToolCommand = new DelegateCommand(OpenCloseMarginTool);
 
-
             SubscribeHotKeys();
             AppDomain.CurrentDomain.ProcessExit += UnsubscribeHotKeys;
-        }
-
-        public REvernusCharacter SelectedCharacter
-        {
-            get => App.AuthProvider.SelectedCharacter;
-            set
-            {
-                App.AuthProvider.SelectedCharacter = value;
-                OnPropertyChanged();
-            }
         }
 
         public string StatusText

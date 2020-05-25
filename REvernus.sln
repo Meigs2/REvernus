@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REvernus", "REvernus\REvern
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REvernus.Database", "REvernus.Database\REvernus.Database.csproj", "{431BA4C7-937D-4B9B-B7CE-77CB8F310F5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REvernus.Utilites", "REvernus.Utilites\REvernus.Utilites.csproj", "{B763E9AD-44E0-4942-85B6-FB7B279F9957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REvernus.Utilities", "REvernus.Utilites\REvernus.Utilities.csproj", "{B763E9AD-44E0-4942-85B6-FB7B279F9957}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
