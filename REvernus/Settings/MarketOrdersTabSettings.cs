@@ -1,6 +1,5 @@
-﻿using System;
-using System.Windows.Controls;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
+using System;
 
 namespace REvernus.Settings
 {
@@ -9,21 +8,18 @@ namespace REvernus.Settings
     {
         private uint _autoUpdateMintues = 5;
         private bool _autoUpdateTimerEnabled = true;
-        private bool _showInEveClient = true;
-        private string _marketUpHotkey = "Shift+S";
         private string _marketDownHotkey = "Shift+D";
+        private string _marketUpHotkey = "Shift+S";
         private bool _playOrderChangedSound;
         private bool _resetRefreshTimerOnPriceCopy;
+        private bool _showInEveClient = true;
 
         public uint AutoUpdateMintues
         {
             get => _autoUpdateMintues;
             set
             {
-                if (value == 0)
-                {
-                    value = 1;
-                }
+                if (value == 0) value = 1;
                 SetProperty(ref _autoUpdateMintues, value);
             }
         }

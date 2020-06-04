@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using EVEStandard.Models;
-using REvernus.Models;
+﻿using REvernus.Models;
 using REvernus.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace REvernus.Views
 {
     public partial class StructureSearchView : Window
     {
+        public StructureSearchView()
+        {
+            InitializeComponent();
+        }
+
         public List<PlayerStructure> SelectedStructures { get; set; } = new List<PlayerStructure>();
 
         protected override void OnInitialized(EventArgs e)
@@ -24,11 +27,6 @@ namespace REvernus.Views
             SelectedStructures = e.SelectedStructures;
 
             Close();
-        }
-
-        public StructureSearchView()
-        {
-            InitializeComponent();
         }
     }
 }

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Models;
+﻿using EVEStandard.Models;
 using EVEStandard.Models.API;
+using System;
+using System.Threading.Tasks;
 
 namespace REvernus.Core.ESI
 {
     public static class Structures
     {
-        public static async Task<Structure> GetStructureInfoAsync(AuthDTO auth, long structureId, string searchString = "")
+        public static async Task<Structure> GetStructureInfoAsync(AuthDTO auth, long structureId,
+            string searchString = "")
         {
             try
             {
@@ -18,15 +17,13 @@ namespace REvernus.Core.ESI
 
                 if (searchString == "") return structureInfo.Model;
 
-                if (structureInfo.Model.Name.Contains(searchString))
-                {
-                    return structureInfo.Model;
-                }
+                if (structureInfo.Model.Name.Contains(searchString)) return structureInfo.Model;
             }
             catch (Exception)
             {
                 // Ignored
             }
+
             return null;
         }
     }

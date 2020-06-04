@@ -1,7 +1,7 @@
-﻿using System;
+﻿using REvernus.Core;
+using System;
 using System.ComponentModel;
 using System.Windows;
-using REvernus.Core;
 
 namespace REvernus
 {

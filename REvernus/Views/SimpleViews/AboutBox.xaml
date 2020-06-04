@@ -8,39 +8,39 @@
         Title="About REvernus" Height="479" Width="754">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <Grid Grid.Column="0" x:Name="ImageGrid">
             <Image Margin="5">
                 <Image.Source>
-                    <BitmapImage UriSource="/Resources/Revernus-Full-2k.png"/>
+                    <BitmapImage UriSource="/Resources/Revernus-Full-2k.png" />
                 </Image.Source>
             </Image>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid>
                 <TabControl Margin="5">
                     <TabItem Header="Information">
                         <TextBlock>
-                            <LineBreak/>
+                            <LineBreak />
                             <Span>
-                                REvernus 
-                                <LineBreak/>
-                                <LineBreak/>
+                                REvernus
+                                <LineBreak />
+                                <LineBreak />
                                 Copyright (c) 2019 Connor Radeloff
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 Contribuitors:
-                                <LineBreak/>
+                                <LineBreak />
                                 Jimmacle
-                                <LineBreak/>
+                                <LineBreak />
                                 Ben-Ki
-                                <LineBreak/>
+                                <LineBreak />
                                 rebelEpik
                             </Span>
                         </TextBlock>
@@ -51,41 +51,64 @@
                                 <Span>
                                     Images and Eve Online data: ©CCP hf. All rights reserved. Used with permission.
                                 </Span>
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 <Span>
-                                    Evestandard: Copyright (c) 2018 Matthew Park <LineBreak/> 
-                                    <Hyperlink NavigateUri="https://github.com/gehnster/EVEStandard/blob/master/LICENSE" RequestNavigate="Hyperlink_RequestNavigate">View License</Hyperlink>
+                                    Evestandard: Copyright (c) 2018 Matthew Park <LineBreak />
+                                    <Hyperlink
+                                        NavigateUri="https://github.com/gehnster/EVEStandard/blob/master/LICENSE"
+                                        RequestNavigate="Hyperlink_RequestNavigate">
+                                        View License
+                                    </Hyperlink>
                                 </Span>
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 <Span>
-                                    SharpZipLib: Copyright © 2000-2018 SharpZipLib Contributors <LineBreak/> 
-                                    <Hyperlink NavigateUri="https://github.com/icsharpcode/SharpZipLib/blob/master/LICENSE.txt" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                    SharpZipLib: Copyright © 2000-2018 SharpZipLib Contributors <LineBreak />
+                                    <Hyperlink
+                                        NavigateUri="https://github.com/icsharpcode/SharpZipLib/blob/master/LICENSE.txt"
+                                        RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">
+                                        View License
+                                    </Hyperlink>
                                 </Span>
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 <Span>
-                                    GlobalMouseKeyHook: Copyright (c) 2010-2018 George Mamaladze <LineBreak/> 
-                                    <Hyperlink NavigateUri="https://github.com/gmamaladze/globalmousekeyhook/blob/vNext/LICENSE.txt" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                    GlobalMouseKeyHook: Copyright (c) 2010-2018 George Mamaladze <LineBreak />
+                                    <Hyperlink
+                                        NavigateUri="https://github.com/gmamaladze/globalmousekeyhook/blob/vNext/LICENSE.txt"
+                                        RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">
+                                        View License
+                                    </Hyperlink>
                                 </Span>
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 <Span>
-                                    Log4Net:<LineBreak/> 
-                                    <Hyperlink NavigateUri="https://github.com/apache/logging-log4net/blob/master/LICENSE" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                    Log4Net:<LineBreak />
+                                    <Hyperlink
+                                        NavigateUri="https://github.com/apache/logging-log4net/blob/master/LICENSE"
+                                        RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">
+                                        View License
+                                    </Hyperlink>
                                 </Span>
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 <Span>
-                                    Newtonsoft.Json: Copyright (c) 2007 James Newton-King<LineBreak/> 
-                                    <Hyperlink NavigateUri="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                    Newtonsoft.Json: Copyright (c) 2007 James Newton-King<LineBreak />
+                                    <Hyperlink
+                                        NavigateUri="https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md"
+                                        RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">
+                                        View License
+                                    </Hyperlink>
                                 </Span>
-                                <LineBreak/>
-                                <LineBreak/>
+                                <LineBreak />
+                                <LineBreak />
                                 <Span>
-                                    PrismLibrary: Copyright (c) .NET Foundation<LineBreak/> 
-                                    <Hyperlink NavigateUri="https://github.com/PrismLibrary/Prism/blob/master/LICENSE" RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">View License</Hyperlink>
+                                    PrismLibrary: Copyright (c) .NET Foundation<LineBreak />
+                                    <Hyperlink NavigateUri="https://github.com/PrismLibrary/Prism/blob/master/LICENSE"
+                                               RequestNavigate="Hyperlink_RequestNavigate" Cursor="Hand">
+                                        View License
+                                    </Hyperlink>
                                 </Span>
                             </TextBlock>
                         </ScrollViewer>

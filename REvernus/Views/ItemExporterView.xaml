@@ -7,14 +7,16 @@
         mc:Ignorable="d"
         Title="Item Exporter" Height="630" Width="550">
     <Window.DataContext>
-        <local:ItemExporterViewModel/>
+        <local:ItemExporterViewModel />
     </Window.DataContext>
     <Grid>
         <DockPanel>
             <Viewbox DockPanel.Dock="Top">
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Height="50" Margin="5">
-                    Use this exporter to easily browse the SDE for items by Market Group for use in things such as spreadsheets.<LineBreak/>
-                    This updates with the SDE, so re-download the SDE from the File menu to get the most recent updates.<LineBreak/>
+                    Use this exporter to easily browse the SDE for items by Market Group for use in things such as spreadsheets.
+                    <LineBreak />
+                    This updates with the SDE, so re-download the SDE from the File menu to get the most recent updates.
+                    <LineBreak />
                     You can move columns around by simply dragging them. Use Ctrl-C to copy the items to your clipboard.
                 </TextBlock>
             </Viewbox>
@@ -23,15 +25,17 @@
                     Pick Items
                 </Button>
             </Grid>
-            <DataGrid ItemsSource="{Binding TypesCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"  Margin="5"
-                      CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid
+                ItemsSource="{Binding TypesCollection, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                Margin="5"
+                CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="TypeId" Binding="{Binding TypeId}"/>
-                    <DataGridTextColumn Header="GroupId" Binding="{Binding GroupId}"/>
-                    <DataGridTextColumn Header="MarketGroupId" Binding="{Binding MarketGroupId}"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding TypeName}"/>
-                    <DataGridTextColumn Header="Volume" Binding="{Binding Volume}"/>
-                    <DataGridTextColumn Header="Mass" Binding="{Binding Mass}"/>
+                    <DataGridTextColumn Header="TypeId" Binding="{Binding TypeId}" />
+                    <DataGridTextColumn Header="GroupId" Binding="{Binding GroupId}" />
+                    <DataGridTextColumn Header="MarketGroupId" Binding="{Binding MarketGroupId}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding TypeName}" />
+                    <DataGridTextColumn Header="Volume" Binding="{Binding Volume}" />
+                    <DataGridTextColumn Header="Mass" Binding="{Binding Mass}" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

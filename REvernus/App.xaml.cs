@@ -13,7 +13,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using REvernus.Core.ESI;
 
 namespace REvernus
 {

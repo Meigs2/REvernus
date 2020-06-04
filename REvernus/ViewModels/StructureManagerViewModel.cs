@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using REvernus.Core;
-using REvernus.Models;
-using REvernus.Utilities;
 using REvernus.Views;
+using System.Collections;
 
 namespace REvernus.ViewModels
 {
@@ -19,13 +13,14 @@ namespace REvernus.ViewModels
             RemoveStructuresCommand = new DelegateCommand<IList>(RemoveStructures);
         }
 
+        public DelegateCommand AddStructuresCommand { get; set; } = new DelegateCommand(AddNewStructures);
+        public DelegateCommand<IList> RemoveStructuresCommand { get; set; }
+
         private void RemoveStructures(IList structures)
         {
             StructureManager.RemoveStructuresFromDatabase(structures);
         }
 
-        public DelegateCommand AddStructuresCommand { get; set; } = new DelegateCommand(AddNewStructures);
-        public DelegateCommand<IList> RemoveStructuresCommand { get; set; }
         private static void AddNewStructures()
         {
             var structureSearchView = new StructureSearchView();

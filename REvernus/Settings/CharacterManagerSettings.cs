@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace REvernus.Settings
 {
@@ -8,6 +6,5 @@ namespace REvernus.Settings
     public class CharacterManagerSettings
     {
         public string SelectedCharacterName { get; set; }
-
     }
 }

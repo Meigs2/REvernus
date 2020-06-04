@@ -1,42 +1,46 @@
-﻿using System;
+﻿using EVEStandard.Models;
+using Prism.Mvvm;
+using REvernus.Utilities.StaticData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Models;
-using EVEStandard.Models.API;
-using Prism.Mvvm;
-using REvernus.Core;
-using REvernus.Core.ESI;
-using REvernus.Utilities.StaticData;
 
 namespace REvernus.Models
 {
     public class MarketOrderInfoModel : BindableBase
     {
-        private CharacterMarketOrder _order;
-        private List<MarketOrder> _marketOrders;
         private List<MarketOrder> _buyOrders = new List<MarketOrder>();
-        private List<MarketOrder> _sellOrders = new List<MarketOrder>();
-        private string _owner;
-        private bool _isBuyOrder;
-        private string _itemName;
-        private int _itemId;
-        private string _locationName;
-        private double _price;
-        private bool _isOutbid;
-        private int _outbidDelta;
+        private string _completionEta;
         private double _difference;
+        private double? _escrow;
+        private bool _isBuyOrder;
+        private bool _isOutbid;
+        private int _itemId;
+        private string _itemName;
+        private string _locationName;
+        private List<MarketOrder> _marketOrders;
+        private CharacterMarketOrder _order;
+        private TimeSpan _orderAge = TimeSpan.Zero;
+        private double _orderMargin;
+        private double _orderValue;
+        private int _outbidDelta;
+        private string _owner;
+        private double _price;
+        private List<MarketOrder> _sellOrders = new List<MarketOrder>();
+        private TimeSpan _timeLeft = TimeSpan.Zero;
+        private double _typeMargin;
+        private string _volumeRatio;
         private int _volumeRemaining;
         private int _volumeTotal;
-        private string _volumeRatio;
-        private double _orderValue;
-        private double _typeMargin;
-        private double _orderMargin;
-        private string _completionEta;
-        private TimeSpan _orderAge = TimeSpan.Zero;
-        private TimeSpan _timeLeft = TimeSpan.Zero;
-        private double? _escrow;
+
+        public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string locationName,
+            List<MarketOrder> marketOrders)
+        {
+            Order = order;
+            Owner = owner.CharacterName;
+            LocationName = locationName;
+            MarketOrders = marketOrders;
+        }
 
         public CharacterMarketOrder Order
         {
@@ -56,7 +60,9 @@ namespace REvernus.Models
                 TimeLeft = TimeSpan.FromDays(Order.Duration) - OrderAge;
                 Escrow = Order.Escrow;
 
-                CompletionEta = VolumeRemaining == VolumeTotal ? "Infinity" : ((OrderAge / (VolumeTotal - VolumeRemaining) * VolumeRemaining)).ToString(@"dd\:hh\:mm");
+                CompletionEta = VolumeRemaining == VolumeTotal
+                    ? "Infinity"
+                    : (OrderAge / (VolumeTotal - VolumeRemaining) * VolumeRemaining).ToString(@"dd\:hh\:mm");
             }
         }
 
@@ -70,31 +76,23 @@ namespace REvernus.Models
                 SellOrders = MarketOrders.Where(o => !o.IsBuyOrder).OrderBy(o => o.Price).ToList();
                 IsOutbid = IsOrderOutbid(MarketOrders, Order, out var diff);
                 Difference = diff;
-                
+
                 // Outbid delta
-                OutbidDelta = IsBuyOrder ? BuyOrders.FindIndex(o => o.OrderId == Order.OrderId) : SellOrders.FindIndex(o => o.OrderId == Order.OrderId);
+                OutbidDelta = IsBuyOrder
+                    ? BuyOrders.FindIndex(o => o.OrderId == Order.OrderId)
+                    : SellOrders.FindIndex(o => o.OrderId == Order.OrderId);
                 if (SellOrders.Count > 0 && BuyOrders.Count > 0)
-                {
                     TypeMargin = (SellOrders[0].Price - BuyOrders[0].Price) / SellOrders[0].Price;
-                }
                 else
-                {
                     TypeMargin = double.PositiveInfinity;
-                }
 
                 // OrderMargin
                 if (IsBuyOrder && SellOrders.Count > 0)
-                {
                     OrderMargin = (SellOrders[0].Price - Order.Price) / SellOrders[0].Price;
-                }
                 else if (!IsBuyOrder && BuyOrders.Count > 0)
-                {
                     OrderMargin = (Order.Price - BuyOrders[0].Price) / Order.Price;
-                }
                 else
-                {
                     OrderMargin = 0.0;
-                }
             }
         }
 
@@ -222,14 +220,6 @@ namespace REvernus.Models
         {
             get => _escrow;
             set => SetProperty(ref _escrow, value);
-        }
-
-        public MarketOrderInfoModel(CharacterMarketOrder order, REvernusCharacter owner, string locationName, List<MarketOrder> marketOrders)
-        {
-            Order = order;
-            Owner = owner.CharacterName;
-            LocationName = locationName;
-            MarketOrders = marketOrders;
         }
 
         private bool IsOrderOutbid(List<MarketOrder> marketOrders, CharacterMarketOrder order, out double difference)

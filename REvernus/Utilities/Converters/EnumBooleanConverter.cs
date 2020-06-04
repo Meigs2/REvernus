@@ -13,7 +13,7 @@ namespace REvernus.Utilities.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && ((bool)value) ? parameter : Binding.DoNothing;
+            return value != null && (bool)value ? parameter : Binding.DoNothing;
         }
     }
 }

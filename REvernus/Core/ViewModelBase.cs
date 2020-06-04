@@ -5,11 +5,12 @@ namespace REvernus.Core
 {
     /// <inheritdoc />
     /// <summary>
-    /// This class implements the INotifyPropertyChanged interface, and should be used for ViewModels
+    ///     This class implements the INotifyPropertyChanged interface, and should be used for ViewModels
     /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

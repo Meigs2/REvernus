@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Item Explorer" Height="450" Width="800" Loaded="ItemExplorerView_OnLoaded" Closing="ItemExplorerView_OnClosing">
+        Title="Item Explorer" Height="450" Width="800" Loaded="ItemExplorerView_OnLoaded"
+        Closing="ItemExplorerView_OnClosing">
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
@@ -23,8 +24,8 @@
     <DockPanel>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Button DockPanel.Dock="Bottom" Height="22" Margin="5" Click="CancelButton_Click">
                 Close
@@ -33,9 +34,9 @@
                 Accept
             </Button>
         </Grid>
-        <TreeView x:Name="TreeView1" Margin="5" 
-                  ItemContainerStyle="{StaticResource TreeViewItemStyle}" 
-                  ItemTemplate="{StaticResource CheckBoxItemTemplate}" 
-                  VirtualizingStackPanel.IsVirtualizing="True"/>
+        <TreeView x:Name="TreeView1" Margin="5"
+                  ItemContainerStyle="{StaticResource TreeViewItemStyle}"
+                  ItemTemplate="{StaticResource CheckBoxItemTemplate}"
+                  VirtualizingStackPanel.IsVirtualizing="True" />
     </DockPanel>
 </Window>

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using REvernus.Database.Contexts;
+using System;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
 
 namespace REvernus.Utilities.Converters
 {
-    using REvernus.Database.Contexts;
-
     public class TypeIdToNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -16,7 +13,8 @@ namespace REvernus.Utilities.Converters
             using var db = new EveContext();
             try
             {
-                return db.InvTypes.FirstOrDefault(o => o.TypeId == System.Convert.ToInt64(value)); ;
+                return db.InvTypes.FirstOrDefault(o => o.TypeId == System.Convert.ToInt64(value));
+                ;
             }
             finally
             {

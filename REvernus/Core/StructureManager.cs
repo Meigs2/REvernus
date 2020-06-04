@@ -1,25 +1,15 @@
-﻿using System;
+﻿using REvernus.Database.Contexts;
+using REvernus.Database.EveDbModels;
+using REvernus.Database.UserDbModels;
+using REvernus.Models;
+using REvernus.Views;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVEStandard.Enumerations;
-using EVEStandard.Models;
-using EVEStandard.Models.API;
-using Microsoft.EntityFrameworkCore.Internal;
-using REvernus.Core.ESI;
-using REvernus.Models;
-using REvernus.Utilities;
-using REvernus.Views;
 
 namespace REvernus.Core
 {
-    using REvernus.Database.Contexts;
-    using REvernus.Database.EveDbModels;
-    using REvernus.Database.UserDbModels;
-
     public static class StructureManager
     {
         public static ObservableCollection<PlayerStructure> Structures = new ObservableCollection<PlayerStructure>();
@@ -56,6 +46,7 @@ namespace REvernus.Core
                 };
                 Structures.Add(structure);
             }
+
             context.Dispose();
         }
 
@@ -65,8 +56,7 @@ namespace REvernus.Core
             {
                 var context = new UserContext();
                 if (!context.AddedStructures.Any(o => o.StructureId == playerStructure.StructureId))
-                {
-                    context.AddedStructures.Add(new AddedStructure()
+                    context.AddedStructures.Add(new AddedStructure
                     {
                         StructureId = playerStructure.StructureId,
                         Name = playerStructure.Name,
@@ -78,7 +68,6 @@ namespace REvernus.Core
                         Enabled = playerStructure.Enabled.GetValueOrDefault(),
                         IsPublic = playerStructure.IsPublic
                     });
-                }
 
                 context.SaveChanges();
                 context.Dispose();
@@ -122,18 +111,10 @@ namespace REvernus.Core
         public static string GetStructureName(long structureId)
         {
             // check for NPC station
-            if (StructureManager.TryGetNpcStation(structureId, out var station))
-            {
-                return station.StationName;
-            }
-            if (StructureManager.TryGetPlayerStructure(structureId, out var structure))
-            {
+            if (TryGetNpcStation(structureId, out var station)) return station.StationName;
+            if (TryGetPlayerStructure(structureId, out var structure))
                 return structure.Name;
-            }
-            else
-            {
-                return "Unknown Structure";
-            }
+            return "Unknown Structure";
         }
     }
 }

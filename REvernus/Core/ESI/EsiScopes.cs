@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace REvernus.Core.ESI
 {
     public class EsiScopes
     {
-        public static List<string> Scopes = new List<string>()
+        public static List<string> Scopes = new List<string>
         {
             "publicData",
             "esi-location.read_location.v1",

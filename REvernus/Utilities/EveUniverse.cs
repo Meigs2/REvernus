@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using REvernus.Database.Contexts;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using REvernus.Core;
-using REvernus.Core.ESI;
 
 namespace REvernus.Utilities
 {
-    using REvernus.Database.Contexts;
-
     public static class EveUniverse
     {
         public static bool TryGetRegionFromSystem(long? systemId, out int regionId)
