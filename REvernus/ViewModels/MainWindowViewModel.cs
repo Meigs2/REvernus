@@ -53,7 +53,7 @@ namespace REvernus.ViewModels
 
         private void OpenCloseMarginTool()
         {
-            if (!App.MainWindow.IsActive && _marginWindow != null && !_marginWindow.IsActive) return;
+            if (!App.MainWindowView.IsActive && _marginWindow != null && !_marginWindow.IsActive) return;
 
             try
             {
@@ -136,7 +136,7 @@ namespace REvernus.ViewModels
 
         private static void OpenSettingsView()
         {
-            if (!App.MainWindow.IsActive) return;
+            if (!App.MainWindowView.IsActive) return;
 
             var a = new SettingsManagerView();
             a.ShowDialog();

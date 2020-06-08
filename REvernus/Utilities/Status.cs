@@ -14,14 +14,14 @@ namespace REvernus.Utilities
         {
             get
             {
-                if (App.MainWindow.DataContext is MainWindowViewModel viewModel) return viewModel.StatusText;
+                if (App.MainWindowView.DataContext is MainWindowViewModel viewModel) return viewModel.StatusText;
                 return "";
             }
             set
             {
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    if (App.MainWindow.DataContext is MainWindowViewModel viewModel) viewModel.StatusText = value;
+                    if (App.MainWindowView.DataContext is MainWindowViewModel viewModel) viewModel.StatusText = value;
                 });
             }
         }

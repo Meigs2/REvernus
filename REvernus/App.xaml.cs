@@ -26,15 +26,14 @@ namespace REvernus
 
         public static AppSettings Settings = new AppSettings();
         public static AuthProvider AuthProvider;
-        public new static MainWindowView MainWindow { get; private set; }
+        public static MainWindowView MainWindowView { get; private set; }
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             StartupComplete += PostStartupActions;
-
             Current.DispatcherUnhandledException += ApplicationDispatcherUnhandledException;
-
             AppDomain.CurrentDomain.ProcessExit += OnApplicationExit;
 
             await StartupActions();
@@ -60,8 +59,8 @@ namespace REvernus
 
         private static void PostStartupActions(object sender, EventArgs e)
         {
-            MainWindow = new MainWindowView();
-            MainWindow.Show();
+            MainWindowView = new MainWindowView();
+            MainWindowView.Show();
         }
 
         private void TestEsiAndInternet()
