@@ -1,3 +1,5 @@
+# REvernus is not currently being worked on. I will accept PR's, however, as of January 2021 this project is not being actively developed. The readme and repo is kept for future use, or people who wish to start development on it.
+
 <p align="center">
   <img src="https://puu.sh/DIGKM/4276bf1022.png" alt="REvernus Logo" width="500"/>
 </p>
